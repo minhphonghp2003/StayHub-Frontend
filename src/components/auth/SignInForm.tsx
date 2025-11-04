@@ -8,6 +8,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import OauthOption from "./OauthOption";
 import authenticationService from "@/core/service/RBAC/authentication-service";
+import { showToast } from "@/utils/alert-helper";
+import { toast } from "react-toastify";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,7 +22,14 @@ export default function SignInForm() {
       username: formValues.username as string,
       password: formValues.password as string,
     });
-    console.log("Login Result:", result);
+    if (!result.success) {
+      showToast({
+        type: "error", content: result.message, options: {
+          position: "top-right"
+        }
+      })
+
+    }
 
   };
   return (
