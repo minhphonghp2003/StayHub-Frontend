@@ -1,24 +1,13 @@
 import { AuthModel } from "@/core/model/RBAC/auth";
 import { LoginPayload } from "@/core/payload/RBAC/login-payload";
+import { api } from "@/core/http-client/axios-client";
 
-const baseUrl: string = '/RBAC/auth';
+const baseUrl: string = '/auth';
 
-const login = async ({ username, password }: LoginPayload): Promise<AuthModel> => {
-    const response = await fetch(`${baseUrl}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-    });
-    if (!response.ok) {
-        throw new Error(`Login failed: ${response.statusText}`);
-    }
-    return response.json();
+const login = async ({ username, password }: LoginPayload) => {
+    const response = await api.post(`${baseUrl}/login`, { username, password });
+    return response.data;
 };
-// export const authRepository = {
-//     login,
-// };
 export default {
     login,
 };
