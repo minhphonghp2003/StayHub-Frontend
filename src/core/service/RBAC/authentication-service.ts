@@ -1,13 +1,11 @@
+import { AuthModel } from "@/core/model/RBAC/auth";
 import { LoginPayload } from "@/core/payload/RBAC/login-payload";
-import { AuthenticationRepository } from "@/core/repository/RBAC/authenticaion-repository";
+import authRepository from "@/core/repository/RBAC/authenticaion-repository";
 
-export class AuthenticationService {
-    authRepository: AuthenticationRepository;
-
-    constructor() {
-        this.authRepository = new AuthenticationRepository();
-    }
-    async login({ username, password }: LoginPayload) {
-        return this.authRepository.login({ username, password });
-    }
+const login = async ({ username, password }: LoginPayload): Promise<AuthModel> => {
+    return authRepository.login({ username, password });
 }
+
+export default {
+    login,
+};
