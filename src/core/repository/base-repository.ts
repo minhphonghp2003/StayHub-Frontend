@@ -5,7 +5,7 @@ export class BaseRepository<T,R> {
     protected endpoint: string;
     protected client: AxiosInstance;
 
-    constructor(endpoint: string, client: AxiosInstance = api) {
+    constructor(endpoint: string = "", client: AxiosInstance = api) {
         this.endpoint = endpoint;
         this.client = client;
     }
