@@ -19,8 +19,7 @@ export default function ToastProvider({ children }: ToastProviderProps) {
 
     return (
         <>
-            <ToastContainer
-            />
+           
             {children}
         </>
     );

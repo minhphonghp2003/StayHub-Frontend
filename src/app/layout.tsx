@@ -5,6 +5,7 @@ import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import StoreProvider from '@/context/StoreContext';
 import ToastProvider from '@/context/ToastifyContext';
+import { ToastContainer } from 'react-toastify';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -16,16 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <ToastProvider>
-        <body className={`${outfit.className} dark:bg-gray-900`}>
-          <StoreProvider>
-            <ThemeProvider>
-              <SidebarProvider>{children}</SidebarProvider>
-            </ThemeProvider>
-          </StoreProvider>
-        </body>
-      </ToastProvider>
+    <html lang="en antialiased ">
+      <body className={`${outfit.className} dark:bg-gray-900`}>
+        <StoreProvider>
+          <ThemeProvider>
+            <SidebarProvider>{children}</SidebarProvider>
+          </ThemeProvider>
+        </StoreProvider>
+        <ToastContainer />
+      </body>
     </html>
   );
 }

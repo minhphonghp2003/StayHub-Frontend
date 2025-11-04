@@ -28,7 +28,13 @@ export default function SignInForm() {
           position: "top-right"
         }
       })
-
+    } else {
+      showToast({
+        type: "success",
+        content: result.message,
+        options: { position: "top-right" },
+      });
+      window.location.href = "/";
     }
 
   };
