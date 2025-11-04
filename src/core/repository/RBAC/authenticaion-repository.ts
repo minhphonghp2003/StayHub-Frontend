@@ -8,6 +8,11 @@ const login = async ({ username, password }: LoginPayload): Promise<BaseResponse
     const response = await api.post(`${baseUrl}/login`, { username, password });
     return response.data;
 };
+
+const logout = async ({ refreshToken }: { refreshToken: string }): Promise<BaseResponse<boolean>> => {
+    const response = await api.post(`${baseUrl}/logout`, { refreshToken });
+    return response.data;
+};
 export default {
-    login,
+    login, logout
 };

@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import authenticationService from "@/core/service/RBAC/authentication-service";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,11 @@ export default function UserDropdown() {
   function closeDropdown() {
     setIsOpen(false);
   }
+  async function logout() {
+    let result = await authenticationService.logout();
+
+  }
+
   return (
     <div className="relative">
       <button
@@ -143,8 +149,10 @@ export default function UserDropdown() {
             </DropdownItem>
           </li>
         </ul>
-        <Link
+        <DropdownItem
           href="/signin"
+          onItemClick={logout}
+          tag="a"
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg
@@ -163,7 +171,7 @@ export default function UserDropdown() {
             />
           </svg>
           Sign out
-        </Link>
+        </DropdownItem>
       </Dropdown>
     </div>
   );

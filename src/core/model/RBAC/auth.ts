@@ -1,5 +1,6 @@
 export interface AuthModel extends BaseModel {
-    username: string;
+    email: string;
+    image: string;
     id: number;
     token: string;
     refreshToken: string;

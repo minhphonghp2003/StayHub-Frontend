@@ -9,7 +9,15 @@ const login = async ({ username, password }: LoginPayload): Promise<BaseResponse
     }
     return result;
 }
-
+const logout = async (): Promise<BaseResponse<boolean>> => {
+    const stored = localStorage.getItem('user');
+    const refreshToken = stored ? (JSON.parse(stored) as AuthModel).refreshToken : "";
+    const result = await authRepository.logout({ refreshToken: refreshToken });
+    if (result.success) {
+        localStorage.removeItem('user');
+    }
+    return result;
+}
 export default {
-    login,
+    login, logout
 };
