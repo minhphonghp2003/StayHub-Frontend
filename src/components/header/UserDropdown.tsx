@@ -20,6 +20,7 @@ export default function UserDropdown() {
   async function logout() {
     let result = await authenticationService.logout();
 
+
   }
 
   return (

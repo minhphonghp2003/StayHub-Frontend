@@ -19,7 +19,7 @@ const logout = async (): Promise<BaseResponse<boolean>> => {
     }
     return result;
 }
-const register = async (payload:RegisterPayload): Promise<BaseResponse<AuthModel>> => {
+const register = async (payload: RegisterPayload): Promise<BaseResponse<AuthModel>> => {
     var result = await authRepository.register(payload)
     if (result.success && result.data?.token) {
         localStorage.setItem('user', JSON.stringify(result.data));
@@ -27,5 +27,5 @@ const register = async (payload:RegisterPayload): Promise<BaseResponse<AuthModel
     return result;
 }
 export default {
-    login, logout,register
+    login, logout, register
 };
