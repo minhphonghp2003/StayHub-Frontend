@@ -1,4 +1,4 @@
-import { AuthModel } from "@/core/model/RBAC/auth";
+import { AuthModel } from "@/core/model/RBAC/Auth";
 
 const removeAuthInfo = async () => {
     localStorage.removeItem('user');

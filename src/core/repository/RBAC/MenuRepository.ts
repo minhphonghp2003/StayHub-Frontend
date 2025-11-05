@@ -1,5 +1,5 @@
 import { api } from "@/core/http-client/AxiosClient";
-import { Menu } from "@/core/model/RBAC/menu";
+import { Menu } from "@/core/model/RBAC/Menu";
 
 const baseUrl: string = '/menu';
 const getMyMenus = async (): Promise<BaseResponse<Menu[]>> => {

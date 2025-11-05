@@ -1,4 +1,4 @@
-import { Menu } from "@/core/model/RBAC/menu";
+import { Menu } from "@/core/model/RBAC/Menu";
 import menuRepository from "@/core/repository/RBAC/MenuRepository";
 
 const getMyMenus = async (): Promise<Menu[]> => {
