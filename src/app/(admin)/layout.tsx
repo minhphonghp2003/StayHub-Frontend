@@ -1,7 +1,7 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
-import { Menu } from "@/core/model/RBAC/menu";
+import { Menu } from "@/core/model/RBAC/Menu";
 import MenuService from "@/core/service/RBAC/MenuService";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";

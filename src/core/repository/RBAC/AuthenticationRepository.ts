@@ -1,4 +1,4 @@
-import { AuthModel } from "@/core/model/RBAC/auth";
+import { AuthModel } from "@/core/model/RBAC/Auth";
 import { LoginPayload } from "@/core/payload/RBAC/LoginPayload";
 import { api } from "@/core/http-client/AxiosClient";
 import { RegisterPayload } from "@/core/payload/RBAC/RegisterPayload";
