@@ -7,18 +7,17 @@ export const authInterceptor = async (config: InternalAxiosRequestConfig): Promi
     }
     return config;
 };
-
 const getToken = async (): Promise<string | undefined> => {
     if (isBrowser) {
-        // ✅ Client side
-        return localStorage.getItem(accessTokenKey || "access_token") || undefined;
+
+        const match = document.cookie.match(new RegExp(`(^| )${accessTokenKey || "access_token"}=([^;]+)`));
+        return match ? match[2] : undefined;
     } else {
-        // ✅ Server side (Next.js App Router only)
+
         try {
             const { cookies } = await import('next/headers');
             return (await cookies()).get(accessTokenKey || "access_token")?.value;
         } catch {
-            // Probably not in server context (e.g., Pages Router)
             return undefined;
         }
     }

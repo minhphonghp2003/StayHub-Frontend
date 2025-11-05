@@ -4,7 +4,6 @@ import { errorInterceptor } from './interceptor/error-interceptor';
 
 // Singleton instance
 let axiosInstance: AxiosInstance | null = null;
-
 const createAxiosInstance = (): AxiosInstance => {
     const instance = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7047/api',

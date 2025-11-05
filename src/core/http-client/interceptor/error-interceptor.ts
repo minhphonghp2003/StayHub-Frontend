@@ -3,19 +3,20 @@ import { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axio
 export const errorInterceptor = async (error: AxiosError): Promise<AxiosError> => {
     const status = error.response?.status;
 
-    console.log(error);
-
+    // TODO 401 handler
     switch (status) {
         case 400:
             console.warn('[Axios] Bad Request:', error.response?.data);
             break;
         case 401:
             console.warn('[Axios] Unauthorized — token may be expired');
-            // Optionally refresh token or redirect to login
-            // if (isBrowser) {
-            //     localStorage.removeItem('access_token');
-            //     window.location.href = '/login';
-            // }
+            if (isBrowser) {
+                localStorage.removeItem('user');
+                
+                window.location.href = '/login';
+            } else {
+
+            }
             break;
         case 403:
             console.warn('[Axios] Forbidden — no permission');
