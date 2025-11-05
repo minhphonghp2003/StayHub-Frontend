@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } fro
 import { api } from "../AxiosClient";
 import { AuthModel } from "@/core/model/RBAC/auth";
 import AuthenticationService from "@/core/service/RBAC/AuthenticationService";
+import { getAuthInfo, setAuthInfo } from "@/core/service/RBAC/TokenService";
 
 export const errorInterceptor = async (error: any) => {
     const status = error.response?.status;
@@ -62,14 +63,11 @@ export const errorInterceptor = async (error: any) => {
 
 const getRefreshToken = async (): Promise<string | undefined> => {
     if (isBrowser) {
-
-        const match = document.cookie.match(new RegExp(`(^| )${"refresh"}=([^;]+)`));
-        return match ? match[2] : undefined;
+        return (getAuthInfo()).refresh || undefined;
     } else {
-
         try {
             const { cookies } = await import('next/headers');
-            return (await cookies()).get("refresh")?.value;
+            return (await cookies()).get(refreshToken || "refresh")?.value;
         } catch {
             return undefined;
         }
@@ -79,11 +77,20 @@ const getRefreshToken = async (): Promise<string | undefined> => {
 const postRefreshToken = async (token: string): Promise<AuthModel | null> => {
     try {
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/token/refresh-token`, {
+        let client = axios.create({
+            baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7047/api',
+            timeout: 10000,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        const response = await client.post(`${process.env.NEXT_PUBLIC_API_URL}/token/refresh-token`, {
             token,
         });
         let result = response.data;
         if (result.success) {
+            setAuthInfo(result.data)
             return result.data;
         } else {
             return null;
@@ -91,8 +98,8 @@ const postRefreshToken = async (token: string): Promise<AuthModel | null> => {
     } catch {
         return null;
     }
-    return null;
 
 }
 
 const isBrowser = typeof window !== 'undefined';
+const refreshToken = process.env.NEXT_PUBLIC_REFRESH_TOKEN
