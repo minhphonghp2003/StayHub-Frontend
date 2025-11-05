@@ -63,7 +63,7 @@ export default function SignUpForm() {
                       type="text"
                       id="fname"
                       name="name"
-                      placeholder="Enter your fullname"
+                      placeholder="Tên"
                     />
                   </div>
                   {/* <!-- Last Name --> */}
@@ -75,7 +75,7 @@ export default function SignUpForm() {
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="Enter your email"
+                      placeholder="Email"
                     />
                   </div>
                 </div>
@@ -88,7 +88,7 @@ export default function SignUpForm() {
                     type="text"
                     id="username"
                     name="username"
-                    placeholder="Enter your username"
+                    placeholder="Tên đăng nhập"
                   />
                 </div>
                 {/* <!-- Password --> */}
@@ -98,7 +98,7 @@ export default function SignUpForm() {
                   </Label>
                   <div className="relative">
                     <Input
-                      placeholder="Enter your password"
+                      placeholder="Mật khẩu"
                       name="password"
                       type={showPassword ? "text" : "password"}
                     />
@@ -135,7 +135,7 @@ export default function SignUpForm() {
                 {/* <!-- Button --> */}
                 <div>
                   <button type="submit" className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    Sign Up
+                    Đăng ký
                   </button>
                 </div>
               </div>

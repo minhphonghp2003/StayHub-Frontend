@@ -1,4 +1,4 @@
-import { Outfit } from 'next/font/google';
+import { Outfit, Roboto, Be_Vietnam_Pro } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -7,10 +7,11 @@ import StoreProvider from '@/context/StoreContext';
 import ToastProvider from '@/context/ToastifyContext';
 import { ToastContainer } from 'react-toastify';
 
-const outfit = Outfit({
-  subsets: ["latin"],
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ['vietnamese', 'latin'], // Include both for broader support
+  weight: ['400', '700'], // Specify desired weights
+  variable: '--font-be-vietnam-pro', // Optional: for use with Tailwind CSS
 });
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -18,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en antialiased ">
-      <body className={`${outfit.className} dark:bg-gray-900`}>
+      <body className={`${beVietnamPro.className} dark:bg-gray-900`}>
         <StoreProvider>
           <ThemeProvider>
             <SidebarProvider>{children}</SidebarProvider>

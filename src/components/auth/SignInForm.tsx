@@ -61,7 +61,7 @@ export default function SignInForm() {
                   <Label>
                     Tên đăng nhập <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="Username" type="text" name="username" />
+                  <Input placeholder="Tên đăng nhập" type="text" name="username" />
                 </div>
                 <div>
                   <Label>
@@ -71,7 +71,7 @@ export default function SignInForm() {
                     <Input
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Mật khẩu"
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
