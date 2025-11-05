@@ -20,6 +20,34 @@ const getAuthInfo = () => {
         user, access_token, refresh
     }
 }
+const decodeJWT = (token: string) => {
+    if (!token) return null;
+
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        console.error("Invalid JWT:", e);
+        return null;
+    }
+}
+
+const isJWTExpired = (token: string) => {
+    const decoded = decodeJWT(token);
+    if (!decoded || !decoded.exp) return true; // assume expired if invalid
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decoded.exp < currentTime;
+}
+
 export {
     removeAuthInfo, setAuthInfo, getAuthInfo
 }
