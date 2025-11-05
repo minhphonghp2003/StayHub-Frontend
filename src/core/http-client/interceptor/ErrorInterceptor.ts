@@ -1,7 +1,11 @@
-import { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import { api } from "../AxiosClient";
+import { AuthModel } from "@/core/model/RBAC/auth";
+import AuthenticationService from "@/core/service/RBAC/AuthenticationService";
 
-export const errorInterceptor = async (error: AxiosError): Promise<AxiosError> => {
+export const errorInterceptor = async (error: any) => {
     const status = error.response?.status;
+    const originalRequest = error.config;
 
     // TODO 401 handler
     switch (status) {
@@ -9,13 +13,25 @@ export const errorInterceptor = async (error: AxiosError): Promise<AxiosError> =
             console.warn('[Axios] Bad Request:', error.response?.data);
             break;
         case 401:
-            console.warn('[Axios] Unauthorized — token may be expired');
-            if (isBrowser) {
-                localStorage.removeItem('user');
-                
-                window.location.href = '/login';
-            } else {
+            try {
+                const refreshToken = await getRefreshToken()
+                if (refreshToken == null) {
+                    await AuthenticationService.logout();
+                    window.location.href = '/login';
+                    return Promise.reject();
+                }
+                let result = await postRefreshToken(refreshToken);
+                if (!result) {
+                    await AuthenticationService.logout();
+                    window.location.href = '/login'; 
+                    return Promise.reject();
+                }
 
+                return api(originalRequest);
+            } catch (refreshError) {
+
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
             }
             break;
         case 403:
@@ -32,7 +48,6 @@ export const errorInterceptor = async (error: AxiosError): Promise<AxiosError> =
             break;
     }
 
-    // 🧩 Normalize error for UI consumption
     const customError = {
         status,
         message:
@@ -45,5 +60,39 @@ export const errorInterceptor = async (error: AxiosError): Promise<AxiosError> =
     return Promise.reject(customError);
 };
 
+const getRefreshToken = async (): Promise<string | undefined> => {
+    if (isBrowser) {
+
+        const match = document.cookie.match(new RegExp(`(^| )${"refresh"}=([^;]+)`));
+        return match ? match[2] : undefined;
+    } else {
+
+        try {
+            const { cookies } = await import('next/headers');
+            return (await cookies()).get("refresh")?.value;
+        } catch {
+            return undefined;
+        }
+    }
+};
+
+const postRefreshToken = async (token: string): Promise<AuthModel | null> => {
+    try {
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/token/refresh-token`, {
+            token,
+        });
+        let result = response.data;
+        if (result.success) {
+            return result.data;
+        } else {
+            return null;
+        }
+    } catch {
+        return null;
+    }
+    return null;
+
+}
 
 const isBrowser = typeof window !== 'undefined';
