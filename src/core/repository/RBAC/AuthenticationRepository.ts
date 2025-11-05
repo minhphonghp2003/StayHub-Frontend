@@ -1,7 +1,7 @@
 import { AuthModel } from "@/core/model/RBAC/auth";
-import { LoginPayload } from "@/core/payload/RBAC/login-payload";
-import { api } from "@/core/http-client/axios-client";
-import { RegisterPayload } from "@/core/payload/RBAC/register-payload";
+import { LoginPayload } from "@/core/payload/RBAC/LoginPayload";
+import { api } from "@/core/http-client/AxiosClient";
+import { RegisterPayload } from "@/core/payload/RBAC/RegisterPayload";
 
 const baseUrl: string = '/auth';
 

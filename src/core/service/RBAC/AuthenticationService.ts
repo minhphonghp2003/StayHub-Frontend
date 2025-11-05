@@ -1,7 +1,7 @@
 import { AuthModel } from "@/core/model/RBAC/auth";
-import { LoginPayload } from "@/core/payload/RBAC/login-payload";
-import { RegisterPayload } from "@/core/payload/RBAC/register-payload";
-import authRepository from "@/core/repository/RBAC/authenticaion-repository";
+import { LoginPayload } from "@/core/payload/RBAC/LoginPayload";
+import { RegisterPayload } from "@/core/payload/RBAC/RegisterPayload";
+import authRepository from "@/core/repository/RBAC/AuthenticationRepository";
 
 const login = async ({ username, password }: LoginPayload): Promise<BaseResponse<AuthModel>> => {
     var result = await authRepository.login({ username, password })

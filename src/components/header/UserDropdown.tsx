@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import authenticationService from "@/core/service/RBAC/authentication-service";
+import authenticationService from "@/core/service/RBAC/AuthenticationService";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);

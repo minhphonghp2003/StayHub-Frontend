@@ -7,7 +7,7 @@ import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import OauthOption from "./OauthOption";
-import authenticationService from "@/core/service/RBAC/authentication-service";
+import authenticationService from "@/core/service/RBAC/AuthenticationService";
 import { showToast } from "@/utils/alert-helper";
 import { toast } from "react-toastify";
 
