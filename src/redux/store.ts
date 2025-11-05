@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import demoReducer from './features/demo/demo-slice';
+import userReducer from './features/RBAC/UserSlice';
 export const store = () => {
     return configureStore({
         reducer: {
             demo: demoReducer,
+            user: userReducer
         },
     })
 }

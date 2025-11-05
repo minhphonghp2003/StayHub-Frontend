@@ -8,7 +8,6 @@ export const errorInterceptor = async (error: any) => {
     const status = error.response?.status;
     const originalRequest = error.config;
 
-    // TODO 401 handler
     switch (status) {
         case 400:
             console.warn('[Axios] Bad Request:', error.response?.data);
