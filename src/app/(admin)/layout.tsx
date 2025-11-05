@@ -1,10 +1,12 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
+import { Menu } from "@/core/model/RBAC/menu";
+import MenuService from "@/core/service/RBAC/MenuService";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function AdminLayout({
   children,
@@ -12,6 +14,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  let [menus, setMenus] = useState<Menu[]>([]);
+  let fetchMenus = async () => {
+    let result = await MenuService.getMyMenus();
+    setMenus(result);
+  }
+  useEffect(() => {
+    fetchMenus()
+  }, [])
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen

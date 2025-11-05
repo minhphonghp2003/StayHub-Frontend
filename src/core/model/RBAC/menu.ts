@@ -1,4 +1,4 @@
-interface Menu extends BaseModel {
+export interface Menu extends BaseModel {
     name?: string;
     icon?: string;
     path?: string;

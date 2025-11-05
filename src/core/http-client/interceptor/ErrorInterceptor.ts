@@ -17,20 +17,20 @@ export const errorInterceptor = async (error: any) => {
                 const refreshToken = await getRefreshToken()
                 if (refreshToken == null) {
                     await AuthenticationService.logout();
-                    window.location.href = '/login';
+                    window.location.href = '/signin';
                     return Promise.reject();
                 }
                 let result = await postRefreshToken(refreshToken);
                 if (!result) {
                     await AuthenticationService.logout();
-                    window.location.href = '/login'; 
+                    window.location.href = '/signin';
                     return Promise.reject();
                 }
 
                 return api(originalRequest);
             } catch (refreshError) {
 
-                window.location.href = '/login';
+                window.location.href = '/signin';
                 return Promise.reject(refreshError);
             }
             break;
