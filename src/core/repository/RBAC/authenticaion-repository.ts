@@ -1,6 +1,7 @@
 import { AuthModel } from "@/core/model/RBAC/auth";
 import { LoginPayload } from "@/core/payload/RBAC/login-payload";
 import { api } from "@/core/http-client/axios-client";
+import { RegisterPayload } from "@/core/payload/RBAC/register-payload";
 
 const baseUrl: string = '/auth';
 
@@ -13,6 +14,11 @@ const logout = async ({ refreshToken }: { refreshToken: string }): Promise<BaseR
     const response = await api.post(`${baseUrl}/logout`, { refreshToken });
     return response.data;
 };
+
+const register = async (payload: RegisterPayload): Promise<BaseResponse<AuthModel>> => {
+    const response = await api.post(`${baseUrl}/register`, payload);
+    return response.data;
+};
 export default {
-    login, logout
+    login, logout, register
 };

@@ -1,5 +1,6 @@
 import { AuthModel } from "@/core/model/RBAC/auth";
 import { LoginPayload } from "@/core/payload/RBAC/login-payload";
+import { RegisterPayload } from "@/core/payload/RBAC/register-payload";
 import authRepository from "@/core/repository/RBAC/authenticaion-repository";
 
 const login = async ({ username, password }: LoginPayload): Promise<BaseResponse<AuthModel>> => {
@@ -18,6 +19,13 @@ const logout = async (): Promise<BaseResponse<boolean>> => {
     }
     return result;
 }
+const register = async (payload:RegisterPayload): Promise<BaseResponse<AuthModel>> => {
+    var result = await authRepository.register(payload)
+    if (result.success && result.data?.token) {
+        localStorage.setItem('user', JSON.stringify(result.data));
+    }
+    return result;
+}
 export default {
-    login, logout
+    login, logout,register
 };
