@@ -8,10 +8,14 @@ import React, { useState } from "react";
 import OauthOption from "./OauthOption";
 import authenticationService from "@/core/service/RBAC/AuthenticationService";
 import { showToast } from "@/utils/alert-helper";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/features/RBAC/UserSlice";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const dispatch = useDispatch();
   async function onRegister(e: any) {
     e.preventDefault();
     const formData = new FormData(e.target); // Create FormData object from the form element
@@ -29,6 +33,8 @@ export default function SignUpForm() {
         }
       })
     } else {
+
+      dispatch(setUser(result.data!))
       showToast({
         type: "success",
         content: result.message,

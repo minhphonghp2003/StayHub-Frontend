@@ -10,10 +10,14 @@ import OauthOption from "./OauthOption";
 import authenticationService from "@/core/service/RBAC/AuthenticationService";
 import { showToast } from "@/utils/alert-helper";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/features/RBAC/UserSlice";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  const dispatch = useDispatch();
   let onLogin = async (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.target); // Create FormData object from the form element
@@ -29,6 +33,7 @@ export default function SignInForm() {
         }
       })
     } else {
+      dispatch(setUser(result.data!))
       showToast({
         type: "success",
         content: result.message,
