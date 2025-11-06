@@ -14,12 +14,7 @@ import { getAuthInfo } from "@/core/service/RBAC/TokenService";
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [user, setUser] = useState<AuthModel | null>()
-  useEffect(() => {
-    let result = getAuthInfo()
-    setUser(result.user)
-  }, [])
-
+  const user = useSelector((state: RootState) => state.user.value)
   function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.stopPropagation();
     setIsOpen((prev) => !prev);

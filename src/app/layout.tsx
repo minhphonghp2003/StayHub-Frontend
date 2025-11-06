@@ -5,7 +5,7 @@ import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import StoreProvider from '@/context/StoreContext';
 import { ToastContainer } from 'react-toastify';
-// TODO set current user, Logo, brand, slogan, favicon
+// TODO  Logo, brand, slogan, favicon
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese', 'latin'], // Include both for broader support
   weight: ['400', '700'], // Specify desired weights
