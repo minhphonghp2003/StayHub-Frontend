@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en antialiased ">
-      <body className={`${beVietnamPro.className} dark:bg-gray-900`}>
+      <body className={`${beVietnamPro.className} dark:bg-black`}>
         <StoreProvider>
           <ThemeProvider>
             <SidebarProvider>{children}</SidebarProvider>

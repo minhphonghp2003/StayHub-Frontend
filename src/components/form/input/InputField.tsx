@@ -34,7 +34,7 @@ const Input: FC<InputProps> = ({
   hint,
 }) => {
   // Determine input styles based on state (disabled, success, error)
-  let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${className}`;
+  let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${className}`;
 
   // Add styles for the different states
   if (disabled) {
@@ -44,7 +44,7 @@ const Input: FC<InputProps> = ({
   } else if (success) {
     inputClasses += ` text-success-500 border-success-400 focus:ring-success-500/10 focus:border-success-300  dark:text-success-400 dark:border-success-500`;
   } else {
-    inputClasses += ` bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:focus:border-brand-800`;
+    inputClasses += ` bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:focus:border-brand-800`;
   }
 
   return (
@@ -66,13 +66,12 @@ const Input: FC<InputProps> = ({
       {/* Optional Hint Text */}
       {hint && (
         <p
-          className={`mt-1.5 text-xs ${
-            error
+          className={`mt-1.5 text-xs ${error
               ? "text-error-500"
               : success
-              ? "text-success-500"
-              : "text-gray-500"
-          }`}
+                ? "text-success-500"
+                : "text-gray-500"
+            }`}
         >
           {hint}
         </p>

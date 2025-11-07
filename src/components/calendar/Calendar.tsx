@@ -87,12 +87,12 @@ const Calendar: React.FC = () => {
         prevEvents.map((event) =>
           event.id === selectedEvent.id
             ? {
-                ...event,
-                title: eventTitle,
-                start: eventStartDate,
-                end: eventEndDate,
-                extendedProps: { calendar: eventLevel },
-              }
+              ...event,
+              title: eventTitle,
+              start: eventStartDate,
+              end: eventEndDate,
+              extendedProps: { calendar: eventLevel },
+            }
             : event
         )
       );
@@ -171,7 +171,7 @@ const Calendar: React.FC = () => {
                   type="text"
                   value={eventTitle}
                   onChange={(e) => setEventTitle(e.target.value)}
-                  className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                  className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                 />
               </div>
             </div>
@@ -201,9 +201,8 @@ const Calendar: React.FC = () => {
                           />
                           <span className="flex items-center justify-center w-5 h-5 mr-2 border border-gray-300 rounded-full box dark:border-gray-700">
                             <span
-                              className={`h-2 w-2 rounded-full bg-white ${
-                                eventLevel === key ? "block" : "hidden"
-                              }`}  
+                              className={`h-2 w-2 rounded-full bg-white ${eventLevel === key ? "block" : "hidden"
+                                }`}
                             ></span>
                           </span>
                         </span>
@@ -225,7 +224,7 @@ const Calendar: React.FC = () => {
                   type="date"
                   value={eventStartDate}
                   onChange={(e) => setEventStartDate(e.target.value)}
-                  className="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                  className="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                 />
               </div>
             </div>
@@ -240,7 +239,7 @@ const Calendar: React.FC = () => {
                   type="date"
                   value={eventEndDate}
                   onChange={(e) => setEventEndDate(e.target.value)}
-                  className="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                  className="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                 />
               </div>
             </div>

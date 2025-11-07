@@ -36,34 +36,22 @@
   --color-current: currentColor;
   --color-transparent: transparent;
   --color-white: #ffffff;
-  --color-black: #101828;
+  --color-black: #0b0e11; 
 
-  --color-brand-25: #f2f7ff;
-  --color-brand-50: #ecf3ff;
-  --color-brand-100: #dde9ff;
-  --color-brand-200: #c2d6ff;
-  --color-brand-300: #9cb9ff;
-  --color-brand-400: #7592ff;
-  --color-brand-500: #465fff;
-  --color-brand-600: #3641f5;
-  --color-brand-700: #2a31d8;
-  --color-brand-800: #252dae;
-  --color-brand-900: #262e89;
-  --color-brand-950: #161950;
+  --color-brand-25:  #fffdf5;   /* very light background */
+  --color-brand-50:  #fff9e8;   /* hover / bg subtle */
+  --color-brand-100: #fff2c2;   /* card bg */
+  --color-brand-200: #ffe480;   /* highlight tint */
+  --color-brand-300: #fed85e;   /* primary (main Revi yellow) */
+  --color-brand-400: #f5c94d;   /* hover state */
+  --color-brand-500: #e5b84b;   /* stronger yellow */
+  --color-brand-600: #c89e3d;   /* press / border */
+  --color-brand-700: #a57f2d;   /* darker tone */
+  --color-brand-800: #856520;   /* strong dark yellow */
+  --color-brand-900: #4d380f;   /* deep accent */
+  --color-brand-950: #2e2208;   /* almost brown-black */
 
-  --color-blue-light-25: #f5fbff;
-  --color-blue-light-50: #f0f9ff;
-  --color-blue-light-100: #e0f2fe;
-  --color-blue-light-200: #b9e6fe;
-  --color-blue-light-300: #7cd4fd;
-  --color-blue-light-400: #36bffa;
-  --color-blue-light-500: #0ba5ec;
-  --color-blue-light-600: #0086c9;
-  --color-blue-light-700: #026aa2;
-  --color-blue-light-800: #065986;
-  --color-blue-light-900: #0b4a6f;
-  --color-blue-light-950: #062c41;
-
+  /* === NEUTRALS (balanced contrast) === */
   --color-gray-25: #fcfcfd;
   --color-gray-50: #f9fafb;
   --color-gray-100: #f2f4f7;
@@ -78,19 +66,34 @@
   --color-gray-950: #0c111d;
   --color-gray-dark: #1a2231;
 
+  /* === LIGHT YELLOW (replaces yellow-light, used for highlights, info, links, hover states) === */
+  --color-yellow-light-25: #fffcf5;
+  --color-yellow-light-50: #fff9e8;
+  --color-yellow-light-100: #fff3c2;
+  --color-yellow-light-200: #ffe990;
+  --color-yellow-light-300: #ffdf5e;
+  --color-yellow-light-400: #fed85e;
+  --color-yellow-light-500: #eac04d;
+  --color-yellow-light-600: #c89e3d;
+  --color-yellow-light-700: #9b772b;
+  --color-yellow-light-800: #70541e;
+  --color-yellow-light-900: #3e2e10;
+  --color-yellow-light-950: #1f1607;
+  /* === ORANGE (used for warmth / secondary highlights) === */
   --color-orange-25: #fffaf5;
-  --color-orange-50: #fff6ed;
-  --color-orange-100: #ffead5;
-  --color-orange-200: #fddcab;
-  --color-orange-300: #feb273;
-  --color-orange-400: #fd853a;
-  --color-orange-500: #fb6514;
-  --color-orange-600: #ec4a0a;
-  --color-orange-700: #c4320a;
-  --color-orange-800: #9c2a10;
-  --color-orange-900: #7e2410;
-  --color-orange-950: #511c10;
+  --color-orange-50: #fff5e1;
+  --color-orange-100: #ffe4b8;
+  --color-orange-200: #ffcc85;
+  --color-orange-300: #fdb64b;
+  --color-orange-400: #f79009;
+  --color-orange-500: #dc6803;
+  --color-orange-600: #b54708;
+  --color-orange-700: #93370d;
+  --color-orange-800: #7a2e0e;
+  --color-orange-900: #4e1d09;
+  --color-orange-950: #2a0f04;
 
+  /* === SUCCESS (adjusted to harmonize with gold) === */
   --color-success-25: #f6fef9;
   --color-success-50: #ecfdf3;
   --color-success-100: #d1fadf;
@@ -104,6 +107,7 @@
   --color-success-900: #054f31;
   --color-success-950: #053321;
 
+  /* === ERROR === */
   --color-error-25: #fffbfa;
   --color-error-50: #fef3f2;
   --color-error-100: #fee4e2;
@@ -117,8 +121,9 @@
   --color-error-900: #7a271a;
   --color-error-950: #55160c;
 
-  --color-warning-25: #fffcf5;
-  --color-warning-50: #fffaeb;
+  /* === WARNING (harmonized with Revi gold) === */
+  --color-warning-25: #fffdf6;
+  --color-warning-50: #fff9e8;
   --color-warning-100: #fef0c7;
   --color-warning-200: #fedf89;
   --color-warning-300: #fec84b;
@@ -130,34 +135,37 @@
   --color-warning-900: #7a2e0e;
   --color-warning-950: #4e1d09;
 
+  /* === THEME ACCENTS === */
   --color-theme-pink-500: #ee46bc;
-
   --color-theme-purple-500: #7a5af8;
 
-  --shadow-theme-md:
-    0px 4px 8px -2px rgba(16, 24, 40, 0.1),
-    0px 2px 4px -2px rgba(16, 24, 40, 0.06);
-  --shadow-theme-lg:
-    0px 12px 16px -4px rgba(16, 24, 40, 0.08),
-    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  /* === SHADOWS (soft + readable on golds/grays) === */
+  --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   --shadow-theme-sm:
     0px 1px 3px 0px rgba(16, 24, 40, 0.1),
     0px 1px 2px 0px rgba(16, 24, 40, 0.06);
-  --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  --shadow-theme-md:
+    0px 4px 8px -2px rgba(16, 24, 40, 0.08),
+    0px 2px 4px -2px rgba(16, 24, 40, 0.04);
+  --shadow-theme-lg:
+    0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
   --shadow-theme-xl:
     0px 20px 24px -4px rgba(16, 24, 40, 0.08),
     0px 8px 8px -4px rgba(16, 24, 40, 0.03);
-  --shadow-datepicker: -5px 0 0 #262d3c, 5px 0 0 #262d3c;
-  --shadow-focus-ring: 0px 0px 0px 4px rgba(70, 95, 255, 0.12);
+
+  --shadow-datepicker: -5px 0 0 #2a2e3c, 5px 0 0 #2a2e3c;
+  --shadow-focus-ring: 0px 0px 0px 4px rgba(254, 216, 94, 0.4); /* gold focus glow */
   --shadow-slider-navigation:
-    0px 1px 2px 0px rgba(16, 24, 40, 0.1), 0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+    0px 1px 2px 0px rgba(16, 24, 40, 0.1),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
   --shadow-tooltip:
     0px 4px 6px -2px rgba(16, 24, 40, 0.05),
     -8px 0px 20px 8px rgba(16, 24, 40, 0.05);
 
   --drop-shadow-4xl:
-    0 35px 35px rgba(0, 0, 0, 0.25), 0 45px 65px rgba(0, 0, 0, 0.15);
-
+    0 35px 35px rgba(0, 0, 0, 0.25),
+    0 45px 65px rgba(0, 0, 0, 0.15);
   --z-index-1: 1;
   --z-index-9: 9;
   --z-index-99: 99;
@@ -455,13 +463,13 @@ span.flatpickr-weekday,
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: #465fff;
+  background: #fed85e;
   @apply !border-brand-500 !bg-brand-500 hover:!border-brand-50 hover:!bg-brand-500;
 }
 .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
 .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n + 1)),
 .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
-  box-shadow: -10px 0 0 #465fff;
+  box-shadow: -10px 0 0 #fed85e;
 }
 
 .flatpickr-months .flatpickr-prev-month svg,
