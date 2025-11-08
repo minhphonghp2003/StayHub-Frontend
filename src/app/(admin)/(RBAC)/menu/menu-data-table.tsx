@@ -43,7 +43,10 @@ interface DataTableProps<TData, TValue> {
     onAddClicked?: any
     onExportClicked?: any,
     actions?: ReactNode[],
-    onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined
+    onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined,
+    currentPage: number,
+    totalPage: number,
+    onPageChange: (page: number) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -52,7 +55,10 @@ export function DataTable<TData, TValue>({
     onAddClicked,
     onExportClicked,
     actions,
-    onSearch
+    onSearch,
+    currentPage,
+    totalPage,
+    onPageChange
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -75,42 +81,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div >
-            {/* Header */}
-            <div className="flex items-center gap-2 justify-between py-4">
-                <div className="flex w-full items-center justify-between rounded-3xl">
-                    {
-
-                        onSearch && <div className="relative w-full max-w-xl">
-                            <Input
-                                placeholder="Tìm kiếm..."
-                                onChange={onSearch}
-                            />
-                        </div>
-                    }
-                </div>
-                {
-                    onAddClicked && <Button
-                        onClick={onAddClicked}
-                        variant="outline"
-                        size="icon"
-                    >
-                        <Plus className="h-4 w-4" />
-                    </Button>}
-                {actions?.map(e => e)}
-
-                {
-
-                    onExportClicked && <Button
-                        onClick={onExportClicked}
-                        variant="outline"
-                    >
-                        <Upload className="h-4 w-4" />
-                        <span>Export</span>
-                    </Button>
-                }
-
-            </div>
-            {/* Table */}
+            <DataTableHeader onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
             <div className="overflow-hidden rounded-md border  p-2">
                 <Table>
                     <TableHeader>
@@ -149,89 +120,143 @@ export function DataTable<TData, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    Chưa có dữ liệu
                                 </TableCell>
+
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </div>
 
-            {/* Pagination */}
-            <Pagination className="flex items-center justify-end space-x-2 py-4">
-                <PaginationContent>
-                    {/* Previous */}
-                    <PaginationItem>
-                        <PaginationPrevious
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                table.previousPage()
-                            }}
-                            className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : ""}
-                        />
-                    </PaginationItem>
-
-                    {/* Page numbers */}
-                    {(() => {
-                        const totalPages = table.getPageCount()
-                        const currentPage = table.getState().pagination.pageIndex + 1
-                        const pages: (number | string)[] = []
-
-                        if (totalPages <= 7) {
-                            for (let i = 1; i <= totalPages; i++) pages.push(i)
-                        } else {
-                            if (currentPage <= 4) {
-                                pages.push(1, 2, 3, 4, 5, "...", totalPages)
-                            } else if (currentPage >= totalPages - 3) {
-                                pages.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
-                            } else {
-                                pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages)
-                            }
-                        }
-
-                        return pages.map((page, idx) =>
-                            page === "..." ? (
-                                <PaginationItem key={idx}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : (
-                                <PaginationItem key={idx}>
-                                    <PaginationLink
-                                        href="#"
-                                        isActive={page === currentPage}
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            if (typeof page === "number") {
-                                                table.setPageIndex(page - 1)
-                                            }
-                                        }}
-                                    // className={
-                                    //     page === currentPage
-                                    //         ? "border-yellow-400 text-yellow-600 bg-yellow-50"
-                                    //         : "hover:bg-yellow-50"
-                                    // }
-                                    >
-                                        {page}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            )
-                        )
-                    })()}
-
-                    {/* Next */}
-                    <PaginationItem>
-                        <PaginationNext
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                table.nextPage()
-                            }}
-                            className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : ""}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+            <DataTablePaginating currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
         </div >
+    )
+}
+
+
+export default function DataTableHeader(
+    { onAddClicked, onExportClicked, onSearch, actions }:
+        {
+            onAddClicked?: any
+            onExportClicked?: any,
+            actions?: ReactNode[],
+            onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined
+        }
+) {
+    return (
+        <div className="flex items-center gap-2 justify-between py-4">
+            <div className="flex w-full items-center justify-between rounded-3xl">
+                {
+
+                    onSearch && <div className="relative w-full max-w-xl">
+                        <Input
+                            placeholder="Tìm kiếm..."
+                            onChange={onSearch}
+                        />
+                    </div>
+                }
+            </div>
+            {
+                onAddClicked && <Button
+                    onClick={onAddClicked}
+                    variant="outline"
+                    size="icon"
+                >
+                    <Plus className="h-4 w-4" />
+                </Button>}
+            {actions?.map(e => e)}
+
+            {
+
+                onExportClicked && <Button
+                    onClick={onExportClicked}
+                    variant="outline"
+                >
+                    <Upload className="h-4 w-4" />
+                    <span>Export</span>
+                </Button>
+            }
+
+        </div>
+    )
+}
+
+
+function DataTablePaginating({ currentPage,
+    totalPages,
+    onPageChange, }: {
+        currentPage: number;
+        totalPages: number;
+        onPageChange: (page: number) => void;
+    }) {
+    return (
+        <Pagination className="flex items-center justify-end space-x-2 py-4">
+            <PaginationContent>
+                {/* Previous */}
+                <PaginationItem>
+                    <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onPageChange(currentPage - 1)
+                        }}
+                        className={currentPage == 1 ? "pointer-events-none opacity-50" : ""}
+                    />
+                </PaginationItem>
+
+                {/* Page numbers */}
+                {(() => {
+                    const pages: (number | string)[] = []
+
+                    if (totalPages <= 7) {
+                        for (let i = 1; i <= totalPages; i++) pages.push(i)
+                    } else {
+                        if (currentPage <= 4) {
+                            pages.push(1, 2, 3, 4, 5, "...", totalPages)
+                        } else if (currentPage >= totalPages - 3) {
+                            pages.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+                        } else {
+                            pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages)
+                        }
+                    }
+
+                    return pages.map((page, idx) =>
+                        page === "..." ? (
+                            <PaginationItem key={idx}>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                        ) : (
+                            <PaginationItem key={idx}>
+                                <PaginationLink
+                                    href="#"
+                                    isActive={page === currentPage}
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        if (typeof page === "number") {
+                                            // table.setPageIndex(page - 1)
+                                        }
+                                    }}
+                                >
+                                    {page}
+                                </PaginationLink>
+                            </PaginationItem>
+                        )
+                    )
+                })()}
+
+                {/* Next */}
+                <PaginationItem>
+                    <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onPageChange(currentPage + 1)
+                        }}
+                        className={currentPage == totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
     )
 }

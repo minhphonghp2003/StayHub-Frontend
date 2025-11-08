@@ -25,6 +25,7 @@ function MenuPage() {
     };
     let action = [
         <Button
+            key="1"
             variant="outline"
             size="icon"
         >
@@ -35,7 +36,9 @@ function MenuPage() {
             <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
             <ComponentCard title="Danh sách Menu" >
                 <DataTable columns={columns} data={data} actions={action} onAddClicked={openModal} onExportClicked={openModal} onSearch={(e) => {
-                    console.log(e.target.value);
+                    console.log(e.target.value)
+                }} currentPage={5} totalPage={10} onPageChange={function (page: number): void {
+                    console.log(page);
                 }} />
             </ComponentCard>
             <Modal
