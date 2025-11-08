@@ -12,8 +12,8 @@ const buttonVariants = cva(
         default: "bg-brand-300 text-brand-950 hover:bg-brand-350 active:bg-brand-400 focus-visible:ring-brand-350",
         secondary: "bg-brand-200 text-brand-900 hover:bg-brand-250 active:bg-brand-150 focus-visible:ring-brand-250",
         destructive: "bg-destructive text-white hover:bg-destructive/90 active:bg-destructive-600 focus-visible:ring-destructive-400",
-        outline: "items-center justify-center text-gray-500 border-gray-200 rounded-lg z-99999 dark:border-gray-800 lg:flex dark:text-gray-400 lg:border",
-        ghost: "hover:bg-brand-50 hover:text-brand-900 dark:hover:bg-brand-100/50",
+        outline: "relative dropdown-toggle flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 hover:text-gray-700  hover:bg-gray-100 dark:border-gray-800 dark:bg-black dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white",
+        ghost: "hover:bg-gray-100 hover:text-gray-700 hover:text-brand-900 dark:hover:bg-gray-800 dark:hover:text-white",
         link: "text-brand-300 underline-offset-4 hover:underline",
       },
       size: {

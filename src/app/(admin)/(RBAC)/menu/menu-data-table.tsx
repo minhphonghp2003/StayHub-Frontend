@@ -206,11 +206,11 @@ export function DataTable<TData, TValue>({
                                                 table.setPageIndex(page - 1)
                                             }
                                         }}
-                                        className={
-                                            page === currentPage
-                                                ? "border-yellow-400 text-yellow-600 bg-yellow-50"
-                                                : "hover:bg-yellow-50"
-                                        }
+                                    // className={
+                                    //     page === currentPage
+                                    //         ? "border-yellow-400 text-yellow-600 bg-yellow-50"
+                                    //         : "hover:bg-yellow-50"
+                                    // }
                                     >
                                         {page}
                                     </PaginationLink>
