@@ -6,8 +6,11 @@ interface ModalProps {
   onClose: () => void;
   className?: string;
   children: React.ReactNode;
-  showCloseButton?: boolean; // New prop to control close button visibility
-  isFullscreen?: boolean; // Default to false for backwards compatibility
+  showCloseButton?: boolean;
+  closeOnOutsideClick?: boolean;
+  closeOnEsc?: boolean;
+  size?: "md" | "lg" | "xl" | "2xl"; // size variants
+  isFullscreen?: boolean; // fullscreen option
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -15,34 +18,30 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   children,
   className,
-  showCloseButton = true, // Default to true for backwards compatibility
+  showCloseButton = true,
+  closeOnOutsideClick = true,
+  closeOnEsc = true,
+  size = "md", // default size is now md
   isFullscreen = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
+  // Handle Escape key
   useEffect(() => {
+    if (!closeOnEsc) return;
+
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
+      if (event.key === "Escape") onClose();
     };
 
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-    }
+    if (isOpen) document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose, closeOnEsc]);
 
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [isOpen, onClose]);
-
+  // Prevent body scroll
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
+    if (isOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "unset";
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -50,22 +49,30 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
+  // Modal width/height based on size or fullscreen
+  const sizeClasses = {
+    md: "max-w-2xl", // ~32rem
+    lg: "max-w-3xl", // ~48rem
+    xl: "max-w-5xl", // ~80rem
+    "2xl": "max-w-7xl", // ~112rem
+  };
+
   const contentClasses = isFullscreen
-    ? "w-full h-full"
-    : "relative w-full rounded-3xl bg-white  dark:bg-black";
+    ? "w-full h-full bg-white dark:bg-black" // fullscreen overrides size
+    : `relative w-full ${sizeClasses[size]} rounded-3xl bg-white dark:bg-black`;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999">
-      {!isFullscreen && (
-        <div
-          className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
-          onClick={onClose}
-        ></div>
-      )}
+      {/* Backdrop always visible */}
+      <div
+        className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
+        onClick={closeOnOutsideClick ? onClose : undefined}
+      ></div>
+
       <div
         ref={modalRef}
-        className={`${contentClasses}  ${className}`}
-        onClick={(e) => e.stopPropagation()}
+        className={`${contentClasses} ${className}`}
+        onClick={(e) => e.stopPropagation()} // prevent click inside from closing
       >
         {showCloseButton && (
           <button

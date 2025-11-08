@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { useModal } from '@/hooks/useModal'
 import { Modal } from '@/components/ui/modal'
 import { SlidersHorizontal } from 'lucide-react'
+import ActionModal from '@/components/ui/modal/ActionModal'
 
 function MenuPage() {
     let [data, setData] = useState<Menu[]>([])
@@ -32,34 +33,9 @@ function MenuPage() {
             }} currentPage={5} totalPage={10} onPageChange={function (page: number): void {
                 console.log(page)
             }} name="Danh sách Menu" />
-            <Modal
-                isOpen={isOpen}
-                onClose={closeModal}
-                className="max-w-[600px] p-5 lg:p-10"
-            >
-                <h4 className="font-semibold text-gray-800 mb-7 text-title-sm dark:text-white/90">
-                    Modal Heading
-                </h4>
-                <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Pellentesque euismod est quis mauris lacinia pharetra. Sed a ligula
-                    ac odio condimentum aliquet a nec nulla. Aliquam bibendum ex sit
-                    amet ipsum rutrum feugiat ultrices enim quam.
-                </p>
-                <p className="mt-5 text-sm leading-6 text-gray-500 dark:text-gray-400">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Pellentesque euismod est quis mauris lacinia pharetra. Sed a ligula
-                    ac odio.
-                </p>
-                <div className="flex items-center justify-end w-full gap-3 mt-8">
-                    <Button size="sm" variant="outline" onClick={closeModal}>
-                        Close
-                    </Button>
-                    <Button size="sm" onClick={handleAddMenu}>
-                        Save Changes
-                    </Button>
-                </div>
-            </Modal>
+            <ActionModal isOpen={isOpen} closeModal={closeModal} onConfirm={handleAddMenu} heading={"Thêm mới menu"} >
+                hihi
+            </ActionModal>
         </div>
     )
 }

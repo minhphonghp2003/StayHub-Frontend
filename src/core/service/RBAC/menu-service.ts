@@ -40,7 +40,7 @@ const setActivateMenu = async (id: number, activated: boolean): Promise<boolean 
 
 const deleteMenu = async (id: number): Promise<boolean | null> => {
     const result = await menuRepository.deleteMenu(id);
-    return result.success ? result.data ?? null : null;
+    return result.success ? result.data??null : null;
 };
 
 export default {
