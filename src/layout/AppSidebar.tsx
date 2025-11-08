@@ -34,19 +34,23 @@ const navItems: NavItem[] = [
   },
   {
     icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
+    name: "Action",
+    path: "/action",
   },
   {
     icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
+    name: "User",
+    path: "/user",
   },
-
   {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
+    icon: <UserCircleIcon />,
+    name: "Role",
+    path: "/role",
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "Menu",
+    path: "/menu",
   },
   {
     name: "Tables",
@@ -65,10 +69,14 @@ const navItems: NavItem[] = [
 
 const othersItems: NavItem[] = [
   {
+    icon: <UserCircleIcon />,
+    name: "Category",
+    path: "/category",
+  },
+  {
     icon: <PieChartIcon />,
-    name: "Charts",
+    name: "Catalog",
     subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
       { name: "Bar Chart", path: "/bar-chart", pro: false },
     ],
   },
