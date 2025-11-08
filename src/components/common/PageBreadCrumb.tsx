@@ -3,7 +3,7 @@ import React from "react";
 
 interface BreadcrumbProps {
   pageTitle: string;
-  pagePath: string;
+  pagePath?: string | null;
   subTitle?: string[] | null
 }
 
@@ -42,7 +42,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, pagePath, subTit
               </svg>
             </Link>
           </li>
-          <Link href={pagePath}>
+          <Link href={pagePath ?? '/'}>
             <li className={`text-sm  ${!subTitle ? "text-gray-800 dark:text-white/90" : "text-gray-500 dark:text-gray-400"}`}>
               {pageTitle}
             </li>
