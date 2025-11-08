@@ -3,8 +3,8 @@
 import { useSidebar } from "@/context/SidebarContext";
 import StoreProvider from "@/context/StoreContext";
 import { Menu } from "@/core/model/RBAC/Menu";
-import MenuService from "@/core/service/RBAC/MenuService";
-import { getAuthInfo } from "@/core/service/RBAC/TokenService";
+import MenuService from "@/core/service/RBAC/menu-service";
+import { getAuthInfo } from "@/core/service/RBAC/token-service";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";

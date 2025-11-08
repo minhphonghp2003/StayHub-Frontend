@@ -36,6 +36,7 @@ import React, { ReactNode } from "react"
 import Input from "@/components/form/input/InputField"
 import { Button } from "@/components/ui/shadcn/button"
 import { Plus, SlidersHorizontal, Upload } from "lucide-react"
+import ComponentCard from "@/components/common/ComponentCard"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -46,7 +47,8 @@ interface DataTableProps<TData, TValue> {
     onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined,
     currentPage: number,
     totalPage: number,
-    onPageChange: (page: number) => void;
+    onPageChange: (page: number) => void,
+    name: string
 }
 
 export function DataTable<TData, TValue>({
@@ -58,7 +60,8 @@ export function DataTable<TData, TValue>({
     onSearch,
     currentPage,
     totalPage,
-    onPageChange
+    onPageChange,
+    name
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -81,55 +84,58 @@ export function DataTable<TData, TValue>({
 
     return (
         <div >
-            <DataTableHeader onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
-            <div className="overflow-hidden rounded-md border  p-2">
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead className=" text-sm font-medium text-gray-500 tracking-wide" key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className={`transition-all [&>td]:py-5`}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
+            <ComponentCard title={name} >
+
+                <DataTableHeader onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
+                <div className="overflow-hidden rounded-md border  p-2">
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead className=" text-sm font-medium text-gray-500 tracking-wide" key={header.id}>
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    Chưa có dữ liệu
-                                </TableCell>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className={`transition-all [&>td]:py-5`}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                                        Chưa có dữ liệu
+                                    </TableCell>
 
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+                <DataTablePaginating currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
 
-            <DataTablePaginating currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
+            </ComponentCard>
         </div >
     )
 }

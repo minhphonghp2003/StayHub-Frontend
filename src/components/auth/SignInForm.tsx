@@ -6,7 +6,7 @@ import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import OauthOption from "./OauthOption";
-import authenticationService from "@/core/service/RBAC/AuthenticationService";
+import authenticationService from "@/core/service/RBAC/authentication-service";
 import { showToast } from "@/lib/alert-helper";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";

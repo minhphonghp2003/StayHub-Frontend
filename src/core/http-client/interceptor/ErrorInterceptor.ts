@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { api } from "../AxiosClient";
-import AuthenticationService from "@/core/service/RBAC/AuthenticationService";
-import { getAuthInfo, removeAuthInfo, setAuthInfo } from "@/core/service/RBAC/TokenService";
+import AuthenticationService from "@/core/service/RBAC/authentication-service";
+import { getAuthInfo, removeAuthInfo, setAuthInfo } from "@/core/service/RBAC/token-service";
 import { AuthModel } from "@/core/model/RBAC/Auth";
 
 export const errorInterceptor = async (error: any) => {

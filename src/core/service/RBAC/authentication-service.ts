@@ -1,8 +1,8 @@
 import { AuthModel } from "@/core/model/RBAC/Auth";
-import { LoginPayload } from "@/core/payload/RBAC/LoginPayload";
-import { RegisterPayload } from "@/core/payload/RBAC/RegisterPayload";
-import authRepository from "@/core/repository/RBAC/AuthenticationRepository";
-import { removeAuthInfo, setAuthInfo } from "./TokenService";
+import { LoginPayload } from "@/core/payload/RBAC/login-payload";
+import { RegisterPayload } from "@/core/payload/RBAC/register-payload";
+import authRepository from "@/core/repository/RBAC/authentication-repository";
+import { removeAuthInfo, setAuthInfo } from "./token-service";
 
 const login = async ({ username, password }: LoginPayload): Promise<BaseResponse<AuthModel>> => {
     var result = await authRepository.login({ username, password })
@@ -16,7 +16,7 @@ const logout = async (): Promise<BaseResponse<boolean>> => {
     const refreshToken = stored ? (JSON.parse(stored) as AuthModel).refreshToken : "";
     const result = await authRepository.logout({ refreshToken: refreshToken });
     removeAuthInfo()
-    
+
     return result;
 }
 const register = async (payload: RegisterPayload): Promise<BaseResponse<AuthModel>> => {

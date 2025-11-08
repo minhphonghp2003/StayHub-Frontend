@@ -4,12 +4,12 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import authenticationService from "@/core/service/RBAC/AuthenticationService";
+import authenticationService from "@/core/service/RBAC/authentication-service";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { AuthModel } from "@/core/model/RBAC/Auth";
-import { getAuthInfo } from "@/core/service/RBAC/TokenService";
+import { getAuthInfo } from "@/core/service/RBAC/token-service";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);

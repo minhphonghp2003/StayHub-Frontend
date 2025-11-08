@@ -1,10 +1,10 @@
 'use client'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import React, { useEffect, useState } from 'react'
-import { DataTable } from './menu-data-table'
+import { DataTable } from '../../../../components/ui/table/data-table'
 import { columns } from './menu-columns'
 import { Menu } from '@/core/model/RBAC/Menu';
-import MenuService from '@/core/service/RBAC/MenuService';
+import MenuService from '@/core/service/RBAC/menu-service';
 import ComponentCard from '@/components/common/ComponentCard'
 import { Button } from '@/components/ui/shadcn/button'
 import { useModal } from '@/hooks/useModal'
@@ -19,28 +19,19 @@ function MenuPage() {
         MenuService.getAllMenus().then(e => setData(e))
     }, [])
     const handleAddMenu = () => {
-        // Handle save logic here
         console.log("Saving changes...");
         closeModal();
     };
-    let action = [
-        <Button
-            key="1"
-            variant="outline"
-            size="icon"
-        >
-            <SlidersHorizontal className="h-4 w-4" />
-        </Button>]
+
     return (
         <div>
             <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
-            <ComponentCard title="Danh sách Menu" >
-                <DataTable columns={columns} data={data} actions={action} onAddClicked={openModal} onExportClicked={openModal} onSearch={(e) => {
-                    console.log(e.target.value)
-                }} currentPage={5} totalPage={10} onPageChange={function (page: number): void {
-                    console.log(page);
-                }} />
-            </ComponentCard>
+
+            <DataTable columns={columns} data={data} onAddClicked={openModal} onSearch={(e) => {
+                console.log(e.target.value)
+            }} currentPage={5} totalPage={10} onPageChange={function (page: number): void {
+                console.log(page)
+            }} name="Danh sách Menu" />
             <Modal
                 isOpen={isOpen}
                 onClose={closeModal}
