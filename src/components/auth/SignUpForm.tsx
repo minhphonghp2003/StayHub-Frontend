@@ -7,7 +7,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import OauthOption from "./OauthOption";
 import authenticationService from "@/core/service/RBAC/AuthenticationService";
-import { showToast } from "@/utils/alert-helper";
+import { showToast } from "@/lib/alert-helper";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/features/RBAC/UserSlice";
 

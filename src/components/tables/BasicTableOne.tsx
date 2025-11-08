@@ -5,7 +5,7 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "../ui/shadcn/table";
 
 import Badge from "../ui/badge/Badge";
 import Image from "next/image";
@@ -205,8 +205,8 @@ export default function BasicTableOne() {
                         order.status === "Active"
                           ? "success"
                           : order.status === "Pending"
-                          ? "warning"
-                          : "error"
+                            ? "warning"
+                            : "error"
                       }
                     >
                       {order.status}

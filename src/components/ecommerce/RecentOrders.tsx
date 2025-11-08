@@ -4,7 +4,7 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "../ui/shadcn/table";
 import Badge from "../ui/badge/Badge";
 import Image from "next/image";
 
