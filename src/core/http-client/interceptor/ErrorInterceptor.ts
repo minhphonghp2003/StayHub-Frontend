@@ -16,21 +16,25 @@ export const errorInterceptor = async (error: any) => {
             try {
                 const refreshToken = await getRefreshToken()
                 if (refreshToken == null) {
-                    await removeToken()
+                    // await removeToken()
                     window.location.href = '/signin';
                     return Promise.reject();
                 }
                 let result = await postRefreshToken(refreshToken);
                 if (!result) {
-                    await removeToken()
+                    // await removeToken()
                     window.location.href = '/signin';
                     return Promise.reject();
                 }
 
                 return api(originalRequest);
             } catch (refreshError) {
-
-                window.location.href = '/signin';
+                if (isBrowser) {
+                    window.location.href = '/signin';
+                } else {
+                    const { redirect } = await import("next/navigation");
+                    redirect("/signin");
+                }
                 return Promise.reject(refreshError);
             }
             break;
@@ -84,7 +88,6 @@ const removeToken = async () => {
         let cookieStore = await cookies();
         cookieStore.delete(accessToken || "access_token")
         cookieStore.delete(refreshToken || "refresh")
-        return (await cookies()).get(refreshToken || "refresh")?.value;
     }
 }
 

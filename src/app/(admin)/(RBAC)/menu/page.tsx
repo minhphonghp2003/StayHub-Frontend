@@ -1,9 +1,19 @@
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import React from 'react'
+import { DataTable } from './menu-data-table'
+import { columns } from './menu-columns'
+import { Menu } from '@/core/model/RBAC/Menu';
+import MenuService from '@/core/service/RBAC/MenuService';
 
-function MenuPage() {
+async function MenuPage() {
+    let data: Menu[] = [];
+    data = await MenuService.getMyMenus();
     return (
-        <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
+        <div>
+            <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
+            <DataTable columns={columns} data={data} />
+
+        </div>
     )
 }
 

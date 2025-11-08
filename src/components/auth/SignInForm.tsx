@@ -33,7 +33,6 @@ export default function SignInForm() {
         }
       })
     } else {
-      dispatch(setUser(result.data!))
       showToast({
         type: "success",
         content: result.message,
