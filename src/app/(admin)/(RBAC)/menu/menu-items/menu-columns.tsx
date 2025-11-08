@@ -12,6 +12,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/shadcn/dropdown-menu"
 import { Button } from "@/components/ui/shadcn/button"
+import { useModal } from "@/hooks/useModal"
+import AddMenuModal from "./add-menu-modal"
 const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: '2-digit',
@@ -54,32 +56,12 @@ export const menuColumns: ColumnDef<Menu>[] = [
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("updatedAt"))
             const formatted = formatter.format(amount)
-
             return <div className="text-right font-medium">{formatted}</div>
         },
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const menu = row.original
-
-            return (
-                <DropdownMenu >
-                    <DropdownMenuTrigger asChild>
-                        <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(menu.id?.toString() ?? "null")}
-                        >
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
+        cell: () => null,
     },
+
 ]

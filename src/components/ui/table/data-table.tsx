@@ -141,7 +141,7 @@ export function DataTable<TData, TValue>({
 }
 
 
-export default function DataTableHeader(
+function DataTableHeader(
     { onAddClicked, onExportClicked, onSearch, actions }:
         {
             onAddClicked?: any
