@@ -21,11 +21,10 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
     hour12: false
 });
 
-export const columns: ColumnDef<Menu>[] = [
+export const menuColumns: ColumnDef<Menu>[] = [
     {
         accessorKey: "icon",
         header: "Icon",
-
     },
     {
         accessorKey: "name",

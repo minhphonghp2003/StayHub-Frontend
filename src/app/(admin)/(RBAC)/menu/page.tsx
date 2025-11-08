@@ -2,7 +2,7 @@
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import React, { useEffect, useState } from 'react'
 import { DataTable } from '../../../../components/ui/table/data-table'
-import { columns } from './menu-columns'
+import { menuColumns } from './menu-columns'
 import { Menu } from '@/core/model/RBAC/Menu';
 import MenuService from '@/core/service/RBAC/menu-service';
 import ComponentCard from '@/components/common/ComponentCard'
@@ -11,31 +11,27 @@ import { useModal } from '@/hooks/useModal'
 import { Modal } from '@/components/ui/modal'
 import { SlidersHorizontal } from 'lucide-react'
 import ActionModal from '@/components/ui/modal/ActionModal'
+import AddMenuModal from './add-menu-modal'
 
 function MenuPage() {
     let [data, setData] = useState<Menu[]>([])
 
-    const { isOpen, openModal, closeModal } = useModal();
+    const { isOpen: isOpenAdd, openModal: openAddModal, closeModal: closeAddModal } = useModal();
     useEffect(() => {
         MenuService.getAllMenus().then(e => setData(e))
     }, [])
-    const handleAddMenu = () => {
-        console.log("Saving changes...");
-        closeModal();
-    };
+
 
     return (
         <div>
             <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
 
-            <DataTable columns={columns} data={data} onAddClicked={openModal} onSearch={(e) => {
+            <DataTable columns={menuColumns} data={data} onAddClicked={openAddModal} onSearch={(e) => {
                 console.log(e.target.value)
             }} currentPage={5} totalPage={10} onPageChange={function (page: number): void {
                 console.log(page)
             }} name="Danh sách Menu" />
-            <ActionModal isOpen={isOpen} closeModal={closeModal} onConfirm={handleAddMenu} heading={"Thêm mới menu"} >
-                hihi
-            </ActionModal>
+            <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} />
         </div>
     )
 }
