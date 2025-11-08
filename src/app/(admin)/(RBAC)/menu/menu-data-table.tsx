@@ -13,6 +13,15 @@ import {
     getPaginationRowModel,
 
 } from "@tanstack/react-table"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationPrevious,
+    PaginationNext,
+    PaginationEllipsis,
+} from "@/components/ui/shadcn/pagination"
 
 import {
     Table,
@@ -119,7 +128,7 @@ export function DataTable<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead className=" text-sm font-medium text-gray-500 tracking-wide" key={header.id}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -138,6 +147,7 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    className={`transition-all [&>td]:py-5`}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
@@ -156,24 +166,82 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
-            </div>
+
+
+            <Pagination className="flex items-center justify-end space-x-2 py-4">
+                <PaginationContent>
+                    {/* Previous */}
+                    <PaginationItem>
+                        <PaginationPrevious
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                table.previousPage()
+                            }}
+                            className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : ""}
+                        />
+                    </PaginationItem>
+
+                    {/* Page numbers */}
+                    {(() => {
+                        const totalPages = table.getPageCount()
+                        const currentPage = table.getState().pagination.pageIndex + 1
+                        const pages: (number | string)[] = []
+
+                        if (totalPages <= 7) {
+                            for (let i = 1; i <= totalPages; i++) pages.push(i)
+                        } else {
+                            if (currentPage <= 4) {
+                                pages.push(1, 2, 3, 4, 5, "...", totalPages)
+                            } else if (currentPage >= totalPages - 3) {
+                                pages.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+                            } else {
+                                pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages)
+                            }
+                        }
+
+                        return pages.map((page, idx) =>
+                            page === "..." ? (
+                                <PaginationItem key={idx}>
+                                    <PaginationEllipsis />
+                                </PaginationItem>
+                            ) : (
+                                <PaginationItem key={idx}>
+                                    <PaginationLink
+                                        href="#"
+                                        isActive={page === currentPage}
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            if (typeof page === "number") {
+                                                table.setPageIndex(page - 1)
+                                            }
+                                        }}
+                                        className={
+                                            page === currentPage
+                                                ? "border-yellow-400 text-yellow-600 bg-yellow-50"
+                                                : "hover:bg-yellow-50"
+                                        }
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            )
+                        )
+                    })()}
+
+                    {/* Next */}
+                    <PaginationItem>
+                        <PaginationNext
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                table.nextPage()
+                            }}
+                            className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : ""}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </div >
     )
 }

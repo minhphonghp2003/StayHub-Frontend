@@ -9,6 +9,7 @@ import ComponentCard from '@/components/common/ComponentCard'
 import { Button } from '@/components/ui/shadcn/button'
 import { useModal } from '@/hooks/useModal'
 import { Modal } from '@/components/ui/modal'
+import { DataTablePagination } from './datatable-pagination'
 
 function MenuPage() {
     let [data, setData] = useState<Menu[]>([])
