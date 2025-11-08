@@ -25,9 +25,7 @@ export default function UserDropdown() {
   }
   async function logout() {
     let result = await authenticationService.logout();
-    if (result) {
-      router.push("/signin");
-    }
+    router.push("/signin");
   }
 
   return (

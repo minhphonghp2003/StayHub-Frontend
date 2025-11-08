@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { api } from "../AxiosClient";
 import AuthenticationService from "@/core/service/RBAC/AuthenticationService";
-import { getAuthInfo, setAuthInfo } from "@/core/service/RBAC/TokenService";
+import { getAuthInfo, removeAuthInfo, setAuthInfo } from "@/core/service/RBAC/TokenService";
 import { AuthModel } from "@/core/model/RBAC/Auth";
 
 export const errorInterceptor = async (error: any) => {
@@ -16,13 +16,13 @@ export const errorInterceptor = async (error: any) => {
             try {
                 const refreshToken = await getRefreshToken()
                 if (refreshToken == null) {
-                    await AuthenticationService.logout();
+                    await removeToken()
                     window.location.href = '/signin';
                     return Promise.reject();
                 }
                 let result = await postRefreshToken(refreshToken);
                 if (!result) {
-                    await AuthenticationService.logout();
+                    await removeToken()
                     window.location.href = '/signin';
                     return Promise.reject();
                 }
@@ -73,6 +73,21 @@ const getRefreshToken = async (): Promise<string | undefined> => {
     }
 };
 
+const removeToken = async () => {
+    if (isBrowser) {
+        await removeAuthInfo();
+        // Optional: remove browser cookies manually if you set tokens as cookies
+        document.cookie = "access_token=; Max-Age=0; path=/; SameSite=Lax;";
+        document.cookie = "refresh=; Max-Age=0; path=/; SameSite=Lax;";
+    } else {
+        const { cookies } = await import('next/headers');
+        let cookieStore = await cookies();
+        cookieStore.delete(accessToken || "access_token")
+        cookieStore.delete(refreshToken || "refresh")
+        return (await cookies()).get(refreshToken || "refresh")?.value;
+    }
+}
+
 const postRefreshToken = async (token: string): Promise<AuthModel | null> => {
     try {
 
@@ -102,3 +117,4 @@ const postRefreshToken = async (token: string): Promise<AuthModel | null> => {
 
 const isBrowser = typeof window !== 'undefined';
 const refreshToken = process.env.NEXT_PUBLIC_REFRESH_TOKEN
+const accessToken = process.env.NEXT_PUBLIC_ACCESS_TOKEN

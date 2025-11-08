@@ -15,9 +15,8 @@ const logout = async (): Promise<BaseResponse<boolean>> => {
     const stored = localStorage.getItem('user');
     const refreshToken = stored ? (JSON.parse(stored) as AuthModel).refreshToken : "";
     const result = await authRepository.logout({ refreshToken: refreshToken });
-    if (result.success) {
-        removeAuthInfo()
-    }
+    removeAuthInfo()
+    
     return result;
 }
 const register = async (payload: RegisterPayload): Promise<BaseResponse<AuthModel>> => {
