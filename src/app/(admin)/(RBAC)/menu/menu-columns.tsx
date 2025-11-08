@@ -10,14 +10,18 @@ export const columns: ColumnDef<Menu>[] = [
     },
     {
         accessorKey: "name",
-        header: "Name",
+        header: "Tên",
     },
     {
         accessorKey: "path",
-        header: "Path",
+        header: "Đường dẫn",
     },
     {
         accessorKey: "isActive",
-        header: "IsActive",
+        header: "Hoạt động",
+    },
+    {
+        accessorKey: "updatedAt",
+        header: "Cập nhật lần cuối",
     },
 ]

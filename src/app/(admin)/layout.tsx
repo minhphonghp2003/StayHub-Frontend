@@ -41,7 +41,7 @@ export default function AdminLayout({
 
   return (
 
-    <div className="min-h-screen xl:flex">
+    <div className="min-h-screen xl:flex bg-bg-white dark:bg-bg-black">
       {/* Sidebar and Backdrop */}
       <AppSidebar />
       <Backdrop />

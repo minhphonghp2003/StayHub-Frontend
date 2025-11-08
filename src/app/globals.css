@@ -37,7 +37,9 @@
   --color-current: currentColor;
   --color-transparent: transparent;
   --color-white: #ffffff;
+  --color-bg-white: #f9fafb;
   --color-black: #0b0e11; 
+  --color-bg-black: #0b0e11; 
 
   --color-brand-25:  #fffdf5;   /* very light background */
   --color-brand-50:  #fff9e8;   /* hover / bg subtle */
