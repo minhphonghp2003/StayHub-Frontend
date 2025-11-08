@@ -9,7 +9,7 @@ import ComponentCard from '@/components/common/ComponentCard'
 import { Button } from '@/components/ui/shadcn/button'
 import { useModal } from '@/hooks/useModal'
 import { Modal } from '@/components/ui/modal'
-import { DataTablePagination } from './datatable-pagination'
+import { SlidersHorizontal } from 'lucide-react'
 
 function MenuPage() {
     let [data, setData] = useState<Menu[]>([])
@@ -23,11 +23,20 @@ function MenuPage() {
         console.log("Saving changes...");
         closeModal();
     };
+    let action = [
+        <Button
+            variant="outline"
+            size="icon"
+        >
+            <SlidersHorizontal className="h-4 w-4" />
+        </Button>]
     return (
         <div>
             <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
             <ComponentCard title="Danh sách Menu" >
-                <DataTable columns={columns} data={data} openAddModal={openModal} />
+                <DataTable columns={columns} data={data} actions={action} onAddClicked={openModal} onExportClicked={openModal} onSearch={(e) => {
+                    console.log(e.target.value);
+                }} />
             </ComponentCard>
             <Modal
                 isOpen={isOpen}
