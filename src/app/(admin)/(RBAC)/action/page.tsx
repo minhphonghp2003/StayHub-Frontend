@@ -4,8 +4,8 @@ import React from 'react'
 function ActionPage() {
     return (
         <div>
-            <PageBreadcrumb subTitle={["Subaction1"]} pagePath='/action' pageTitle="Action" />
-            ActionPage</div>
+            <PageBreadcrumb pagePath='/action' pageTitle="Action" />
+        </div>
     )
 }
 

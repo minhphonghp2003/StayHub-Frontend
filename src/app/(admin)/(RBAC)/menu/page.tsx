@@ -1,8 +1,9 @@
+import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import React from 'react'
 
 function MenuPage() {
     return (
-        <div>MenuPage</div>
+        <PageBreadcrumb pagePath='/menu' pageTitle="Menu" />
     )
 }
 
