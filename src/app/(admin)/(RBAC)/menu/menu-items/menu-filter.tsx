@@ -1,9 +1,15 @@
 import TableFilterDrawer from '@/components/ui/table/table-filtering'
-import React from 'react'
+import { TableFitler } from '@/core/model/application/filter'
+import React, { useState } from 'react'
 
-function MenuFilterDrawer({ openFilter, setOpenFilter, }: { openFilter: boolean, setOpenFilter: any, }) {
+function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, setInitFitler }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], setInitFitler: any }) {
+    let [filter, setFilter] = useState<TableFitler[]>([])
+    let onApply = (isApplied: boolean) => {
+        setOpenFilter(false)
+        setInitFitler(filter)
+    }
     return (
-        <TableFilterDrawer openFilter={openFilter} setOpenFilter={setOpenFilter} >
+        <TableFilterDrawer isOpen={isOpen} onApply={onApply} >
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
                 <div className="space-y-2">
                     <label className="text-sm font-medium">Category</label>

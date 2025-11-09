@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/shadcn/drawer"
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/shadcn/button'
-function TableFilterDrawer({ openFilter, setOpenFilter, children }: { openFilter: boolean, setOpenFilter: any, children?: any }) {
+function TableFilterDrawer({ isOpen, onApply, children }: { isOpen: boolean, onApply: any, children?: any }) {
     return (
-        <Drawer direction='right' open={openFilter} onOpenChange={setOpenFilter}>
+        <Drawer direction='right' open={isOpen} onOpenChange={onApply}>
             <DrawerContent
                 className={cn(
                     "fixed z-[100000] bg-white shadow-xl border-t md:border-t-0 md:border-l",
@@ -35,14 +35,14 @@ function TableFilterDrawer({ openFilter, setOpenFilter, children }: { openFilter
                 {/* Footer */}
                 <DrawerFooter className="border-t px-6 py-4 flex gap-2">
                     <Button
-                        onClick={() => setOpenFilter(false)}
+                        onClick={() => onApply(true)}
                     >
                         Apply Filters
                     </Button>
                     <DrawerClose asChild>
                         <Button
                             variant="outline"
-                            onClick={() => setOpenFilter(false)}
+                            onClick={() => onApply(false)}
                         >
                             Cancel
                         </Button>
