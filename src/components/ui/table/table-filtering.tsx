@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/shadcn/drawer"
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/shadcn/button'
-function TableFilterDrawer({ isOpen, onApply, children }: { isOpen: boolean, onApply: any, children?: any }) {
+function TableFilterDrawer({ isOpen, onApply, onRemoveAllFilters, children }: { isOpen: boolean, onApply: any, onRemoveAllFilters?: any, children?: any }) {
     return (
         <Drawer direction='right' open={isOpen} onOpenChange={onApply}>
             <DrawerContent
@@ -25,8 +25,8 @@ function TableFilterDrawer({ isOpen, onApply, children }: { isOpen: boolean, onA
             >
                 {/* Header */}
                 <DrawerHeader className="border-b p-4">
-                    <DrawerTitle>Filter Options</DrawerTitle>
-                    <DrawerDescription>Adjust filters and refine your results</DrawerDescription>
+                    <DrawerTitle>Bộ lọc</DrawerTitle>
+                    <DrawerDescription onClick={onRemoveAllFilters} className='cursor-pointer'>Xóa tất cả bộ lọc</DrawerDescription>
                 </DrawerHeader>
 
                 {/* Body */}
@@ -37,14 +37,14 @@ function TableFilterDrawer({ isOpen, onApply, children }: { isOpen: boolean, onA
                     <Button
                         onClick={() => onApply(true)}
                     >
-                        Apply Filters
+                        Xác nhận
                     </Button>
                     <DrawerClose asChild>
                         <Button
                             variant="outline"
                             onClick={() => onApply(false)}
                         >
-                            Cancel
+                            Hủy
                         </Button>
                     </DrawerClose>
                 </DrawerFooter>

@@ -27,7 +27,7 @@ import { TableFitler } from '@/core/model/application/filter';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-
+// TODO CRUD menu; create Filter component, 
 function MenuItem() {
     // ---------------query param------------
     const router = useRouter();
@@ -63,7 +63,7 @@ function MenuItem() {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set('page', page.toString());
         router.push(`?${currentParams.toString()}`);
-    }, 1000);
+    }, 500);
     let onSearch = useDebouncedCallback((value) => {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set('search', value);
@@ -78,11 +78,9 @@ function MenuItem() {
         });
         router.push(`?${currentParams.toString()}`);
     }
-    let onRemoveFilter = (filter: TableFitler) => {
+    let onRemoveAllFilter = () => {
         const currentParams = new URLSearchParams(searchParams.toString());
-        if (filter.code == "MENU") {
-            currentParams.delete('group');
-        }
+        currentParams.delete('group');
         router.push(`?${currentParams.toString()}`);
     }
 
@@ -122,7 +120,7 @@ function MenuItem() {
             <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} />
             <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
-            <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter}></MenuFilterDrawer>
+            <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
 
         </div>
     )

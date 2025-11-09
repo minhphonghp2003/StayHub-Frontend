@@ -6,7 +6,7 @@ import { CategoryItem } from '@/core/model/catalog/category-item'
 import { categoryItemService } from '@/core/service/catalog/category-item-service'
 import React, { useEffect, useState } from 'react'
 
-function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onFiltered }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], onFiltered: (filtered: TableFitler[]) => void }) {
+function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onRemoveAllFilters, onFiltered }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], onFiltered: (filtered: TableFitler[]) => void, onRemoveAllFilters?: any }) {
     let [groupFilter, setGroupFilter] = useState<number | null>()
     let [menuGroups, setMenuGroups] = useState<CategoryItem[]>([])
     let onApply = (isApplied: boolean) => {
@@ -29,7 +29,10 @@ function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onFiltered }: { i
 
 
     return (
-        <TableFilterDrawer isOpen={isOpen} onApply={onApply} >
+        <TableFilterDrawer isOpen={isOpen} onApply={onApply} onRemoveAllFilters={() => {
+            setOpenFilter(false)
+            onRemoveAllFilters()
+        }} >
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <label className="text-md font-semibold mb-2 block ">Nhóm menu</label>
                 <List items={menuGroups} selected={groupFilter} onClick={(e: any) => {

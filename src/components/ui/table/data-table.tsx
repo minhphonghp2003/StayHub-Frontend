@@ -225,7 +225,7 @@ function DataTableHeader(
                     variant="outline"
                 >
                     <Upload className="h-4 w-4" />
-                    <span>Export</span>
+                    <span>Xuất dữ liệu</span>
                 </Button>
             }
 
