@@ -1,7 +1,7 @@
 import { api } from "@/core/http-client/AxiosClient";
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
-import { AddMenuPayload } from "@/core/payload/menu/add-menu-payload";
-import { UpdateMenuPayload } from "@/core/payload/menu/udpate-menu-payload";
+import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
+import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
 
 const baseUrl: string = '/menu';
 const getMyMenus = async (): Promise<BaseResponse<MenuGroup[]>> => {

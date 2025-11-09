@@ -1,6 +1,6 @@
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
-import { AddMenuPayload } from "@/core/payload/menu/add-menu-payload";
-import { UpdateMenuPayload } from "@/core/payload/menu/udpate-menu-payload";
+import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
+import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
 import menuRepository from "@/core/repository/RBAC/menu-repository";
 
 const getMyMenus = async (): Promise<MenuGroup[]> => {
@@ -40,7 +40,7 @@ const setActivateMenu = async (id: number, activated: boolean): Promise<boolean 
 
 const deleteMenu = async (id: number): Promise<boolean | null> => {
     const result = await menuRepository.deleteMenu(id);
-    return result.success ? result.data??null : null;
+    return result.success ? result.data ?? null : null;
 };
 
 export default {
