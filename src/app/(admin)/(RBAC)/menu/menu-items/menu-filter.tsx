@@ -7,7 +7,7 @@ import { categoryItemService } from '@/core/service/catalog/category-item-servic
 import React, { useEffect, useState } from 'react'
 
 function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onFiltered }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], onFiltered: (filtered: TableFitler[]) => void }) {
-    let [groupFilter, setGroupFilter] = useState<number | null>(initFilter?.find(e => e.code == "MENU")?.id ?? null)
+    let [groupFilter, setGroupFilter] = useState<number | null>()
     let [menuGroups, setMenuGroups] = useState<CategoryItem[]>([])
     let onApply = (isApplied: boolean) => {
         if (isApplied) {
@@ -23,8 +23,9 @@ function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onFiltered }: { i
         setOpenFilter(false)
     }
     useEffect(() => {
+        setGroupFilter(initFilter?.find(e => e.code == "MENU")?.id ?? null)
         categoryItemService.getCategoryItemsByCategoryCode("MENU").then(e => setMenuGroups(e))
-    }, [])
+    }, [initFilter])
 
 
     return (
