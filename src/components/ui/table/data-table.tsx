@@ -84,17 +84,17 @@ export function DataTable<TData, TValue>({
 
     return (
         <div >
-            <ComponentCard title={name} >
+            <ComponentCard desc="Tỏng cộng 125" title={name} >
 
                 <DataTableHeader onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
-                <div className="overflow-hidden rounded-md border px-4   py-2">
+                <div className="overflow-hidden rounded-md border px-4  py-2">
                     <Table>
                         <TableHeader >
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => {
                                         return (
-                                            <TableHead className=" text-sm font-medium  px-4  text-gray-500 tracking-wide" key={header.id}>
+                                            <TableHead className=" text-sm font-medium  text-gray-500 tracking-wide" key={header.id}>
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(
@@ -151,7 +151,7 @@ function DataTableHeader(
         }
 ) {
     return (
-        <div className="flex items-center gap-2 justify-between py-4">
+        <div className="flex items-center gap-2 justify-between ">
             <div className="flex w-full items-center justify-between rounded-3xl">
                 {
 
@@ -166,7 +166,7 @@ function DataTableHeader(
             {
                 onAddClicked && <Button
                     onClick={onAddClicked}
-                    variant="outline"
+                    variant="default"
                     size="icon"
                 >
                     <Plus className="h-4 w-4" />

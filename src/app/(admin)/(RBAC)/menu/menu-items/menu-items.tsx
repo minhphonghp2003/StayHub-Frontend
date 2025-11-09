@@ -29,6 +29,12 @@ function MenuItem() {
     useEffect(() => {
         MenuService.getAllMenus().then(e => setMenuData(e))
     }, [])
+    let actions = [<Button
+        variant="outline"
+        size="icon"
+    >
+        <SlidersHorizontal className="h-4 w-4" />
+    </Button>]
     const columns = menuColumns.map((col) => {
         if (col.id === "actions") {
             return {
@@ -62,7 +68,7 @@ function MenuItem() {
     });
     return (
         <div>
-            <DataTable columns={columns} data={menuData} onAddClicked={openAddModal} onSearch={(e) => {
+            <DataTable columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} actions={actions} onSearch={(e) => {
                 console.log(e.target.value)
             }} currentPage={5} totalPage={10} onPageChange={function (page: number): void {
                 console.log(page)

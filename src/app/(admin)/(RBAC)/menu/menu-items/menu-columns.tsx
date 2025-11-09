@@ -25,10 +25,6 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
 
 export const menuColumns: ColumnDef<Menu>[] = [
     {
-        accessorKey: "icon",
-        header: "Icon",
-    },
-    {
         accessorKey: "name",
         header: ({ column }) => {
             return (
@@ -45,19 +41,52 @@ export const menuColumns: ColumnDef<Menu>[] = [
     },
     {
         accessorKey: "path",
-        header: "Đường dẫn",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Đường dẫn
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "isActive",
-        header: "Hoạt động",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Trạng thái
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "updatedAt",
-        header: () => <div className="text-right">Cập nhật lần cuối</div>,
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Cập nhật lần cuối
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("updatedAt"))
             const formatted = formatter.format(amount)
-            return <div className="text-right font-medium">{formatted}</div>
+            return <div className="font-medium">{formatted}</div>
         },
     },
     {
