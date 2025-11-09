@@ -1,5 +1,5 @@
 import ComponentCard from '@/components/common/ComponentCard'
-import ListPage from '@/components/ui/list/paginate-list'
+import List from '@/components/ui/list/list'
 import TableFilterDrawer from '@/components/ui/table/table-filtering'
 import { TableFitler } from '@/core/model/application/filter'
 import { CategoryItem } from '@/core/model/catalog/category-item'
@@ -32,7 +32,7 @@ function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onFiltered }: { i
         <TableFilterDrawer isOpen={isOpen} onApply={onApply} >
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <label className="text-md font-semibold mb-2 block ">Nhóm menu</label>
-                <ListPage items={menuGroups} selected={groupFilter} onClick={(e: any) => {
+                <List items={menuGroups} selected={groupFilter} onClick={(e: any) => {
                     setGroupFilter(e.id)
                 }} />
             </div>

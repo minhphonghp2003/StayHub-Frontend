@@ -47,8 +47,6 @@ interface DataTableProps<TData, TValue> {
     pageSize: number,
     onPageChange: (page: number) => void,
     name: string,
-    filters?: TableFitler[],
-    onRemoveFilter?: (filter: TableFitler) => void,
     loading: boolean
 }
 
@@ -67,8 +65,6 @@ export function DataTable<TData, TValue>({
     pageSize,
     onPageChange,
     name,
-    filters,
-    onRemoveFilter,
     loading
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -96,20 +92,6 @@ export function DataTable<TData, TValue>({
         <div >
             <ComponentCard desc={`Tổng cộng ${totalItems}`} title={name} >
                 <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
-                {/* {
-                    filters?.map((e, i) => <Badge
-                        key={i}
-                        color="light"
-                    >
-                        {e.value?.name}
-                        <button
-                            onClick={() => onRemoveFilter && onRemoveFilter(e)}
-                            className="text-gray-500 hover:text-gray-700"
-                        >
-                            <X className="h-3 w-3" />
-                        </button>
-                    </Badge>)
-                } */}
 
                 <div className="overflow-hidden rounded-md border px-4  py-2">
                     <Table>

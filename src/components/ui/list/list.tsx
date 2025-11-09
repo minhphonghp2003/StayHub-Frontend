@@ -4,7 +4,7 @@ import { CategoryItem } from '@/core/model/catalog/category-item';
 import React from 'react';
 
 
-function ListPage({ items, onClick, onPageChanged, selected }: { items?: CategoryItem[], onClick?: any, onPageChanged?: any, selected?: any }) {
+function List({ items, onClick, onPageChanged, selected }: { items?: CategoryItem[], onClick?: any, onPageChanged?: any, selected?: any }) {
     return (
         <div>
 
@@ -14,7 +14,7 @@ function ListPage({ items, onClick, onPageChanged, selected }: { items?: Categor
                     return (
                         <li
                             key={i}
-                            onClick={()=>onClick(e)}
+                            onClick={() => onClick(e)}
                             className={`cursor-pointer px-4 py-3 flex items-center justify-between ${isSelected ? "bg-brand-100 dark:bg-brand-500/[0.12]" : "hover:bg-gray-50 dark:hover:bg-gray-800/60"}  transition-colors `}
                         >
                             <span className={`${isSelected ? "text-brand-700 dark:text-brand-400" : " text-gray-800 dark:text-gray-100"}`}>{e.name}</span>
@@ -22,11 +22,10 @@ function ListPage({ items, onClick, onPageChanged, selected }: { items?: Categor
                     );
                 })}
             </ul>
-            <PaginationComponent align='center' currentPage={1} totalPages={30} onPageChange={onPageChanged} />
         </div>
     );
 }
 
 
 
-export default ListPage;
+export default List;
