@@ -42,6 +42,7 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[],
     onAddClicked?: any
+    onFilterClicked?: any,
     onExportClicked?: any,
     actions?: ReactNode[],
     onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined,
@@ -56,6 +57,7 @@ export function DataTable<TData, TValue>({
     data,
     onAddClicked,
     onExportClicked,
+    onFilterClicked,
     actions,
     onSearch,
     currentPage,
@@ -86,7 +88,7 @@ export function DataTable<TData, TValue>({
         <div >
             <ComponentCard desc="Tỏng cộng 125" title={name} >
 
-                <DataTableHeader onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
+                <DataTableHeader onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
                 <div className="overflow-hidden rounded-md border px-4  py-2">
                     <Table>
                         <TableHeader >
@@ -142,9 +144,10 @@ export function DataTable<TData, TValue>({
 
 
 function DataTableHeader(
-    { onAddClicked, onExportClicked, onSearch, actions }:
+    { onAddClicked, onFilterclicked, onExportClicked, onSearch, actions }:
         {
             onAddClicked?: any
+            onFilterclicked?: any
             onExportClicked?: any,
             actions?: ReactNode[],
             onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined
@@ -171,6 +174,16 @@ function DataTableHeader(
                 >
                     <Plus className="h-4 w-4" />
                 </Button>}
+            {
+
+                onFilterclicked && <Button
+                    onClick={onFilterclicked}
+                    variant="outline"
+                    size="icon"
+                >
+                    <SlidersHorizontal className="h-4 w-4" />
+                </Button>
+            }
             {actions?.map(e => e)}
 
             {
