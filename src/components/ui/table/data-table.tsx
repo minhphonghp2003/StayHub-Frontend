@@ -40,6 +40,7 @@ interface DataTableProps<TData, TValue> {
     onExportClicked?: any,
     actions?: ReactNode[],
     onSearch?: ((e: string | null) => void) | undefined,
+    search?: string | null,
     currentPage: number,
     totalPage: number,
     totalItems: number,
@@ -59,6 +60,7 @@ export function DataTable<TData, TValue>({
     onFilterClicked,
     actions,
     onSearch,
+    search,
     currentPage,
     totalPage,
     totalItems,
@@ -93,7 +95,7 @@ export function DataTable<TData, TValue>({
     return (
         <div >
             <ComponentCard desc={`Tổng cộng ${totalItems}`} title={name} >
-                <DataTableHeader onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
+                <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
                 {
                     filters?.map((e, i) => <Badge
                         key={i}
@@ -190,12 +192,13 @@ export function DataTable<TData, TValue>({
 
 
 function DataTableHeader(
-    { onAddClicked, onFilterclicked, onExportClicked, onSearch, actions }:
+    { onAddClicked, onFilterclicked, onExportClicked, onSearch, actions, search }:
         {
             onAddClicked?: any
             onFilterclicked?: any
             onExportClicked?: any,
             actions?: ReactNode[],
+            search?: string | null,
             onSearch?: ((e: string | null) => void) | undefined
         }
 ) {
@@ -207,6 +210,7 @@ function DataTableHeader(
                     onSearch && <div className="relative w-full max-w-xl">
                         <Input
                             placeholder="Tìm kiếm..."
+                            defaultValue={search ?? ""}
                             onChange={(e) => { onSearch(e.target.value) }}
                         />
                     </div>

@@ -26,6 +26,7 @@ import TableFilterDrawer from '@/components/ui/table/table-filtering';
 import { TableFitler } from '@/core/model/application/filter';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 function MenuItem() {
     const searchParams = useSearchParams()
@@ -48,17 +49,16 @@ function MenuItem() {
             setMenuData(e?.data ?? []); setLoading(false); setPageInfo(e?.pageInfo ?? null);
         })
     }, [page, search])
-    let onChangePage = (page: number) => {
+    let onChangePage = useDebouncedCallback((page) => {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set('page', page.toString());
         router.push(`?${currentParams.toString()}`);
-    }
-    // TODO debounce
-    let onSearch = (e: any) => {
+    }, 1000);
+    let onSearch = useDebouncedCallback((value) => {
         const currentParams = new URLSearchParams(searchParams.toString());
-        currentParams.set('search', e);
+        currentParams.set('search', value);
         router.push(`?${currentParams.toString()}`);
-    }
+    }, 1000);
     let onRemoveFilter = (filter: TableFitler) => { }
 
     const columns = menuColumns.map((col) => {
@@ -94,7 +94,7 @@ function MenuItem() {
     });
     return (
         <div>
-            <DataTable filters={filter} onRemoveFilter={onRemoveFilter} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
+            <DataTable search={search} filters={filter} onRemoveFilter={onRemoveFilter} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} />
             <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} setInitFitler={setFilter}></MenuFilterDrawer>

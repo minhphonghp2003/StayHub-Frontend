@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, FormEventHandler } from "react";
 
 interface InputProps {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
@@ -67,10 +67,10 @@ const Input: FC<InputProps> = ({
       {hint && (
         <p
           className={`mt-1.5 text-xs ${error
-              ? "text-error-500"
-              : success
-                ? "text-success-500"
-                : "text-gray-500"
+            ? "text-error-500"
+            : success
+              ? "text-success-500"
+              : "text-gray-500"
             }`}
         >
           {hint}
