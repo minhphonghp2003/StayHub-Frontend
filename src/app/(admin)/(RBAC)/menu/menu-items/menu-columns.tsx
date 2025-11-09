@@ -32,7 +32,7 @@ export const menuColumns: ColumnDef<Menu>[] = [
                 <p className="text-center">#</p>
             )
         },
-
+        cell: () => null,
         enableSorting: false,
         enableHiding: false,
         size: 50,

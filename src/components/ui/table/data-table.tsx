@@ -132,20 +132,33 @@ export function DataTable<TData, TValue>({
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row, rowIndex) => {
-                                    const pageIndex = currentPage; // from your state
-                                    const globalIndex = (pageIndex - 1) * pageSize + rowIndex + 1;
+
                                     return (
                                         <TableRow
                                             key={row.id}
                                             data-state={row.getIsSelected() && "selected"}
                                             className={`transition-all  [&>td]:py-5 [&>td]:px-4`}
                                         >
-                                            <TableCell className="text-center font-medium">{globalIndex}</TableCell>
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell className="border-r border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
+                                            {row.getVisibleCells().map((cell) => {
+                                                if (cell.column.id === "index") {
+                                                    const pageIndex = currentPage; // from your state
+                                                    const globalIndex = (pageIndex - 1) * pageSize + rowIndex + 1;
+
+                                                    return (
+                                                        <TableCell
+                                                            key={cell.id}
+                                                            className="border-r border-gray-100   dark:border-gray-800 text-center font-medium"
+                                                        >
+                                                            {globalIndex}
+                                                        </TableCell>
+                                                    );
+                                                }
+                                                return (
+                                                    <TableCell className="border-r border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                )
+                                            })}
                                         </TableRow>
                                     )
                                 })
