@@ -36,21 +36,23 @@ function MenuItem() {
                 cell: ({ row }: any) => {
                     const menu = row.origina
                     return (
-                        <DropdownMenu >
-                            <DropdownMenuTrigger asChild>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={() => navigator.clipboard.writeText(menu.id?.toString() ?? "null")}
-                                >
-                                    Copy payment ID
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={openUpdateModal}>View customer</DropdownMenuItem>
-                                <DropdownMenuItem>View payment details</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className='flex justify-center'>
+                            <DropdownMenu >
+                                <DropdownMenuTrigger asChild>
+                                    <MoreHorizontal className="h-4 w-4  " />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                        onClick={() => navigator.clipboard.writeText(menu.id?.toString() ?? "null")}
+                                    >
+                                        Copy payment ID
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={openUpdateModal}>View customer</DropdownMenuItem>
+                                    <DropdownMenuItem>View payment details</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     )
                 },
 

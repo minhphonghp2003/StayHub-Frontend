@@ -33,6 +33,7 @@ export const menuColumns: ColumnDef<Menu>[] = [
         header: ({ column }) => {
             return (
                 <Button
+                    className="flex justify-between w-full"
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
