@@ -96,12 +96,12 @@ export function DataTable<TData, TValue>({
         <div >
             <ComponentCard desc={`Tổng cộng ${totalItems}`} title={name} >
                 <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
-                {
+                {/* {
                     filters?.map((e, i) => <Badge
                         key={i}
                         color="light"
                     >
-                        {e.key.name}: {e.value.name}
+                        {e.value?.name}
                         <button
                             onClick={() => onRemoveFilter && onRemoveFilter(e)}
                             className="text-gray-500 hover:text-gray-700"
@@ -109,7 +109,7 @@ export function DataTable<TData, TValue>({
                             <X className="h-3 w-3" />
                         </button>
                     </Badge>)
-                }
+                } */}
 
                 <div className="overflow-hidden rounded-md border px-4  py-2">
                     <Table>

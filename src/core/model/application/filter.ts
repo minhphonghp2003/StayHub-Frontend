@@ -2,6 +2,6 @@ import { Category } from "@/core/model/catalog/category";
 import { CategoryItem } from "@/core/model/catalog/category-item";
 
 export interface TableFitler {
-    key: Category,
-    value: CategoryItem
+    code: string,
+    id?:any,
 }
