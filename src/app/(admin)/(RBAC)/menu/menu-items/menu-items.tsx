@@ -22,10 +22,9 @@ import AddMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/add-menu-modal';
 import { menuColumns } from '@/app/(admin)/(RBAC)/menu/menu-items/menu-columns';
 import UpdateMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/update-menu-modal';
 import { DataTable } from '@/components/ui/table/data-table';
-import { cn } from '@/lib/utils';
 import TableFilterDrawer from '@/components/ui/table/table-filtering';
 import { TableFitler } from '@/core/model/application/filter';
-// TODO pagination, sorting, searching, filtering
+import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 function MenuItem() {
     let [loading, setLoading] = useState(true)
     let [menuData, setMenuData] = useState<Menu[]>([])
@@ -77,29 +76,7 @@ function MenuItem() {
             <DataTable filters={filter} onRemoveFilter={onRemoveFilter} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={5} totalPage={10} onPageChange={onChangePage} name="Danh sách Menu" totalItems={0} loading={loading} />
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} />
             <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
-            <TableFilterDrawer openFilter={openFilter} setOpenFilter={setOpenFilter} >
-                <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Category</label>
-                        <select className="w-full rounded-md border p-2 text-sm">
-                            <option>All</option>
-                            <option>Technology</option>
-                            <option>Business</option>
-                            <option>Design</option>
-                        </select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Sort By</label>
-                        <select className="w-full rounded-md border p-2 text-sm">
-                            <option>Newest</option>
-                            <option>Oldest</option>
-                            <option>Name (A–Z)</option>
-                            <option>Name (Z–A)</option>
-                        </select>
-                    </div>
-                </div>
-            </TableFilterDrawer>
+            <MenuFilterDrawer openFilter={openFilter} setOpenFilter={setOpenFilter}></MenuFilterDrawer>
 
         </div>
     )
