@@ -11,7 +11,7 @@ const getMyMenus = async (): Promise<MenuGroup[]> => {
     return [];
 }
 const getAllMenus = async (params: any): Promise<{ data: Menu[], pageInfo?: PageInfo } | null> => {
-    var result = await menuRepository.getAllMenu({ params })
+    var result = await menuRepository.getAllMenu(params)
     if (result.success) {
         return {
             data: result.data ?? [],

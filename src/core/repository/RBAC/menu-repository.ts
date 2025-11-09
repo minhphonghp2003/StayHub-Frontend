@@ -9,6 +9,7 @@ const getMyMenus = async (): Promise<BaseResponse<MenuGroup[]>> => {
     return response.data;
 };
 const getAllMenu = async ({ search, pageNumber, pageSize }: any): Promise<BaseResponse<Menu[]>> => {
+
     const params = {
         search: search?.trim() || undefined,
         pageNumber,

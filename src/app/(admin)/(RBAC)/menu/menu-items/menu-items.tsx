@@ -36,10 +36,9 @@ function MenuItem() {
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [search, setSearch] = useState<string | null>(null)
     useEffect(() => {
-        console.log(pageNumber);
-
         setLoading(true)
-        MenuService.getAllMenus({ pageNumber: pageInfo?.currentPage, search }).then(e => {
+        setMenuData([])
+        MenuService.getAllMenus({ pageNumber: pageNumber, search }).then(e => {
             setMenuData(e?.data ?? []); setLoading(false); setPageInfo(e?.pageInfo ?? null);
         })
     }, [pageNumber, search])
