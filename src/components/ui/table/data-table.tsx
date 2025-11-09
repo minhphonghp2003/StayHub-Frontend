@@ -41,6 +41,7 @@ import Badge from "@/components/ui/badge/Badge"
 import { TableFitler } from "@/core/model/application/filter"
 import { Spinner } from "@/components/ui/shadcn/spinner"
 import Image from "next/image"
+import { PaginationComponent } from "@/components/ui/pagination/pagination-component"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -169,7 +170,7 @@ export function DataTable<TData, TValue>({
                         </TableBody>
                     </Table>
                 </div>
-                <DataTablePaginating currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
+                <PaginationComponent visibleCount={5} currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
 
             </ComponentCard>
         </div >
@@ -235,81 +236,3 @@ function DataTableHeader(
     )
 }
 
-
-function DataTablePaginating({ currentPage,
-    totalPages,
-    onPageChange, }: {
-        currentPage: number;
-        totalPages: number;
-        onPageChange: (page: number) => void;
-    }) {
-    return (
-        <Pagination className="flex items-center justify-end space-x-2 py-4">
-            <PaginationContent>
-                {/* Previous */}
-                <PaginationItem>
-                    <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            onPageChange(currentPage - 1)
-                        }}
-                        className={currentPage == 1 ? "pointer-events-none opacity-50" : ""}
-                    />
-                </PaginationItem>
-
-                {/* Page numbers */}
-                {(() => {
-                    const pages: (number | string)[] = []
-
-                    if (totalPages <= 7) {
-                        for (let i = 1; i <= totalPages; i++) pages.push(i)
-                    } else {
-                        if (currentPage <= 4) {
-                            pages.push(1, 2, 3, 4, 5, "...", totalPages)
-                        } else if (currentPage >= totalPages - 3) {
-                            pages.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
-                        } else {
-                            pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages)
-                        }
-                    }
-
-                    return pages.map((page, idx) =>
-                        page === "..." ? (
-                            <PaginationItem key={idx}>
-                                <PaginationEllipsis />
-                            </PaginationItem>
-                        ) : (
-                            <PaginationItem key={idx}>
-                                <PaginationLink
-                                    href="#"
-                                    isActive={page === currentPage}
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        if (typeof page === "number") {
-                                            // table.setPageIndex(page - 1)
-                                        }
-                                    }}
-                                >
-                                    {page}
-                                </PaginationLink>
-                            </PaginationItem>
-                        )
-                    )
-                })()}
-
-                {/* Next */}
-                <PaginationItem>
-                    <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            onPageChange(currentPage + 1)
-                        }}
-                        className={currentPage == totalPages ? "pointer-events-none opacity-50" : ""}
-                    />
-                </PaginationItem>
-            </PaginationContent>
-        </Pagination>
-    )
-}
