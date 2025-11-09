@@ -1,8 +1,5 @@
 // pages/list.tsx
-import ComponentCard from '@/components/common/ComponentCard';
 import { PaginationComponent } from '@/components/ui/pagination/pagination-component';
-import { Button } from '@/components/ui/shadcn/button';
-import { SelectItem } from '@/components/ui/shadcn/select';
 import { CategoryItem } from '@/core/model/catalog/category-item';
 import React from 'react';
 
@@ -18,9 +15,9 @@ function ListPage({ items, onClick, onPageChanged, selected }: { items?: Categor
                         <li
                             key={i}
                             onClick={onClick}
-                            className="cursor-pointer px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
+                            className={`cursor-pointer px-4 py-3 flex items-center justify-between ${isSelected ? "bg-brand-100 dark:bg-brand-500/[0.12]" : "hover:bg-gray-50 dark:hover:bg-gray-800/60"}  transition-colors `}
                         >
-                            <span className="text-gray-800 dark:text-gray-100">{e.name}</span>
+                            <span className={`${isSelected ? "text-brand-700 dark:text-brand-400" : " text-gray-800 dark:text-gray-100"}`}>{e.name}</span>
                         </li>
                     );
                 })}
