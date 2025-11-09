@@ -126,8 +126,9 @@ export const menuColumns: ColumnDef<Menu>[] = [
             )
         },
         cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("updatedAt"))
-            const formatted = formatter.format(amount)
+            const updatedAt = row.getValue<string>("updatedAt");
+            const date = new Date(updatedAt);
+            const formatted = formatter.format(date);
             return <div className="font-medium">{formatted}</div>
         },
     },
