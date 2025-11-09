@@ -25,7 +25,14 @@ import { DataTable } from '@/components/ui/table/data-table';
 import TableFilterDrawer from '@/components/ui/table/table-filtering';
 import { TableFitler } from '@/core/model/application/filter';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 function MenuItem() {
+    const searchParams = useSearchParams()
+    const search = searchParams.get('search')
+    const page = searchParams.get('page')
+    const router = useRouter();
+    // -------------- component sate
     let [loading, setLoading] = useState(true)
     let [menuData, setMenuData] = useState<Menu[]>([])
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
@@ -33,19 +40,25 @@ function MenuItem() {
     const [filter, setFilter] = useState<TableFitler[]>([])
     const { isOpen: isOpenAdd, openModal: openAddModal, closeModal: closeAddModal } = useModal();
     const { isOpen: isOpenUpdate, openModal: openUpdateModal, closeModal: closeUpdateModal } = useModal();
-    const [pageNumber, setPageNumber] = useState<number>(1)
-    const [search, setSearch] = useState<string | null>(null)
+
     useEffect(() => {
         setLoading(true)
         setMenuData([])
-        MenuService.getAllMenus({ pageNumber: pageNumber, search }).then(e => {
+        MenuService.getAllMenus({ pageNumber: page, search }).then(e => {
             setMenuData(e?.data ?? []); setLoading(false); setPageInfo(e?.pageInfo ?? null);
         })
-    }, [pageNumber, search])
+    }, [page, search])
     let onChangePage = (page: number) => {
-        setPageNumber(page)
+        const currentParams = new URLSearchParams(searchParams.toString());
+        currentParams.set('page', page.toString());
+        router.push(`?${currentParams.toString()}`);
     }
-    let onSearch = (e: any) => { setSearch(e) }
+    // TODO debounce
+    let onSearch = (e: any) => {
+        const currentParams = new URLSearchParams(searchParams.toString());
+        currentParams.set('search', e);
+        router.push(`?${currentParams.toString()}`);
+    }
     let onRemoveFilter = (filter: TableFitler) => { }
 
     const columns = menuColumns.map((col) => {
