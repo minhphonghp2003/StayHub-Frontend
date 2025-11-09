@@ -24,17 +24,22 @@ import UpdateMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/update-menu-mo
 import { DataTable } from '@/components/ui/table/data-table';
 import { cn } from '@/lib/utils';
 import TableFilterDrawer from '@/components/ui/table/table-filtering';
+import { TableFitler } from '@/core/model/application/filter';
 // TODO pagination, sorting, searching, filtering
 function MenuItem() {
+    let [loading, setLoading] = useState(true)
     let [menuData, setMenuData] = useState<Menu[]>([])
     const [openFilter, setOpenFilter] = React.useState(false)
+    const [filter, setFilter] = useState<TableFitler[]>([])
     const { isOpen: isOpenAdd, openModal: openAddModal, closeModal: closeAddModal } = useModal();
     const { isOpen: isOpenUpdate, openModal: openUpdateModal, closeModal: closeUpdateModal } = useModal();
     useEffect(() => {
-        MenuService.getAllMenus().then(e => setMenuData(e))
+        setLoading(true)
+        MenuService.getAllMenus().then(e => { setMenuData(e); setLoading(false) })
     }, [])
     let onChangePage = (page: number) => { }
     let onSearch = (e: any) => { }
+    let onRemoveFilter = (filter: TableFitler) => { }
 
     const columns = menuColumns.map((col) => {
         if (col.id === "actions") {
@@ -69,7 +74,7 @@ function MenuItem() {
     });
     return (
         <div>
-            <DataTable onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={5} totalPage={10} onPageChange={onChangePage} name="Danh sách Menu" />
+            <DataTable filters={filter} onRemoveFilter={onRemoveFilter} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={5} totalPage={10} onPageChange={onChangePage} name="Danh sách Menu" totalItems={0} loading={loading} />
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} />
             <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
             <TableFilterDrawer openFilter={openFilter} setOpenFilter={setOpenFilter} >

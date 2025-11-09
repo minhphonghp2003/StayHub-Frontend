@@ -2,7 +2,7 @@
 
 import { Menu } from "@/core/model/RBAC/Menu"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, Check, MoreHorizontal, X } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/shadcn/button"
 import { useModal } from "@/hooks/useModal"
 import AddMenuModal from "./add-menu-modal"
+import Badge from "@/components/ui/badge/Badge"
 const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: '2-digit',
@@ -67,6 +68,13 @@ export const menuColumns: ColumnDef<Menu>[] = [
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            return <Badge size="sm" color="success">
+                {row.getValue("isActive") ? "Đang kích hoạt" : "Chưa kích hoạt"}
+            </Badge>
+
+
         },
     },
     {
