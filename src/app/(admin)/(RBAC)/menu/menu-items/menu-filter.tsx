@@ -1,35 +1,30 @@
+import ComponentCard from '@/components/common/ComponentCard'
+import ListPage from '@/components/ui/list/paginate-list'
 import TableFilterDrawer from '@/components/ui/table/table-filtering'
 import { TableFitler } from '@/core/model/application/filter'
-import React, { useState } from 'react'
+import { CategoryItem } from '@/core/model/catalog/category-item'
+import { categoryItemService } from '@/core/service/catalog/category-item-service'
+import React, { useEffect, useState } from 'react'
 
 function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, setInitFitler }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], setInitFitler: any }) {
     let [filter, setFilter] = useState<TableFitler[]>([])
+    let [menuGroups, setMenuGroups] = useState<CategoryItem[]>([])
     let onApply = (isApplied: boolean) => {
         setOpenFilter(false)
         setInitFitler(filter)
     }
+    useEffect(() => {
+        categoryItemService.getCategoryItemsByCategoryCode("MENU").then(e => setMenuGroups(e))
+    }, [])
     return (
         <TableFilterDrawer isOpen={isOpen} onApply={onApply} >
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-                <div className="space-y-2">
-                    <label className="text-sm font-medium">Category</label>
-                    <select className="w-full rounded-md border p-2 text-sm">
-                        <option>All</option>
-                        <option>Technology</option>
-                        <option>Business</option>
-                        <option>Design</option>
-                    </select>
-                </div>
+                menu group
+                <ListPage />
+                {
 
-                <div className="space-y-2">
-                    <label className="text-sm font-medium">Sort By</label>
-                    <select className="w-full rounded-md border p-2 text-sm">
-                        <option>Newest</option>
-                        <option>Oldest</option>
-                        <option>Name (A–Z)</option>
-                        <option>Name (Z–A)</option>
-                    </select>
-                </div>
+                    // menuGroups.map((e, i) => <p>{e.name}</p>)
+                }
             </div>
         </TableFilterDrawer>
     )

@@ -3,7 +3,7 @@ import { CategoryItem } from "@/core/model/catalog/category-item";
 import { AddCategoryItemPayload } from "@/core/payload/catalog/add-category-item-payload";
 import { UpdateCategoryItemPayload } from "@/core/payload/catalog/update-category-item-payload";
 
-const baseUrl = "/category-item";
+const baseUrl = "/categoryItem";
 
 const getAllCategoryItems = async (): Promise<BaseResponse<CategoryItem[]>> => {
     const response = await api.get(`${baseUrl}`);
