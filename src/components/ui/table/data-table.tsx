@@ -43,6 +43,7 @@ interface DataTableProps<TData, TValue> {
     currentPage: number,
     totalPage: number,
     totalItems: number,
+    pageSize: number,
     onPageChange: (page: number) => void,
     name: string,
     filters?: TableFitler[],
@@ -61,6 +62,7 @@ export function DataTable<TData, TValue>({
     currentPage,
     totalPage,
     totalItems,
+    pageSize,
     onPageChange,
     name,
     filters,
@@ -81,10 +83,7 @@ export function DataTable<TData, TValue>({
             columnFilters
         },
         manualPagination: true,
-        meta: {
-            currentPage,
-        },
-        pageCount: totalPage,
+
         getCoreRowModel: getCoreRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
@@ -132,19 +131,24 @@ export function DataTable<TData, TValue>({
                         </TableHeader>
                         <TableBody>
                             {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                        className={`transition-all  [&>td]:py-5 [&>td]:px-4`}
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell className="border-r border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
+                                table.getRowModel().rows.map((row, rowIndex) => {
+                                    const pageIndex = currentPage; // from your state
+                                    const globalIndex = (pageIndex - 1) * pageSize + rowIndex + 1;
+                                    return (
+                                        <TableRow
+                                            key={row.id}
+                                            data-state={row.getIsSelected() && "selected"}
+                                            className={`transition-all  [&>td]:py-5 [&>td]:px-4`}
+                                        >
+                                            <TableCell className="text-center font-medium">{globalIndex}</TableCell>
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell className="border-r border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    )
+                                })
                             ) : (
                                 <TableRow >
                                     <TableCell colSpan={columns.length} className="h-24 text-center ">

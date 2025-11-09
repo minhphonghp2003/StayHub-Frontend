@@ -32,13 +32,7 @@ export const menuColumns: ColumnDef<Menu>[] = [
                 <p className="text-center">#</p>
             )
         },
-        cell: ({ row, table }) => {
-            const pageIndex = table.getState().pagination.pageIndex; // current page
-            const pageSize = table.getState().pagination.pageSize;   // rows per page
-            return <p className="text-center">
-                {pageIndex * pageSize + row.index + 1}
-            </p>
-        },
+
         enableSorting: false,
         enableHiding: false,
         size: 50,
