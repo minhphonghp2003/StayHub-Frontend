@@ -152,7 +152,7 @@ export function DataTable<TData, TValue>({
                                         {
                                             loading ? <Spinner className="size-8 mx-auto" /> :
                                                 <div>
-                                                    <Image className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
+                                                    <Image color="red-100" className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
                                                     <p >
                                                         Chưa có dữ liệu
                                                     </p>
