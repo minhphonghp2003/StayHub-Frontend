@@ -8,50 +8,55 @@ import {
     PaginationEllipsis,
 } from "@/components/ui/shadcn/pagination"
 
-export function PaginationComponent({ currentPage,
+export function PaginationComponent({
+    currentPage,
     totalPages,
     visibleCount = 3,
-    onPageChange, align }: {
-        currentPage: number;
-        totalPages: number;
-        onPageChange: (page: number) => void;
-        align?: "end" | "center",
-        visibleCount?: number;
-    }) {
+    onPageChange,
+    align,
+}: {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+    align?: "end" | "center";
+    visibleCount?: number;
+}) {
     const safeVisible = Math.max(3, visibleCount); // at least 3 visible icons
     const half = Math.floor(safeVisible / 2);
 
     const getPages = (): (number | string)[] => {
         if (totalPages <= safeVisible + 2) {
-            return Array.from({ length: totalPages }, (_, i) => i);
+
+            return Array.from({ length: totalPages }, (_, i) => i + 1); // ✅ 1-based pages
         }
 
         const pages: (number | string)[] = [];
 
         // Always show first & last page
-        pages.push(0);
+        pages.push(1);
 
         // Calculate window range
-        let start = Math.max(currentPage - half, 1);
-        let end = Math.min(currentPage + half, totalPages - 2);
+        let start = Math.max(currentPage - half, 2);
+        let end = Math.min(currentPage + half, totalPages - 1);
 
         // Adjust window when near start or end
-        if (currentPage <= half) {
+        if (currentPage <= half + 1) {
             end = safeVisible;
-        } else if (currentPage >= totalPages - half - 1) {
-            start = totalPages - safeVisible - 1;
+        } else if (currentPage >= totalPages - half) {
+            start = totalPages - safeVisible + 1;
         }
 
-        if (start > 1) pages.push("...");
+        if (start > 2) pages.push("...");
         for (let i = start; i <= end; i++) pages.push(i);
-        if (end < totalPages - 2) pages.push("...");
-        pages.push(totalPages - 1);
+        if (end < totalPages - 1) pages.push("...");
+        pages.push(totalPages);
 
         // Ensure only one ellipsis
         return pages.filter((p, i, arr) => p !== "..." || arr.indexOf("...") === i);
     };
 
     const pages = getPages();
+
 
     return (
         <Pagination
@@ -65,15 +70,13 @@ export function PaginationComponent({ currentPage,
                         href="#"
                         onClick={(e) => {
                             e.preventDefault();
-                            if (currentPage > 0) onPageChange(currentPage - 1);
+                            if (currentPage > 1) onPageChange(currentPage - 1);
                         }}
-                        className={
-                            currentPage === 0 ? "pointer-events-none opacity-50" : ""
-                        }
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                     />
                 </PaginationItem>
 
-                {/* Page icons */}
+                {/* Page numbers */}
                 {pages.map((page, idx) =>
                     page === "..." ? (
                         <PaginationItem key={idx}>
@@ -89,7 +92,7 @@ export function PaginationComponent({ currentPage,
                                     if (typeof page === "number") onPageChange(page);
                                 }}
                             >
-                                {page ?? 0 + 1}
+                                {page}
                             </PaginationLink>
                         </PaginationItem>
                     )
@@ -101,17 +104,15 @@ export function PaginationComponent({ currentPage,
                         href="#"
                         onClick={(e) => {
                             e.preventDefault();
-                            if (currentPage < totalPages - 1)
-                                onPageChange(currentPage + 1);
+                            if (currentPage < totalPages) onPageChange(currentPage + 1);
                         }}
                         className={
-                            currentPage === totalPages - 1
-                                ? "pointer-events-none opacity-50"
-                                : ""
+                            currentPage === totalPages ? "pointer-events-none opacity-50" : ""
                         }
                     />
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
-    )
+    );
 }
+

@@ -8,8 +8,13 @@ const getMyMenus = async (): Promise<BaseResponse<MenuGroup[]>> => {
     const response = await api.get(`${baseUrl}/my`);
     return response.data;
 };
-const getAllMenu = async (): Promise<BaseResponse<Menu[]>> => {
-    const response = await api.get(`${baseUrl}`);
+const getAllMenu = async ({ search, pageNumber, pageSize }: any): Promise<BaseResponse<Menu[]>> => {
+    const params = {
+        search: search?.trim() || undefined,
+        pageNumber,
+        pageSize,
+    };
+    const response = await api.get(`${baseUrl}`, { params });
     return response.data;
 };
 

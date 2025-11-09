@@ -10,19 +10,8 @@ import {
     getSortedRowModel,
     getCoreRowModel,
     useReactTable,
-    getPaginationRowModel,
 
 } from "@tanstack/react-table"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationPrevious,
-    PaginationNext,
-    PaginationEllipsis,
-} from "@/components/ui/shadcn/pagination"
-
 import {
     Table,
     TableBody,
@@ -50,7 +39,7 @@ interface DataTableProps<TData, TValue> {
     onFilterClicked?: any,
     onExportClicked?: any,
     actions?: ReactNode[],
-    onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined,
+    onSearch?: ((e: string | null) => void) | undefined,
     currentPage: number,
     totalPage: number,
     totalItems: number,
@@ -91,10 +80,15 @@ export function DataTable<TData, TValue>({
             sorting,
             columnFilters
         },
+        manualPagination: true,
+        meta: {
+            currentPage,
+        },
+        pageCount: totalPage,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+
     })
 
     return (
@@ -185,7 +179,7 @@ function DataTableHeader(
             onFilterclicked?: any
             onExportClicked?: any,
             actions?: ReactNode[],
-            onSearch?: ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined
+            onSearch?: ((e: string | null) => void) | undefined
         }
 ) {
     return (
@@ -196,7 +190,7 @@ function DataTableHeader(
                     onSearch && <div className="relative w-full max-w-xl">
                         <Input
                             placeholder="Tìm kiếm..."
-                            onChange={onSearch}
+                            onChange={(e) => { onSearch(e.target.value) }}
                         />
                     </div>
                 }

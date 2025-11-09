@@ -26,6 +26,24 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
 
 export const menuColumns: ColumnDef<Menu>[] = [
     {
+        id: "index",
+        header: ({ column }) => {
+            return (
+                <p className="text-center">#</p>
+            )
+        },
+        cell: ({ row, table }) => {
+            const pageIndex = table.getState().pagination.pageIndex; // current page
+            const pageSize = table.getState().pagination.pageSize;   // rows per page
+            return <p className="text-center">
+                {pageIndex * pageSize + row.index + 1}
+            </p>
+        },
+        enableSorting: false,
+        enableHiding: false,
+        size: 50,
+    },
+    {
         accessorKey: "name",
         header: ({ column }) => {
             return (
@@ -40,6 +58,7 @@ export const menuColumns: ColumnDef<Menu>[] = [
             )
         },
     },
+
     {
         accessorKey: "path",
         header: ({ column }) => {
@@ -50,6 +69,21 @@ export const menuColumns: ColumnDef<Menu>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Đường dẫn
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "groupName",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Thuộc nhóm
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
