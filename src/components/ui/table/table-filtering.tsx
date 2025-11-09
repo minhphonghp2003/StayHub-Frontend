@@ -24,7 +24,7 @@ function TableFilterDrawer({ isOpen, onApply, children }: { isOpen: boolean, onA
                 )}
             >
                 {/* Header */}
-                <DrawerHeader className="border-b px-6 py-4">
+                <DrawerHeader className="border-b p-4">
                     <DrawerTitle>Filter Options</DrawerTitle>
                     <DrawerDescription>Adjust filters and refine your results</DrawerDescription>
                 </DrawerHeader>

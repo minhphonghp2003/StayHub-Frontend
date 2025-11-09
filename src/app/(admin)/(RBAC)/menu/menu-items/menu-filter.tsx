@@ -18,8 +18,10 @@ function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, setInitFitler }: 
     }, [])
     return (
         <TableFilterDrawer isOpen={isOpen} onApply={onApply} >
-            <div className="flex-1 overflow-y-auto p-2 space-y-4">
-                <ListPage />
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <label className="text-md font-semibold mb-2 block ">Nhóm menu</label>
+                <ListPage items={[...menuGroups, ...menuGroups, ...menuGroups]} selected={2} onClick={(e: any) => { }} />
+
             </div>
         </TableFilterDrawer>
     )

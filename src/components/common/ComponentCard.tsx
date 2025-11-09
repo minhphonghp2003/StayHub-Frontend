@@ -13,7 +13,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   children,
   className = "",
   desc = "",
-  trailing
+  trailing,
+
 }) => {
   return (
     <div
@@ -36,7 +37,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
+      <div className={`p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6 `}>
         <div className="space-y-6">{children}</div>
       </div>
     </div>
