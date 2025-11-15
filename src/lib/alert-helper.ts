@@ -43,3 +43,31 @@ export const showToast = (
             return toast(content, optionsToApply);
     }
 };
+export const toastPromise = async (
+  promise: Promise<any>,
+  messages: { loading: string; success: string; error: string },
+  options?: Partial<ToastOptions>
+) => {
+  const toastId: Id = toast.loading(messages.loading, { ...defaultToastOptions, ...options });
+
+  try {
+    const result = await promise;
+
+    toast.update(toastId, {
+      render: messages.success,
+      type: "success",
+      isLoading: false,
+      autoClose: 3000,
+    });
+
+    return result;
+  } catch (err: any) {
+    toast.update(toastId, {
+      render: messages.error || err.message || "Something went wrong",
+      type: "error",
+      isLoading: false,
+      autoClose: 3000,
+    });
+    throw err;
+  }
+};

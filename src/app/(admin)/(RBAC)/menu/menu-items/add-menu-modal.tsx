@@ -12,7 +12,7 @@ import CustomSelect from '@/components/form/Select';
 import TextArea from '@/components/form/TextArea';
 import DynamicIcon from '@/components/common/DynamicIcon';
 import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
-import { showToast } from '@/lib/alert-helper';
+import { showToast, toastPromise } from '@/lib/alert-helper';
 import { parseOptionalNumber } from '@/lib/utils';
 
 function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeModal: any, reload?: any }) {
@@ -31,14 +31,23 @@ function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeMo
             icon: data.icon ? String(data.icon) : undefined,
             parentId: parseOptionalNumber(data.parentId),
         };
-        let result = await menuService.createMenu(payload)
-        if (result) {
-            showToast({ type: "success", content: "Tạo menu thành công" })
-            closeModal()
-            reload()
-            return
-        } else {
-            showToast({ type: "error", content: result || "Tạo menu thất bại" })
+        try {
+            // Call API with toastPromise helper
+            const result = await toastPromise(
+                menuService.createMenu(payload),
+                {
+                    loading: "Đang tạo menu...",
+                    success: "Tạo menu thành công!",
+                    error: "Tạo menu thất bại!",
+                }
+            );
+            if (result) {
+                closeModal();
+                reload(); // refresh parent data
+            }
+        } catch (err) {
+            showToast({ type: "error", content: "Có lỗi xảy ra" })
+            // console.error(err);
         }
 
 
