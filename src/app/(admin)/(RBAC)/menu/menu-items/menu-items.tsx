@@ -52,12 +52,16 @@ function MenuItem() {
                 id: menuGroup && parseInt(menuGroup)
             }
         ])
+        fetchData()
+    }, [page, search, menuGroup])
+    let fetchData = async () => {
         setLoading(true)
         setMenuData([])
-        MenuService.getAllMenus({ pageNumber: page, search, menuGroupId: menuGroup }).then(e => {
-            setMenuData(e?.data ?? []); setLoading(false); setPageInfo(e?.pageInfo ?? null);
-        })
-    }, [page, search, menuGroup])
+        let result = await MenuService.getAllMenus({ pageNumber: page, search, menuGroupId: menuGroup })
+        setMenuData(result?.data ?? []);
+        setPageInfo(result?.pageInfo ?? null);
+        setLoading(false);
+    }
     let onChangePage = useDebouncedCallback((page) => {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set('page', page.toString());
@@ -117,7 +121,7 @@ function MenuItem() {
     return (
         <div>
             <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
-            <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} />
+            <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} reload={fetchData} />
             <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
 

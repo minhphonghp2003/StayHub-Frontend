@@ -15,7 +15,7 @@ import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
 import { showToast } from '@/lib/alert-helper';
 import { parseOptionalNumber } from '@/lib/utils';
 
-function AddMenuModal({ isOpen, closeModal }: { isOpen: boolean, closeModal: any }) {
+function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeModal: any, reload?: any }) {
     let [menuGroups, setMenuGroup] = useState<CategoryItem[]>([])
     let [parentMenus, setParentMenus] = useState<CategoryItem[]>([])
     let [icon, setIcon] = useState<string>("")
@@ -31,15 +31,15 @@ function AddMenuModal({ isOpen, closeModal }: { isOpen: boolean, closeModal: any
             icon: data.icon ? String(data.icon) : undefined,
             parentId: parseOptionalNumber(data.parentId),
         };
-        // let result = await menuService.createMenu(payload)
-        // if (result) {
-        //     showToast({ type: "success", content: "Tạo menu thành công" })
-        //     closeModal()
-        //     return
-        // } else {
-        //     showToast({ type: "error", content: result || "Tạo menu thất bại" })
-        // }
-        console.log(payload);
+        let result = await menuService.createMenu(payload)
+        if (result) {
+            showToast({ type: "success", content: "Tạo menu thành công" })
+            closeModal()
+            reload()
+            return
+        } else {
+            showToast({ type: "error", content: result || "Tạo menu thất bại" })
+        }
 
 
     };
