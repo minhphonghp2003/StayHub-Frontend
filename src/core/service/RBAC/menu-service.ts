@@ -1,3 +1,4 @@
+import { CategoryItem } from "@/core/model/catalog/category-item";
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
 import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
 import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
@@ -19,6 +20,13 @@ const getAllMenus = async (params: any): Promise<{ data: Menu[], pageInfo?: Page
         };
     }
     return null;
+}
+const getAllNoPaginateMenus = async (): Promise<CategoryItem[]> => {
+    var result = await menuRepository.getAllNoPaginateMenu()
+    if (result.success) {
+        return result.data??[];
+    }
+    return [];
 }
 
 const getMenuById = async (id: number): Promise<Menu | null> => {
@@ -53,5 +61,6 @@ export default {
     createMenu,
     updateMenu,
     setActivateMenu,
+    getAllNoPaginateMenus,
     deleteMenu
 };

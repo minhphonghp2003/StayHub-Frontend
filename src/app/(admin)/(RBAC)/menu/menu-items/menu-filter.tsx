@@ -7,23 +7,23 @@ import { categoryItemService } from '@/core/service/catalog/category-item-servic
 import React, { useEffect, useState } from 'react'
 
 function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onRemoveAllFilters, onFiltered }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], onFiltered: (filtered: TableFitler[]) => void, onRemoveAllFilters?: any }) {
-    let [groupFilter, setGroupFilter] = useState<number | null>()
+    let [selectedGroupFilter, setSelectedGroupFilter] = useState<number | null>()
     let [menuGroups, setMenuGroups] = useState<CategoryItem[]>([])
     let onApply = (isApplied: boolean) => {
         if (isApplied) {
             onFiltered([
                 {
                     code: "MENU",
-                    id: groupFilter
+                    id: selectedGroupFilter
                 }
             ])
         } else {
-            setGroupFilter(initFilter?.find(e => e.code == "MENU")?.id ?? null)
+            setSelectedGroupFilter(initFilter?.find(e => e.code == "MENU")?.id ?? null)
         }
         setOpenFilter(false)
     }
     useEffect(() => {
-        setGroupFilter(initFilter?.find(e => e.code == "MENU")?.id ?? null)
+        setSelectedGroupFilter(initFilter?.find(e => e.code == "MENU")?.id ?? null)
         categoryItemService.getCategoryItemsByCategoryCode("MENU").then(e => setMenuGroups(e))
     }, [initFilter])
 
@@ -35,8 +35,8 @@ function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onRemoveAllFilter
         }} >
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <label className="text-md font-semibold mb-2 block ">Nhóm menu</label>
-                <List items={menuGroups} selected={groupFilter} onClick={(e: any) => {
-                    setGroupFilter(e.id)
+                <List items={menuGroups} selected={selectedGroupFilter} onClick={(e: any) => {
+                    setSelectedGroupFilter(e.id)
                 }} />
             </div>
         </TableFilterDrawer>

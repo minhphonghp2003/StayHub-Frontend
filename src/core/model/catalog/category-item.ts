@@ -1,5 +1,5 @@
 export interface CategoryItem extends BaseModel {
     name: string,
-    code: string,
+    code?: string,
     description?: string
 }
