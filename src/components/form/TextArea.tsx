@@ -11,7 +11,8 @@ interface TextareaProps {
   error?: boolean; // Error state
   hint?: string; // Hint text to display
   name?: string,
-  label?: string
+  label?: string,
+  required?: boolean
 }
 
 const TextArea: React.FC<TextareaProps> = ({
@@ -24,7 +25,8 @@ const TextArea: React.FC<TextareaProps> = ({
   error = false, // Error state
   hint = "", // Default hint text
   name,
-  label
+  label,
+  required
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (onChange) {
@@ -45,9 +47,11 @@ const TextArea: React.FC<TextareaProps> = ({
   return (
     <div className="relative">
       {
-        label && <Label>{label}</Label>
+
+        label && <Label>{label} <span className={`${required ? "text-red-500" : "hidden"}`}>*</span></Label>
       }
       <textarea
+        required={required}
         name={name}
         placeholder={placeholder}
         rows={rows}

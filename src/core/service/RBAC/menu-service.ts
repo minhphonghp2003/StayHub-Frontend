@@ -24,7 +24,7 @@ const getAllMenus = async (params: any): Promise<{ data: Menu[], pageInfo?: Page
 const getAllNoPaginateMenus = async (): Promise<CategoryItem[]> => {
     var result = await menuRepository.getAllNoPaginateMenu()
     if (result.success) {
-        return result.data??[];
+        return result.data ?? [];
     }
     return [];
 }
@@ -34,9 +34,9 @@ const getMenuById = async (id: number): Promise<Menu | null> => {
     return result.success ? result.data ?? null : null;
 };
 
-const createMenu = async (command: AddMenuPayload): Promise<Menu | null> => {
+const createMenu = async (command: AddMenuPayload): Promise<Menu | string | null> => {
     const result = await menuRepository.createMenu(command);
-    return result.success ? result.data ?? null : null;
+    return result.success ? result.data ?? null : result.message ?? null;
 };
 
 const updateMenu = async (id: number, command: UpdateMenuPayload): Promise<Menu | null> => {

@@ -17,7 +17,8 @@ interface InputProps {
   error?: boolean;
   hint?: string; // Optional hint text
   label?: string;
-  suffix?: any
+  suffix?: any,
+  required?: boolean
 }
 
 const Input: FC<InputProps> = ({
@@ -36,7 +37,8 @@ const Input: FC<InputProps> = ({
   error = false,
   hint,
   label,
-  suffix
+  suffix,
+  required
 }) => {
   // Determine input styles based on state (disabled, success, error)
   let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${className}`;
@@ -57,9 +59,10 @@ const Input: FC<InputProps> = ({
 
       {
 
-        label && <Label>{label}</Label>
+        label && <Label>{label} <span className={`${required ? "text-red-500" : "hidden"}`}>*</span></Label>
       }
       <input
+        required={required}
         type={type}
         id={id}
         name={name}

@@ -23,6 +23,7 @@ interface SelectProps {
   defaultValue?: string;
   name?: string,
   label?: string
+  required?: boolean
 }
 
 const CustomSelect: React.FC<SelectProps> = ({
@@ -32,13 +33,18 @@ const CustomSelect: React.FC<SelectProps> = ({
   className = "",
   defaultValue = "",
   name,
-  label
+  label,
+  required
 }) => {
   // Manage the selected value
-  const [selectedValue, setSelectedValue] = useState<string>(String(defaultValue));
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(defaultValue ? String(defaultValue) : undefined);
 
-  const handleChange = (value: string) => {
-    setSelectedValue(value.toString());
+  const handleChange = (value: string | undefined) => {
+    if (value === "__clear") {
+      setSelectedValue(undefined); // clear selection
+    } else {
+      setSelectedValue(value);
+    }
     const option = options.find((o) => String(o.value) === value);
     if (option) {
       onChange?.(option.value);
@@ -48,17 +54,22 @@ const CustomSelect: React.FC<SelectProps> = ({
   return (
     <div className="w-full">
       {
-        label && <Label>{label}</Label>
+
+        label && <Label>{label} <span className={`${required ? "text-red-500" : "hidden"}`}>*</span></Label>
       }
-      <Select name={name} value={selectedValue} onValueChange={handleChange}>
+      <Select required={required} name={name} value={selectedValue} onValueChange={handleChange}>
         <SelectTrigger >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent position="popper" className="z-[999999]">
           <SelectGroup>
-            {
-              label && <SelectLabel>{label ?? ""}</SelectLabel>
-            }
+            <SelectItem
+              value="__clear"
+              className="text-red-500"
+            >
+              Xóa lựa chọn
+            </SelectItem>
+            {/* <SelectLabel className="cursor-pointer" onClick={() => { handleChange(undefined) }}>Xóa lựa chọn</SelectLabel> */}
             {options.map((option) => (
               <SelectItem key={option.value} value={String(option.value)}>{option.label}</SelectItem>
             ))}
