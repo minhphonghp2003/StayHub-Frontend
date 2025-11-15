@@ -1,15 +1,12 @@
 "use client";
+import authenticationService from "@/core/service/RBAC/authentication-service";
+import { RootState } from "@/redux/store";
 import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import authenticationService from "@/core/service/RBAC/authentication-service";
-import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { AuthModel } from "@/core/model/RBAC/Auth";
-import { getAuthInfo } from "@/core/service/RBAC/token-service";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,15 +1,15 @@
-import { toast, ToastContent, ToastOptions, Slide, Id } from "react-toastify";
+import { Id, Slide, toast, ToastContent, ToastOptions } from "react-toastify";
 
 
 export const defaultToastOptions: ToastOptions = {
-    position: "top-right",
-    autoClose: 1000,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-    transition: Slide,
+  position: "top-right",
+  autoClose: 1000,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "colored",
+  transition: Slide,
 };
 
 type ToastType = "success" | "error" | "info" | "warning" | "default";
@@ -23,25 +23,25 @@ type ToastType = "success" | "error" | "info" | "warning" | "default";
  * @return {Id}
  */
 export const showToast = (
-    { type = "default", content, options }: { type: ToastType, content: ToastContent, options?: Partial<ToastOptions> }
+  { type = "default", content, options }: { type: ToastType, content: ToastContent, options?: Partial<ToastOptions> }
 
 ): Id => {
-    const optionsToApply = { ...defaultToastOptions, ...options };
+  const optionsToApply = { ...defaultToastOptions, ...options };
 
-    switch (type) {
-        case "success":
-            return toast.success(content, optionsToApply);
-        case "error":
-            return toast.error(content, optionsToApply);
-        case "info":
-            return toast.info(content, optionsToApply);
-        case "warning":
-            return toast.warn(content, optionsToApply);
-        case "default":
-            return toast(content, optionsToApply);
-        default:
-            return toast(content, optionsToApply);
-    }
+  switch (type) {
+    case "success":
+      return toast.success(content, optionsToApply);
+    case "error":
+      return toast.error(content, optionsToApply);
+    case "info":
+      return toast.info(content, optionsToApply);
+    case "warning":
+      return toast.warn(content, optionsToApply);
+    case "default":
+      return toast(content, optionsToApply);
+    default:
+      return toast(content, optionsToApply);
+  }
 };
 export const toastPromise = async (
   promise: Promise<any>,

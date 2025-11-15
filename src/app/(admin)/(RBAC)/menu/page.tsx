@@ -1,6 +1,5 @@
-import PageBreadcrumb from '@/components/common/PageBreadCrumb'
-import React, { useEffect, useState } from 'react'
 import MenuItem from '@/app/(admin)/(RBAC)/menu/menu-items/menu-items'
+import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 async function MenuPage() {
 
     return (

@@ -1,12 +1,12 @@
 import {
     Pagination,
     PaginationContent,
+    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
-    PaginationPrevious,
     PaginationNext,
-    PaginationEllipsis,
-} from "@/components/ui/shadcn/pagination"
+    PaginationPrevious,
+} from "@/components/ui/shadcn/pagination";
 
 export function PaginationComponent({
     currentPage,

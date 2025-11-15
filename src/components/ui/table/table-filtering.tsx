@@ -1,4 +1,4 @@
-import React from 'react'
+import { Button } from '@/components/ui/shadcn/button'
 import {
     Drawer,
     DrawerClose,
@@ -6,11 +6,9 @@ import {
     DrawerDescription,
     DrawerFooter,
     DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
+    DrawerTitle
 } from "@/components/ui/shadcn/drawer"
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/shadcn/button'
 function TableFilterDrawer({ isOpen, onApply, onRemoveAllFilters, children }: { isOpen: boolean, onApply: any, onRemoveAllFilters?: any, children?: any }) {
     return (
         <Drawer direction='right' open={isOpen} onOpenChange={onApply}>

@@ -2,15 +2,12 @@
 import Checkbox from "@/components/form/Checkbox";
 import Input from "@/components/form/InputField";
 import Label from "@/components/form/Label";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
-import Link from "next/link";
-import React, { useState } from "react";
-import OauthOption from "./OauthOption";
 import authenticationService from "@/core/service/RBAC/authentication-service";
+import { EyeCloseIcon, EyeIcon } from "@/icons";
 import { showToast } from "@/lib/alert-helper";
-import { toast } from "react-toastify";
+import Link from "next/link";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/features/RBAC/UserSlice";
 import { Button } from "../ui/shadcn/button";
 
 export default function SignInForm() {

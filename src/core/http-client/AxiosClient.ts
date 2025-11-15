@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { authInterceptor } from './interceptor/AuthInterceptor';
 import { errorInterceptor } from './interceptor/ErrorInterceptor';
 

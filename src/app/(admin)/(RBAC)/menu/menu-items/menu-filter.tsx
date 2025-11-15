@@ -1,10 +1,9 @@
-import ComponentCard from '@/components/common/ComponentCard'
 import List from '@/components/ui/list/list'
 import TableFilterDrawer from '@/components/ui/table/table-filtering'
 import { TableFitler } from '@/core/model/application/filter'
 import { CategoryItem } from '@/core/model/catalog/category-item'
 import { categoryItemService } from '@/core/service/catalog/category-item-service'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function MenuFilterDrawer({ isOpen, setOpenFilter, initFilter, onRemoveAllFilters, onFiltered }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], onFiltered: (filtered: TableFitler[]) => void, onRemoveAllFilters?: any }) {
     let [selectedGroupFilter, setSelectedGroupFilter] = useState<number | null>()

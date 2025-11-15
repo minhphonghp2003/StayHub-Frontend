@@ -1,9 +1,9 @@
-import { Outfit, Roboto, Be_Vietnam_Pro } from 'next/font/google';
+import { Be_Vietnam_Pro } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
-import { ThemeProvider } from '@/context/ThemeContext';
 import StoreProvider from '@/context/StoreContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { ToastContainer } from 'react-toastify';
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese', 'latin'], // Include both for broader support

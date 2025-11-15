@@ -1,17 +1,10 @@
 "use client"
 
-import {
-    ColumnDef,
-    flexRender,
-    SortingState,
-    ColumnFiltersState,
-    getFilteredRowModel,
-
-    getSortedRowModel,
-    getCoreRowModel,
-    useReactTable,
-
-} from "@tanstack/react-table"
+import ComponentCard from "@/components/common/ComponentCard"
+import Input from "@/components/form/InputField"
+import { PaginationComponent } from "@/components/ui/pagination/pagination-component"
+import { Button } from "@/components/ui/shadcn/button"
+import { Spinner } from "@/components/ui/shadcn/spinner"
 import {
     Table,
     TableBody,
@@ -19,18 +12,21 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-
 } from "@/components/ui/shadcn/table"
-import React, { ReactNode } from "react"
-import Input from "@/components/form/InputField"
-import { Button } from "@/components/ui/shadcn/button"
-import { Plus, SlidersHorizontal, Upload, X } from "lucide-react"
-import ComponentCard from "@/components/common/ComponentCard"
-import Badge from "@/components/ui/badge/Badge"
-import { TableFitler } from "@/core/model/application/filter"
-import { Spinner } from "@/components/ui/shadcn/spinner"
+import {
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+
+    getSortedRowModel,
+    SortingState,
+    useReactTable,
+} from "@tanstack/react-table"
+import { Plus, SlidersHorizontal, Upload } from "lucide-react"
 import Image from "next/image"
-import { PaginationComponent } from "@/components/ui/pagination/pagination-component"
+import React, { ReactNode } from "react"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]

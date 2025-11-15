@@ -1,19 +1,15 @@
+import DynamicIcon from '@/components/common/DynamicIcon';
 import Input from '@/components/form/InputField';
-import Label from '@/components/form/Label';
-import ActionModal from '@/components/ui/modal/ActionModal'
-import { CategoryItem } from '@/core/model/catalog/category-item';
-import { Menu } from '@/core/model/RBAC/Menu';
-import { categoryItemService } from '@/core/service/catalog/category-item-service';
-import menuService from '@/core/service/RBAC/menu-service';
-import { ArrowBigDown, ChevronDownIcon } from 'lucide-react';
-import React, { useEffect, useState } from 'react'
-import Dropzone from 'react-dropzone';
 import CustomSelect from '@/components/form/Select';
 import TextArea from '@/components/form/TextArea';
-import DynamicIcon from '@/components/common/DynamicIcon';
+import ActionModal from '@/components/ui/modal/ActionModal';
+import { CategoryItem } from '@/core/model/catalog/category-item';
 import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
+import { categoryItemService } from '@/core/service/catalog/category-item-service';
+import menuService from '@/core/service/RBAC/menu-service';
 import { showToast, toastPromise } from '@/lib/alert-helper';
 import { parseOptionalNumber } from '@/lib/utils';
+import { useEffect, useState } from 'react';
 
 function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeModal: any, reload?: any }) {
     let [menuGroups, setMenuGroup] = useState<CategoryItem[]>([])

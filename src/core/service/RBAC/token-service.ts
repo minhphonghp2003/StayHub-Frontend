@@ -1,5 +1,4 @@
 import { AuthModel } from "@/core/model/RBAC/Auth";
-import { useDispatch } from "react-redux";
 
 const removeAuthInfo = async () => {
     localStorage.removeItem('user');
@@ -49,6 +48,4 @@ const isJWTExpired = (token: string) => {
     return decoded.exp < currentTime;
 }
 
-export {
-    removeAuthInfo, setAuthInfo, getAuthInfo
-}
+export { getAuthInfo, removeAuthInfo, setAuthInfo };

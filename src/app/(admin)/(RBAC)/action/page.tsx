@@ -1,5 +1,4 @@
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
-import React from 'react'
 
 function ActionPage() {
     return (

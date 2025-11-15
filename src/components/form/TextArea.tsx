@@ -1,37 +1,25 @@
 import Label from "@/components/form/Label";
-import React from "react";
+import { forwardRef, TextareaHTMLAttributes } from "react";
 
-interface TextareaProps {
-  placeholder?: string; // Placeholder text
-  rows?: number; // Number of rows
-  value?: string; // Current value
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void; // Change handler
-  className?: string; // Additional CSS classes
-  disabled?: boolean; // Disabled state
-  error?: boolean; // Error state
-  hint?: string; // Hint text to display
-  name?: string,
-  label?: string,
-  required?: boolean
+interface TextAreaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> {
+  label?: string;
+  hint?: string;
+  error?: boolean;
+  required?: boolean;
 }
 
-const TextArea: React.FC<TextareaProps> = ({
-  placeholder = "Enter your message", // Default placeholder
-  rows = 3, // Default number of rows
-  value = "", // Default value
-  onChange,// Callback for changes
-  className = "", // Additional custom styles
-  disabled = false, // Disabled state
-  error = false, // Error state
-  hint = "", // Default hint text
-  name,
+const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(({
   label,
-  required
-}) => {
+  hint,
+  error = false,
+  required = false,
+  className = "",
+  ...rest
+}, ref) => {
 
-  let textareaClasses = `w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-hidden ${className}`;
+  let textareaClasses = `w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-none ${className}`;
 
-  if (disabled) {
+  if (rest.disabled) {
     textareaClasses += ` bg-gray-100 opacity-50 text-gray-500 border-gray-300 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700`;
   } else if (error) {
     textareaClasses += ` bg-transparent text-gray-400 border-gray-300 focus:border-error-300 focus:ring-3 focus:ring-error-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:focus:border-error-800`;
@@ -40,31 +28,29 @@ const TextArea: React.FC<TextareaProps> = ({
   }
 
   return (
-    <div className="relative">
-      {
+    <div className="relative w-full">
+      {label && (
+        <Label>
+          {label} {required && <span className="text-red-500">*</span>}
+        </Label>
+      )}
 
-        label && <Label>{label} <span className={`${required ? "text-red-500" : "hidden"}`}>*</span></Label>
-      }
       <textarea
-        required={required}
-        name={name}
-        placeholder={placeholder}
-        rows={rows}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
+        ref={ref}   // important for RHF
         className={textareaClasses}
+        required={required}
+        {...rest}  // includes value, onChange, name, placeholder, rows, etc.
       />
+
       {hint && (
-        <p
-          className={`mt-2 text-sm ${error ? "text-error-500" : "text-gray-500 dark:text-gray-400"
-            }`}
-        >
+        <p className={`mt-2 text-sm ${error ? "text-error-500" : "text-gray-500 dark:text-gray-400"}`}>
           {hint}
         </p>
       )}
     </div>
   );
-};
+});
+
+TextArea.displayName = "TextArea";
 
 export default TextArea;

@@ -1,6 +1,4 @@
 import { getAuthInfo } from "@/core/service/RBAC/token-service";
-import { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
-import Cookies from 'js-cookie';
 // TODO cookie and local storage not sync
 export const authInterceptor = async (config: any) => {
     const token = await getToken();

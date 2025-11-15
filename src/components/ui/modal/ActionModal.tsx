@@ -1,13 +1,6 @@
 "use client"
-import PageBreadcrumb from '@/components/common/PageBreadCrumb'
-import React, { useEffect, useState } from 'react'
-import { Menu } from '@/core/model/RBAC/Menu';
-import MenuService from '@/core/service/RBAC/menu-service';
-import ComponentCard from '@/components/common/ComponentCard'
-import { Button } from '@/components/ui/shadcn/button'
-import { useModal } from '@/hooks/useModal'
-import { Modal } from '@/components/ui/modal'
-import { SlidersHorizontal } from 'lucide-react'
+import { Modal } from '@/components/ui/modal';
+import { Button } from '@/components/ui/shadcn/button';
 function ActionModal({ isOpen, closeModal, onConfirm, children, heading, closeOnEsc = false, closeOnOutsideClick = false, isFullscreen = false, size = "lg" }: any) {
 
     return (

@@ -1,7 +1,6 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
-import StoreProvider from "@/context/StoreContext";
 import { Menu } from "@/core/model/RBAC/Menu";
 import MenuService from "@/core/service/RBAC/menu-service";
 import { getAuthInfo } from "@/core/service/RBAC/token-service";
@@ -9,8 +8,7 @@ import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
 import { setUser } from "@/redux/features/RBAC/UserSlice";
-import { AppStore, store } from "@/redux/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function AdminLayout({

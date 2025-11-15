@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -7,14 +6,13 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+    AlertDialogTitle
 } from "@/components/ui/shadcn/alert-dialog"
 import { Button } from '@/components/ui/shadcn/button'
-import { Trash2 } from 'lucide-react'
 import { Menu } from '@/core/model/RBAC/Menu'
 import menuService from '@/core/service/RBAC/menu-service'
 import { toastPromise } from '@/lib/alert-helper'
+import { Trash2 } from 'lucide-react'
 function MenuDeleteDialog({ isOpen, closeModal, reload, menu }: { isOpen: boolean, closeModal: any, reload?: any, menu?: Menu | null }) {
 
     const deleteMenu = async () => {
