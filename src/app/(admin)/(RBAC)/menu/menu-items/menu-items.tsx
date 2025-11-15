@@ -38,7 +38,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import MenuDeleteDialog from '@/app/(admin)/(RBAC)/menu/menu-items/menu-delete-dialog';
 import { SelectItem } from '@radix-ui/react-select';
-// TODO CRUD menu 
+// TODO change table (if possible), move to local db, update status
 function MenuItem() {
     // ---------------query param------------
     const router = useRouter();
@@ -114,7 +114,7 @@ function MenuItem() {
                                     <MoreHorizontal className="h-4 w-4  " />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={openUpdateModal}>
+                                    <DropdownMenuItem onClick={() => { setSelected(menu); openUpdateModal() }}>
                                         <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
                                         <span className='text-blue-500'>
                                             Cập nhật
@@ -139,7 +139,7 @@ function MenuItem() {
         <div>
             <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} reload={fetchData} />
-            <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
+            <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} menu={selected} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
             <MenuDeleteDialog isOpen={isOpenDelete} closeModal={closeDeleteModal} reload={fetchData} menu={selected} />
         </div>

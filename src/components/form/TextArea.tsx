@@ -5,7 +5,7 @@ interface TextareaProps {
   placeholder?: string; // Placeholder text
   rows?: number; // Number of rows
   value?: string; // Current value
-  onChange?: (value: string) => void; // Change handler
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void; // Change handler
   className?: string; // Additional CSS classes
   disabled?: boolean; // Disabled state
   error?: boolean; // Error state
@@ -19,7 +19,7 @@ const TextArea: React.FC<TextareaProps> = ({
   placeholder = "Enter your message", // Default placeholder
   rows = 3, // Default number of rows
   value = "", // Default value
-  onChange, // Callback for changes
+  onChange,// Callback for changes
   className = "", // Additional custom styles
   disabled = false, // Disabled state
   error = false, // Error state
@@ -28,11 +28,6 @@ const TextArea: React.FC<TextareaProps> = ({
   label,
   required
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (onChange) {
-      onChange(e.target.value);
-    }
-  };
 
   let textareaClasses = `w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-hidden ${className}`;
 
@@ -56,7 +51,7 @@ const TextArea: React.FC<TextareaProps> = ({
         placeholder={placeholder}
         rows={rows}
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         disabled={disabled}
         className={textareaClasses}
       />

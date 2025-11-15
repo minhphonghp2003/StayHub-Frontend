@@ -1,16 +1,15 @@
 import Label from "@/components/form/Label";
 import React, { FC, FormEventHandler } from "react";
-
-interface InputProps {
+import { InputHTMLAttributes, ReactNode } from "react";
+import { FieldError } from "react-hook-form";
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
   id?: string;
   name?: string;
   placeholder?: string;
-  defaultValue?: string | number;
+  defaultValue?: string | number | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  min?: string;
-  max?: string;
   step?: number;
   disabled?: boolean;
   success?: boolean;
@@ -29,8 +28,6 @@ const Input: FC<InputProps> = ({
   defaultValue,
   onChange,
   className = "",
-  min,
-  max,
   step,
   disabled = false,
   success = false,
@@ -69,8 +66,6 @@ const Input: FC<InputProps> = ({
         placeholder={placeholder}
         defaultValue={defaultValue}
         onChange={onChange}
-        min={min}
-        max={max}
         step={step}
         disabled={disabled}
         className={inputClasses}

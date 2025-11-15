@@ -21,7 +21,7 @@ interface Option {
 interface SelectProps {
   options: Option[];
   placeholder?: string;
-  onChange?: (value: string) => void;
+  onChange?: any;
   className?: string;
   defaultValue?: string;
   name?: string,
@@ -49,10 +49,10 @@ const CustomSelect: React.FC<SelectProps> = ({
     } else {
       setSelectedValue(value);
     }
-    const option = options.find((o) => String(o.value) === value);
-    if (option) {
-      onChange?.(option.value);
-    }
+    // const option = options.find((o) => String(o.value) === value);
+    // if (option) {
+    //   onChange?.(option.value);
+    // }
   };
 
   return (
