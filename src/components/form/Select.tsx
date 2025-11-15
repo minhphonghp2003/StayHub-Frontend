@@ -50,8 +50,8 @@ const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>(({
       onChange?.(undefined);
     } else {
       setSelectedValue(value);
-      const option = options.find((o) => String(o.value) === value);
-      onChange?.(option?.value);
+      // const option = options.find((o) => String(o.value) === value);
+      // onChange?.(option?.value);
     }
   };
 

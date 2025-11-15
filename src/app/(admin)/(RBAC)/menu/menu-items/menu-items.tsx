@@ -120,7 +120,7 @@ function MenuItem() {
         <div>
             <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} reload={fetchData} />
-            <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} menu={selected} />
+            <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} menu={selected} reload={fetchData} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
             <MenuDeleteDialog isOpen={isOpenDelete} closeModal={closeDeleteModal} reload={fetchData} menu={selected} />
         </div>

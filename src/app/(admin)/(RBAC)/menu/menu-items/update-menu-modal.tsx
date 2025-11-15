@@ -5,8 +5,10 @@ import TextArea from '@/components/form/TextArea';
 import ActionModal from '@/components/ui/modal/ActionModal';
 import { CategoryItem } from '@/core/model/catalog/category-item';
 import { Menu } from '@/core/model/RBAC/Menu';
+import { UpdateMenuPayload } from '@/core/payload/RBAC/udpate-menu-payload';
 import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import menuService from '@/core/service/RBAC/menu-service';
+import { showToast, toastPromise } from '@/lib/alert-helper';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -18,7 +20,7 @@ type FormValues = {
     parentId?: number;
     description?: string;
 };
-function UpdateMenuModal({ isOpen, closeModal, menu }: { isOpen: boolean, closeModal: any, menu?: Menu | null }) {
+function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean, closeModal: any, menu?: Menu | null, reload: any }) {
     let [menuGroups, setMenuGroup] = useState<CategoryItem[]>([])
     let [parentMenus, setParentMenus] = useState<CategoryItem[]>([])
     let [icon, setIcon] = useState<string>("")
@@ -34,24 +36,36 @@ function UpdateMenuModal({ isOpen, closeModal, menu }: { isOpen: boolean, closeM
     });
 
     const handleSubmitForm: SubmitHandler<FormValues> = async (data,) => {
-        // Convert optional number fields to number or undefined
-        // const payload: AddMenuPayload = {
-        //     name: data.name,
-        //     path: data.path,
-        //     icon: data.icon || undefined,
-        //     groupId: data.groupId ? Number(data.groupId) : undefined,
-        //     parentId: data.parentId ? Number(data.parentId) : undefined,
-        //     description: data.description || undefined,
-        // };
+        const payload: UpdateMenuPayload = {
+            name: data.name,
+            path: data.path,
+            icon: data.icon || undefined,
+            groupId: data.groupId ? Number(data.groupId) : 0,
+            parentId: data.parentId ? Number(data.parentId) : undefined,
+            description: data.description || undefined,
+        };
+        try {
+            const result = await toastPromise(
+                menuService.updateMenu(menu?.id ?? 0, payload),
+                {
+                    loading: "Cập nhật menu...",
+                    success: "Cập nhật menu thành công!",
+                    error: "Cập nhật menu thất bại!",
+                }
+            );
+            if (result) {
+                closeModal();
+                reload();
+                form.reset()
+            }
+        } catch (err) {
+            showToast({ type: "error", content: "Có lỗi xảy ra" })
+        }
 
-        // const data = form.getValues();
-        console.log(data);
-        // closeModal();
-        // form.reset()
     };
     useEffect(() => {
         if (!isOpen) return;
-
+        form.reset();
         Promise.all([
             menuService.getMenuById(menu?.id ?? 0),
             menuService.getAllNoPaginateMenus(),
@@ -78,7 +92,7 @@ function UpdateMenuModal({ isOpen, closeModal, menu }: { isOpen: boolean, closeM
     }, [isOpen])
 
     return (
-        <ActionModal size="md" isOpen={isOpen} closeModal={closeModal} onConfirm={() => { form.handleSubmit(handleSubmitForm) }} heading={"Cập nhật menu"} >
+        <ActionModal size="md" isOpen={isOpen} closeModal={closeModal} onConfirm={form.handleSubmit(handleSubmitForm)} heading={"Cập nhật menu"} >
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-2  justify-between items-center'>
                     <Input  {...form.register("name")} required label='Tên' type="text" />
