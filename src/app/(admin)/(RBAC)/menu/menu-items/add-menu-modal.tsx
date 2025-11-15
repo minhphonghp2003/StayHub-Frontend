@@ -29,7 +29,9 @@ function AddMenuModal({ isOpen, closeModal }: { isOpen: boolean, closeModal: any
             })
             categoryItemService.getCategoryItemsByCategoryCode("MENU").then(e => setMenuGroup(e))
         }
-
+        return () => {
+            setIcon("")
+        };
     }, [isOpen])
 
     return (
