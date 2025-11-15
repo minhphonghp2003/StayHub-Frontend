@@ -22,7 +22,7 @@ import {
 
 } from "@/components/ui/shadcn/table"
 import React, { ReactNode } from "react"
-import Input from "@/components/form/input/InputField"
+import Input from "@/components/form/InputField"
 import { Button } from "@/components/ui/shadcn/button"
 import { Plus, SlidersHorizontal, Upload, X } from "lucide-react"
 import ComponentCard from "@/components/common/ComponentCard"

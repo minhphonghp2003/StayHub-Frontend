@@ -23,15 +23,21 @@ function ActionModal({ isOpen, closeModal, onConfirm, children, heading, closeOn
             <h4 className="font-semibold text-gray-800 mb-7 text-title-sm dark:text-white/90">
                 {heading}
             </h4>
-            {children}
-            <div className="flex items-center justify-end w-full gap-3 mt-8">
-                <Button size="lg" variant="outline" onClick={closeModal}>
-                    Đóng
-                </Button>
-                <Button size="lg" onClick={onConfirm}>
-                    Xác nhận
-                </Button>
-            </div>
+            <form onSubmit={onConfirm}>
+
+                {children}
+                <div className="flex items-center justify-end w-full gap-3 mt-8">
+                    <Button size="lg" variant="outline" onClick={closeModal}>
+                        Đóng
+                    </Button>
+                    {
+
+                        onConfirm && <Button type='submit' size="lg">
+                            Xác nhận
+                        </Button>
+                    }
+                </div>
+            </form>
         </Modal>
     )
 }
