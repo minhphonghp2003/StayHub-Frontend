@@ -8,7 +8,17 @@ import { useModal } from '@/hooks/useModal'
 import { Modal } from '@/components/ui/modal'
 import { Edit2, MoreHorizontal, RefreshCcw, SlidersHorizontal, Trash2 } from 'lucide-react'
 import ActionModal from '@/components/ui/modal/ActionModal'
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/shadcn/alert-dialog"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,6 +36,7 @@ import { TableFitler } from '@/core/model/application/filter';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
+import MenuDeleteDialog from '@/app/(admin)/(RBAC)/menu/menu-items/menu-delete-dialog';
 // TODO CRUD menu 
 function MenuItem() {
     // ---------------query param------------
@@ -43,6 +54,7 @@ function MenuItem() {
     const [openFilter, setOpenFilter] = React.useState(false)
     const { isOpen: isOpenAdd, openModal: openAddModal, closeModal: closeAddModal } = useModal();
     const { isOpen: isOpenUpdate, openModal: openUpdateModal, closeModal: closeUpdateModal } = useModal();
+    const { isOpen: isOpenDelete, openModal: openDeleteModal, closeModal: closeDeleteModal } = useModal();
     // ----------------------------------------------
 
     useEffect(() => {
@@ -100,23 +112,17 @@ function MenuItem() {
                                     <MoreHorizontal className="h-4 w-4  " />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>
-                                        <RefreshCcw className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                        <span className='text-blue-500'>
-                                            Cập nhật trạng thái
-                                        </span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
                                     <DropdownMenuItem onClick={openUpdateModal}>
                                         <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
                                         <span className='text-blue-500'>
                                             Cập nhật
                                         </span>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem >
+                                    <DropdownMenuItem onClick={openDeleteModal}>
                                         <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
                                         <span className='text-red-500'>Xóa</span>
                                     </DropdownMenuItem>
+
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
@@ -133,7 +139,7 @@ function MenuItem() {
             <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} reload={fetchData} />
             <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
-
+            <MenuDeleteDialog isOpen={isOpenDelete} closeModal={closeDeleteModal} reload={fetchData} />
         </div>
     )
 }
