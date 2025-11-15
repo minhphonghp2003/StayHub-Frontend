@@ -75,6 +75,7 @@ export const menuColumns: ColumnDef<Menu>[] = [
     },
     {
         accessorKey: "isActive",
+        id: "isActive",
         header: ({ column }) => {
             return (
                 <Button

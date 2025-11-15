@@ -4,6 +4,8 @@ import { menuColumns } from '@/app/(admin)/(RBAC)/menu/menu-items/menu-columns';
 import MenuDeleteDialog from '@/app/(admin)/(RBAC)/menu/menu-items/menu-delete-dialog';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 import UpdateMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/update-menu-modal';
+import Switch from '@/components/form/Switch';
+import Badge from '@/components/ui/badge/Badge';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,13 +15,15 @@ import {
 import { DataTable } from '@/components/ui/table/data-table';
 import { TableFitler } from '@/core/model/application/filter';
 import { Menu } from '@/core/model/RBAC/Menu';
+import menuService from '@/core/service/RBAC/menu-service';
 import MenuService from '@/core/service/RBAC/menu-service';
 import { useModal } from '@/hooks/useModal';
+import { toastPromise } from '@/lib/alert-helper';
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-// TODO change table (if possible), move to local db, update status, form
+// TODO change table (if possible), move to local db,  form
 function MenuItem() {
     // ---------------query param------------
     const router = useRouter();
@@ -83,7 +87,43 @@ function MenuItem() {
     }
 
     const columns = menuColumns.map((col) => {
+        if (col.id === "isActive") {
+            return {
+                ...col,
+                cell: ({ row }: any) => {
+                    const menu = row.original;
+
+                    return (
+                        <div className="flex justify-between">
+                            <Badge size="sm" color={row.getValue("isActive") ? 'success' : 'warning'}>
+                                {row.getValue("isActive") ? "Đang kích hoạt" : "Chưa kích hoạt"}
+                            </Badge>
+                            <Switch
+                                defaultChecked={menu.isActive}
+                                onChange={async (value) => {
+
+                                    const result = await toastPromise(menuService.setActivateMenu(menu.id, value),
+                                        {
+                                            loading: "Đang cập nhật trạng thái...",
+                                            success: "Cập nhật trạng thái thành công!",
+                                            error: "Cập nhật trạng thái thất bại!",
+                                        })
+                                    setMenuData(prev =>
+                                        prev.map(item =>
+                                            item.id === menu.id
+                                                ? { ...item, isActive: value, }
+                                                : item
+                                        )
+                                    );
+
+                                }} label={''} />
+                        </div>
+                    );
+                },
+            };
+        }
         if (col.id === "actions") {
+
             return {
                 ...col,
                 cell: ({ row }: any) => {
