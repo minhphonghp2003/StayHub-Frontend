@@ -1,10 +1,12 @@
 "use client"
 
+import Switch from "@/components/form/Switch"
 import Badge from "@/components/ui/badge/Badge"
 import { Button } from "@/components/ui/shadcn/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu"
 import { Menu } from "@/core/model/RBAC/Menu"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react"
 const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: '2-digit',
@@ -13,8 +15,13 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
     minute: '2-digit',
     hour12: false
 });
+export interface ColumnProp {
+    onDelete: (menu: Menu) => void;
+    onUpdate: (menu: Menu) => void;
+    onToggleActive: (menu: Menu, value: boolean) => void;
+}
 
-export const menuColumns: ColumnDef<Menu>[] = [
+export const getMenuColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp): ColumnDef<Menu>[] => [
     {
         id: "index",
         header: ({ column }) => {
@@ -88,12 +95,20 @@ export const menuColumns: ColumnDef<Menu>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => {
-            return <Badge size="sm" color="success">
-                {row.getValue("isActive") ? "Đang kích hoạt" : "Chưa kích hoạt"}
-            </Badge>
+        cell: ({ row }: any) => {
+            const menu = row.original;
 
-
+            return (
+                <div className="flex justify-between">
+                    <Badge size="sm" color={row.getValue("isActive") ? 'success' : 'warning'}>
+                        {row.getValue("isActive") ? "Đang kích hoạt" : "Chưa kích hoạt"}
+                    </Badge>
+                    <Switch
+                        defaultChecked={menu.isActive}
+                        onChange={(val) => onToggleActive(menu, val)}
+                        label={''} />
+                </div>
+            );
         },
     },
     {
@@ -119,7 +134,37 @@ export const menuColumns: ColumnDef<Menu>[] = [
     },
     {
         id: "actions",
-        cell: () => null,
+        cell: ({ row }: any) => {
+            const menu = row.original
+            return (
+                <div className='flex justify-center'>
+                    <DropdownMenu >
+                        <DropdownMenuTrigger asChild>
+                            <MoreHorizontal className="h-4 w-4  " />
+
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => {
+                                onUpdate(menu)
+                            }
+                            }>
+                                <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
+                                <span className='text-blue-500'>
+                                    Cập nhật
+                                </span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                                onDelete(menu)
+                            }}>
+                                <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
+                                <span className='text-red-500'>Xóa</span>
+                            </DropdownMenuItem>
+
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )
+        },
     },
 
 ]

@@ -1,6 +1,6 @@
 'use client'
 import AddMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/add-menu-modal';
-import { menuColumns } from '@/app/(admin)/(RBAC)/menu/menu-items/menu-columns';
+import { getMenuColumns } from '@/app/(admin)/(RBAC)/menu/menu-items/menu-columns';
 import MenuDeleteDialog from '@/app/(admin)/(RBAC)/menu/menu-items/menu-delete-dialog';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 import UpdateMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/update-menu-modal';
@@ -23,7 +23,12 @@ import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-// TODO change table (if possible), move to local db,  form
+// TODO   form
+type ModalState = {
+    type: 'ADD' | 'UPDATE' | 'DELETE' | null;
+    data: Menu | null;
+};
+
 function MenuItem() {
     // ---------------query param------------
     const router = useRouter();
@@ -32,17 +37,12 @@ function MenuItem() {
     const page = searchParams.get('page')
     const menuGroup = searchParams.get('group')
     // -------------- component sate-----
+    let [modal, setModalState] = useState<ModalState>({ type: null, data: null });
     let [loading, setLoading] = useState(true)
     let [menuData, setMenuData] = useState<Menu[]>([])
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
     const [filter, setFilter] = useState<TableFitler[]>()
-    const [selected, setSelected] = useState<Menu | null>(null)
-    // --------modal/drawer state-----------------
     const [openFilter, setOpenFilter] = React.useState(false)
-    const { isOpen: isOpenAdd, openModal: openAddModal, closeModal: closeAddModal } = useModal();
-    const { isOpen: isOpenUpdate, openModal: openUpdateModal, closeModal: closeUpdateModal } = useModal();
-    const { isOpen: isOpenDelete, openModal: openDeleteModal, closeModal: closeDeleteModal } = useModal();
-    // ----------------------------------------------
 
     useEffect(() => {
         setFilter([
@@ -53,6 +53,10 @@ function MenuItem() {
         ])
         fetchData()
     }, [page, search, menuGroup])
+    // ---------------functions-----------------
+    let closeModal = () => {
+        setModalState({ type: null, data: null });
+    }
     let fetchData = async () => {
         setLoading(true)
         setMenuData([])
@@ -66,6 +70,21 @@ function MenuItem() {
         currentParams.set('page', page.toString());
         router.push(`?${currentParams.toString()}`);
     }, 500);
+    let onToggleActive = async (menu: Menu, value: boolean) => {
+        const result = await toastPromise(menuService.setActivateMenu(menu.id ?? 0, value),
+            {
+                loading: "Đang cập nhật trạng thái...",
+                success: "Cập nhật trạng thái thành công!",
+                error: "Cập nhật trạng thái thất bại!",
+            })
+        setMenuData(prev =>
+            prev.map(item =>
+                item.id === menu.id
+                    ? { ...item, isActive: value, }
+                    : item
+            )
+        );
+    }
     let onSearch = useDebouncedCallback((value) => {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set('search', value);
@@ -85,84 +104,14 @@ function MenuItem() {
         currentParams.delete('group');
         router.push(`?${currentParams.toString()}`);
     }
-
-    const columns = menuColumns.map((col) => {
-        if (col.id === "isActive") {
-            return {
-                ...col,
-                cell: ({ row }: any) => {
-                    const menu = row.original;
-
-                    return (
-                        <div className="flex justify-between">
-                            <Badge size="sm" color={row.getValue("isActive") ? 'success' : 'warning'}>
-                                {row.getValue("isActive") ? "Đang kích hoạt" : "Chưa kích hoạt"}
-                            </Badge>
-                            <Switch
-                                defaultChecked={menu.isActive}
-                                onChange={async (value) => {
-
-                                    const result = await toastPromise(menuService.setActivateMenu(menu.id, value),
-                                        {
-                                            loading: "Đang cập nhật trạng thái...",
-                                            success: "Cập nhật trạng thái thành công!",
-                                            error: "Cập nhật trạng thái thất bại!",
-                                        })
-                                    setMenuData(prev =>
-                                        prev.map(item =>
-                                            item.id === menu.id
-                                                ? { ...item, isActive: value, }
-                                                : item
-                                        )
-                                    );
-
-                                }} label={''} />
-                        </div>
-                    );
-                },
-            };
-        }
-        if (col.id === "actions") {
-
-            return {
-                ...col,
-                cell: ({ row }: any) => {
-                    const menu = row.original
-                    return (
-                        <div className='flex justify-center'>
-                            <DropdownMenu >
-                                <DropdownMenuTrigger asChild>
-                                    <MoreHorizontal className="h-4 w-4  " />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => { setSelected(menu); openUpdateModal() }}>
-                                        <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                        <span className='text-blue-500'>
-                                            Cập nhật
-                                        </span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => { setSelected(menu); openDeleteModal() }}>
-                                        <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                        <span className='text-red-500'>Xóa</span>
-                                    </DropdownMenuItem>
-
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    )
-                },
-
-            };
-        }
-        return col;
-    });
+    const columns = getMenuColumns({ onDelete: (menu) => setModalState({ type: 'DELETE', data: menu }), onUpdate: (menu) => setModalState({ type: 'UPDATE', data: menu }), onToggleActive });
     return (
         <div>
-            <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={openAddModal} onExportClicked={openAddModal} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
-            <AddMenuModal isOpen={isOpenAdd} closeModal={closeAddModal} reload={fetchData} />
-            <UpdateMenuModal isOpen={isOpenUpdate} closeModal={closeUpdateModal} menu={selected} reload={fetchData} />
+            <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
+            <AddMenuModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} />
+            <UpdateMenuModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} menu={modal.data} reload={fetchData} />
+            <MenuDeleteDialog isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} menu={modal.data} reload={fetchData} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
-            <MenuDeleteDialog isOpen={isOpenDelete} closeModal={closeDeleteModal} reload={fetchData} menu={selected} />
         </div>
     )
 }
