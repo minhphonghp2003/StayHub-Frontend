@@ -65,7 +65,6 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
     };
     useEffect(() => {
         if (!isOpen) return;
-        form.reset();
         Promise.all([
             menuService.getMenuById(menu?.id ?? 0),
             menuService.getAllNoPaginateMenus(),
@@ -83,11 +82,20 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                 groupId: menuDetailResponse?.groupId ?? 0,
                 parentId: menuDetailResponse?.parentId ?? undefined,
             });
+
+            console.log(form);
         });
 
         return () => {
             setIcon("");
-            form.reset()
+            form.reset({
+                name: "",
+                path: "",
+                icon: "",
+                groupId: 0,
+                parentId: 0,
+                description: "",
+            })
         };
     }, [isOpen])
 
