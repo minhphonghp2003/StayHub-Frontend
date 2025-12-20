@@ -17,6 +17,7 @@ import {
   UserCircleIcon
 } from "../icons/index";
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
+import DynamicIcon from "@/components/common/DynamicIcon";
 
 type NavItem = {
   name: string;
@@ -110,11 +111,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
 
   const renderMenuItems = (
     navItems: NavItem[],
-    menuType: "main" | "others"
+    menuType: any
   ) => (
     <ul className="flex flex-col gap-4">
       {navItems.map((nav, index) => (
-        <li key={nav.name}>
+        <li key={nav.path}>
           {nav.subItems ? (
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
@@ -132,7 +133,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                   : "menu-item-icon-inactive"
                   }`}
               >
-                {nav.icon}
+                <DynamicIcon iconString={nav.icon?.toString() ?? "<GridIcon />"} />
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
                 <span className={`menu-item-text`}>{nav.name}</span>
@@ -160,7 +161,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                     : "menu-item-icon-inactive"
                     }`}
                 >
-                  {nav.icon}
+                  <DynamicIcon iconString={nav.icon?.toString() ?? "<GridIcon />"} />
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className={`menu-item-text`}>{nav.name}</span>
@@ -226,7 +227,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
   );
 
   const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others";
+    type: any;
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
@@ -240,14 +241,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
   useEffect(() => {
     // Check if the current path matches any submenu item
     let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
-      items.forEach((nav, index) => {
+    menuGroups.forEach((menuGroup) => {
+      menuGroup.items?.forEach((nav, index) => {
         if (nav.subItems) {
           nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
+            if (isActive(subItem.path ?? "")) {
               setOpenSubmenu({
-                type: menuType as "main" | "others",
+                type: menuGroup.name,
                 index,
               });
               submenuMatched = true;
@@ -276,7 +276,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
     }
   }, [openSubmenu]);
 
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
+  const handleSubmenuToggle = (index: number, menuType: any) => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
         prevOpenSubmenu &&
@@ -338,7 +338,27 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
-            <div>
+            {
+              menuGroups.map((menuGroup) => (
+                <div key={menuGroup.name} className="">
+                  <h2
+
+                    className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
+                      ? "lg:justify-center"
+                      : "justify-start"
+                      }`}
+                  >
+                    {isExpanded || isHovered || isMobileOpen ? (
+                      menuGroup.name
+                    ) : (
+                      <HorizontaLDots />
+                    )}
+                  </h2>
+                  {renderMenuItems(menuGroup.items as NavItem[], menuGroup.name)}
+                </div>
+              ))
+            }
+            {/* <div>
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
                   ? "lg:justify-center"
@@ -368,7 +388,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                 )}
               </h2>
               {renderMenuItems(othersItems, "others")}
-            </div>
+            </div> */}
           </div>
         </nav>
 

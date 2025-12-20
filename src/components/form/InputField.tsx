@@ -44,7 +44,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       />
 
       {suffix && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        <div className="absolute right-3 top-1/2  pointer-events-none">
           {suffix}
         </div>
       )}
