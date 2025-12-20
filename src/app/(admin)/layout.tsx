@@ -1,7 +1,7 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
-import { Menu } from "@/core/model/RBAC/Menu";
+import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
 import MenuService from "@/core/service/RBAC/menu-service";
 import { getAuthInfo } from "@/core/service/RBAC/token-service";
 import AppHeader from "@/layout/AppHeader";
@@ -17,7 +17,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
-  let [menus, setMenus] = useState<Menu[]>([]);
+  let [menus, setMenus] = useState<MenuGroup[]>([]);
   const dispatch = useDispatch()
 
   let fetchMenus = async () => {
@@ -41,7 +41,7 @@ export default function AdminLayout({
 
     <div className="min-h-screen xl:flex bg-bg-white dark:bg-bg-black">
       {/* Sidebar and Backdrop */}
-      <AppSidebar />
+      <AppSidebar menuGroups={menus} />
       <Backdrop />
       {/* Main Content Area */}
       <div

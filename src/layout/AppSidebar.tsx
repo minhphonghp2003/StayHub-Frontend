@@ -16,6 +16,7 @@ import {
   TableIcon,
   UserCircleIcon
 } from "../icons/index";
+import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
 
 type NavItem = {
   name: string;
@@ -99,10 +100,13 @@ const othersItems: NavItem[] = [
     ],
   },
 ];
-
-const AppSidebar: React.FC = () => {
+type AppSidebarProps = {
+  menuGroups: MenuGroup[]
+};
+const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+
 
   const renderMenuItems = (
     navItems: NavItem[],
