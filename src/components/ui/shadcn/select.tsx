@@ -45,6 +45,7 @@ function SelectTrigger({
   // Size adjustments
   if (size === "sm") triggerClasses += " h-8 py-1.5 px-3";
 
+
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
@@ -54,9 +55,12 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-50" />
-      </SelectPrimitive.Icon>
+
+      {
+        !props.value && <SelectPrimitive.Icon asChild>
+          <ChevronDownIcon className="size-4 opacity-50" />
+        </SelectPrimitive.Icon>
+      }
     </SelectPrimitive.Trigger>
   );
 }

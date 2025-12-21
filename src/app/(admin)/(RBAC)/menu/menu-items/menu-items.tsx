@@ -9,7 +9,6 @@ import Badge from '@/components/ui/badge/Badge';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/shadcn/dropdown-menu";
 import { DataTable } from '@/components/ui/table/data-table';
@@ -26,8 +25,8 @@ import { useDebouncedCallback } from 'use-debounce';
 type ModalState = {
     type: 'ADD' | 'UPDATE' | 'DELETE' | null;
     data: Menu | null;
-};
-
+}
+//  TODO fix init form
 function MenuItem() {
     // ---------------query param------------
     const router = useRouter();

@@ -1,6 +1,6 @@
 import DynamicIcon from '@/components/common/DynamicIcon';
 import Input from '@/components/form/InputField';
-import CustomSelect from '@/components/form/Select';
+import { FormSelect } from '@/components/form/Select';
 import TextArea from '@/components/form/TextArea';
 import ActionModal from '@/components/ui/modal/ActionModal';
 import { CategoryItem } from '@/core/model/catalog/category-item';
@@ -10,11 +10,22 @@ import menuService from '@/core/service/RBAC/menu-service';
 import { showToast, toastPromise } from '@/lib/alert-helper';
 import { parseOptionalNumber } from '@/lib/utils';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeModal: any, reload?: any }) {
     let [menuGroups, setMenuGroup] = useState<CategoryItem[]>([])
     let [parentMenus, setParentMenus] = useState<CategoryItem[]>([])
     let [icon, setIcon] = useState<string>("")
+    const form = useForm({
+        defaultValues: {
+            name: "",
+            path: "",
+            icon: "",
+            groupId: 0,
+            parentId: 0,
+            description: ""
+        },
+    });
     const handleAddMenu = async (e: any) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
@@ -56,7 +67,15 @@ function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeMo
             categoryItemService.getCategoryItemsByCategoryCode("MENU").then(e => setMenuGroup(e))
         }
         return () => {
-            setIcon("")
+            setIcon("");
+            form.reset({
+                name: "",
+                path: "",
+                icon: "",
+                groupId: 0,
+                parentId: 0,
+                description: "",
+            })
         };
     }, [isOpen])
 
@@ -64,15 +83,37 @@ function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeMo
         <ActionModal size="md" isOpen={isOpen} closeModal={closeModal} onConfirm={handleAddMenu} heading={"Thêm mới menu"} >
             <div className='flex flex-col gap-4'>
                 <div className='flex gap-2  justify-between items-center'>
-                    <Input required label='Tên' name='name' type="text" />
-                    <Input required label='Đường dẫn' name='path' type="text" />
+                    <Input {...form.register("name")} required label="Tên" type="text" />
+                    <Input {...form.register("path")} required label="Đường dẫn" type="text" />
                 </div>
-                <Input onChange={(e) => {
-                    setIcon(e.target.value);
-                }} suffix={<DynamicIcon iconString={icon} className="text-gray-500" />} label='Icon' name='icon' type="text" />
+                <Input
+                    {...form.register("icon")}
+                    onChange={(e) => setIcon(e.target.value)}
+                    suffix={<DynamicIcon iconString={icon} className="text-gray-500" />}
+                    label="Icon"
+                    type="text"
+                />
                 <div className='flex gap-2 '>
-                    <CustomSelect required label='Nhóm menu' name='groupId' options={menuGroups.map(e => ({ value: e.id ?? 0, label: e.name }))} />
-                    <CustomSelect label='Thuộc Menu' name='parentId' options={parentMenus.map(e => ({ value: e.id ?? 0, label: e.name }))} />
+
+                    <FormSelect
+                        name="groupId"
+                        control={form.control}
+                        label="Nhóm menu"
+                        required
+                        options={menuGroups.map(g => ({
+                            value: g.id?.toString(),
+                            label: g.name,
+                        }))}
+                    />
+                    <FormSelect
+                        name="parentId"
+                        control={form.control}
+                        label="Thuộc Menu"
+                        options={parentMenus.map(g => ({
+                            value: g.id?.toString(),
+                            label: g.name,
+                        }))}
+                    />
                 </div>
                 <TextArea label='Mô tả' name='description' />
             </div>

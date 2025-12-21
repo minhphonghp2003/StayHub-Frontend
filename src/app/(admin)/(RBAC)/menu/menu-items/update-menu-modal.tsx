@@ -1,6 +1,6 @@
 import DynamicIcon from '@/components/common/DynamicIcon';
 import Input from '@/components/form/InputField';
-import CustomSelect from '@/components/form/Select';
+import { FormSelect } from '@/components/form/Select';
 import TextArea from '@/components/form/TextArea';
 import ActionModal from '@/components/ui/modal/ActionModal';
 import { Spinner } from '@/components/ui/shadcn/spinner';
@@ -86,6 +86,8 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                 groupId: menuDetailResponse?.groupId ?? 0,
                 parentId: menuDetailResponse?.parentId ?? undefined,
             });
+            console.log(form.getValues("groupId"), menuGroupResponse);
+
             setIsLoading(false);
         });
 
@@ -132,19 +134,24 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                     />
 
                     <div className="flex gap-2">
-                        <CustomSelect
-                            defaultValue={form.getValues().groupId}
-                            {...form.register("groupId")}
-                            required
+                        <FormSelect
+                            name="groupId"
+                            control={form.control}
                             label="Nhóm menu"
-                            options={menuGroups.map(e => ({ value: e.id ?? 0, label: e.name }))}
+                            required
+                            options={menuGroups.map(g => ({
+                                value: g.id?.toString(),
+                                label: g.name,
+                            }))}
                         />
-
-                        <CustomSelect
-                            defaultValue={form.getValues().parentId}
-                            {...form.register("parentId")}
+                        <FormSelect
+                            name="parentId"
+                            control={form.control}
                             label="Thuộc Menu"
-                            options={parentMenus.map(e => ({ value: e.id ?? 0, label: e.name }))}
+                            options={parentMenus.map(g => ({
+                                value: g.id?.toString(),
+                                label: g.name,
+                            }))}
                         />
                     </div>
 

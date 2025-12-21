@@ -10,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/shadcn/select";
+import { cn } from "@/lib/utils";
+import { ChevronDownIcon, X } from "lucide-react";
 import { forwardRef, useState } from "react";
 
 interface Option {
@@ -22,90 +24,92 @@ interface CustomSelectProps {
   placeholder?: string;
   onChange?: (value: any) => void;
   className?: string;
-  defaultValue?: any;
+  value?: any;
   name?: string;
   label?: string;
   required?: boolean;
 }
+import * as React from "react";
+import { Controller, Control } from "react-hook-form";
 
-// Forward ref to support RHF
-const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>(({
-  options,
-  placeholder = "Select an option",
-  onChange,
-  className = "",
-  defaultValue,
+
+
+interface FormSelectProps {
+  name: string;
+  control: Control<any>;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  options: Option[];
+  disabled?: boolean;
+  allowClear?: boolean;
+}
+
+
+export function FormSelect({
   name,
+  control,
   label,
-  required = false,
-}, ref) => {
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    defaultValue !== undefined ? String(defaultValue) : undefined
-  );
-  const [key, setKey] = useState(+new Date()); // force re-render to reset value
-
-  const handleChange = (value: string) => {
-    if (value === "__clear") {
-      setSelectedValue(undefined);
-      onChange?.(undefined);
-    } else {
-      setSelectedValue(value);
-      // const option = options.find((o) => String(o.value) === value);
-      // onChange?.(option?.value);
-    }
-  };
-
+  placeholder = "Select an option",
+  required,
+  options,
+  disabled,
+  allowClear = true,
+}: FormSelectProps) {
   return (
-    <div className="w-full" ref={ref}>
-      {label && (
-        <Label>
-          {label} {required && <span className="text-red-500">*</span>}
-        </Label>
-      )}
-      <Select
-        key={key}
-        name={name}
-        required={required}
-        value={selectedValue}
-        onValueChange={handleChange}
-      >
-        <SelectTrigger className={`w-full ${className}`}>
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-
-        <SelectContent position="popper" className="z-[999999]">
-          <SelectGroup>
-            {label && <SelectLabel>{label}</SelectLabel>}
-            {options.map((option) => (
-              <SelectItem key={option.value} value={String(option.value)}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-
-          <SelectSeparator />
-
-          {selectedValue && (
-            <Button
-              className="w-full px-2"
-              variant="secondary"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleChange("__clear");
-                setKey(+new Date()); // reset select
-              }}
-            >
-              Xóa
-            </Button>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <div className="w-full space-y-1">
+          {label && (
+            <Label>
+              {label} {required && <span className="text-red-500">*</span>}
+            </Label>
           )}
-        </SelectContent>
-      </Select>
-    </div>
+
+          <div className="relative">
+            <Select
+              value={field.value ?? ""}
+              onValueChange={field.onChange}
+              disabled={disabled}
+            >
+              <SelectTrigger
+                className={cn(
+                  "w-full pr-9", // space for suffix button
+                )}
+              >
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+
+              <SelectContent className="z-[999999]">
+                {options.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {allowClear && field.value && !disabled && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  field.onChange(undefined);
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2
+                           rounded-sm p-1 text-muted-foreground
+                           hover:bg-accent hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    />
   );
-});
+}
 
-CustomSelect.displayName = "CustomSelect";
-
-export default CustomSelect;
 
