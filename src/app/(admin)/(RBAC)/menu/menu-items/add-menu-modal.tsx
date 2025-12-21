@@ -8,38 +8,53 @@ import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
 import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import menuService from '@/core/service/RBAC/menu-service';
 import { showToast, toastPromise } from '@/lib/alert-helper';
-import { parseOptionalNumber } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeModal: any, reload?: any }) {
-    let [menuGroups, setMenuGroup] = useState<CategoryItem[]>([])
-    let [parentMenus, setParentMenus] = useState<CategoryItem[]>([])
-    let [icon, setIcon] = useState<string>("")
-    const form = useForm({
+type FormValues = {
+    name: string;
+    path: string;
+    icon?: string;
+    groupId?: string;
+    parentId?: string;
+    description?: string;
+};
+
+function AddMenuModal({
+    isOpen,
+    closeModal,
+    reload,
+}: {
+    isOpen: boolean;
+    closeModal: any;
+    reload?: any;
+}) {
+    const [menuGroups, setMenuGroup] = useState<CategoryItem[]>([]);
+    const [parentMenus, setParentMenus] = useState<CategoryItem[]>([]);
+    const [icon, setIcon] = useState<string>("");
+
+    const form = useForm<FormValues>({
         defaultValues: {
             name: "",
             path: "",
             icon: "",
-            groupId: 0,
-            parentId: 0,
-            description: ""
+            groupId: undefined,
+            parentId: undefined,
+            description: "",
         },
     });
-    const handleAddMenu = async (e: any) => {
-        e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const data = Object.fromEntries(formData.entries());
+
+    const handleAddMenu: SubmitHandler<FormValues> = async (data) => {
         const payload: AddMenuPayload = {
-            name: String(data.name || ""),
-            path: String(data.path || ""),
-            groupId: parseOptionalNumber(data.groupId) ?? 0,
-            description: data.description ? String(data.description) : undefined,
-            icon: data.icon ? String(data.icon) : undefined,
-            parentId: parseOptionalNumber(data.parentId),
+            name: data.name,
+            path: data.path,
+            icon: data.icon || undefined,
+            description: data.description || undefined,
+            groupId: data.groupId ? Number(data.groupId) : 0,
+            parentId: data.parentId ? Number(data.parentId) : undefined,
         };
+
         try {
-            // Call API with toastPromise helper
             const result = await toastPromise(
                 menuService.createMenu(payload),
                 {
@@ -48,77 +63,87 @@ function AddMenuModal({ isOpen, closeModal, reload }: { isOpen: boolean, closeMo
                     error: "Tạo menu thất bại!",
                 }
             );
+
             if (result) {
                 closeModal();
-                reload(); // refresh parent data
+                reload?.();
+                form.reset();
+                setIcon("");
             }
-        } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" })
-            // console.error(err);
+        } catch {
+            showToast({ type: "error", content: "Có lỗi xảy ra" });
         }
-
-
     };
+
     useEffect(() => {
-        if (isOpen) {
-            menuService.getAllNoPaginateMenus().then(function (e) {
-                return setParentMenus(e);
-            })
-            categoryItemService.getCategoryItemsByCategoryCode("MENU").then(e => setMenuGroup(e))
-        }
+        if (!isOpen) return;
+
+        menuService.getAllNoPaginateMenus().then(setParentMenus);
+        categoryItemService
+            .getCategoryItemsByCategoryCode("MENU")
+            .then(setMenuGroup);
+
         return () => {
             setIcon("");
             form.reset({
                 name: "",
                 path: "",
                 icon: "",
-                groupId: 0,
-                parentId: 0,
                 description: "",
-            })
+                groupId: undefined,
+                parentId: undefined,
+            });
         };
-    }, [isOpen])
+    }, [isOpen]);
 
     return (
-        <ActionModal size="md" isOpen={isOpen} closeModal={closeModal} onConfirm={handleAddMenu} heading={"Thêm mới menu"} >
-            <div className='flex flex-col gap-4'>
-                <div className='flex gap-2  justify-between items-center'>
-                    <Input {...form.register("name")} required label="Tên" type="text" />
-                    <Input {...form.register("path")} required label="Đường dẫn" type="text" />
+        <ActionModal
+            size="md"
+            isOpen={isOpen}
+            closeModal={closeModal}
+            onConfirm={form.handleSubmit(handleAddMenu)}
+            heading="Thêm mới menu"
+        >
+            <div className="flex flex-col gap-4">
+                <div className="flex gap-2">
+                    <Input {...form.register("name")} required label="Tên" />
+                    <Input {...form.register("path")} required label="Đường dẫn" />
                 </div>
+
                 <Input
                     {...form.register("icon")}
+                    label="Icon"
                     onChange={(e) => setIcon(e.target.value)}
                     suffix={<DynamicIcon iconString={icon} className="text-gray-500" />}
-                    label="Icon"
-                    type="text"
                 />
-                <div className='flex gap-2 '>
 
+                <div className="flex gap-2">
                     <FormSelect
                         name="groupId"
                         control={form.control}
                         label="Nhóm menu"
                         required
-                        options={menuGroups.map(g => ({
+                        options={menuGroups.map((g) => ({
                             value: g.id?.toString(),
                             label: g.name,
                         }))}
                     />
+
                     <FormSelect
                         name="parentId"
                         control={form.control}
                         label="Thuộc Menu"
-                        options={parentMenus.map(g => ({
+                        options={parentMenus.map((g) => ({
                             value: g.id?.toString(),
                             label: g.name,
                         }))}
                     />
                 </div>
-                <TextArea label='Mô tả' name='description' />
+
+                <TextArea {...form.register("description")} label="Mô tả" />
             </div>
         </ActionModal>
-    )
+    );
 }
 
-export default AddMenuModal
+export default AddMenuModal;

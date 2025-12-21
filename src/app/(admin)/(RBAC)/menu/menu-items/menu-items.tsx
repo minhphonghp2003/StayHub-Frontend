@@ -26,7 +26,6 @@ type ModalState = {
     type: 'ADD' | 'UPDATE' | 'DELETE' | null;
     data: Menu | null;
 }
-//  TODO fix init form
 function MenuItem() {
     // ---------------query param------------
     const router = useRouter();
