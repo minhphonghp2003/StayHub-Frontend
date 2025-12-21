@@ -17,8 +17,8 @@ type FormValues = {
     name: string;
     path: string;
     icon?: string;
-    groupId?: number;
-    parentId?: number;
+    groupId?: string;
+    parentId?: string;
     description?: string;
 };
 function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean, closeModal: any, menu?: Menu | null, reload: any }) {
@@ -26,13 +26,13 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
     let [parentMenus, setParentMenus] = useState<CategoryItem[]>([])
     let [icon, setIcon] = useState<string>("")
     let [isLoading, setIsLoading] = useState(true)
-    const form = useForm({
+    const form = useForm<FormValues>({
         defaultValues: {
             name: "",
             path: "",
             icon: "",
-            groupId: 0,
-            parentId: 0,
+            groupId: undefined,
+            parentId: undefined,
             description: ""
         },
     });
@@ -77,14 +77,18 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
 
             setParentMenus(parentMenusResponse);
             setMenuGroup(menuGroupResponse)
-
+            setIcon(menuDetailResponse?.icon ?? "");
             form.reset({
                 name: menuDetailResponse?.name ?? "",
                 path: menuDetailResponse?.path ?? "",
                 icon: menuDetailResponse?.icon ?? "",
                 description: menuDetailResponse?.description ?? "",
-                groupId: menuDetailResponse?.groupId ?? 0,
-                parentId: menuDetailResponse?.parentId ?? undefined,
+                groupId: menuDetailResponse?.groupId
+                    ? menuDetailResponse.groupId.toString()
+                    : undefined,
+                parentId: menuDetailResponse?.parentId
+                    ? menuDetailResponse.parentId.toString()
+                    : undefined,
             });
             console.log(form.getValues("groupId"), menuGroupResponse);
 
@@ -97,8 +101,8 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                 name: "",
                 path: "",
                 icon: "",
-                groupId: 0,
-                parentId: 0,
+                groupId: undefined,
+                parentId: undefined,
                 description: "",
             })
         };
@@ -108,7 +112,6 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
         <ActionModal size="md" isOpen={isOpen} closeModal={closeModal} onConfirm={form.handleSubmit(handleSubmitForm)} heading={"Cập nhật menu"} >
             <div className="relative">
 
-                {/* 🔥 Loading Overlay */}
                 {isLoading && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md transition-all duration-200">
                         <div className="flex flex-col items-center gap-2">
@@ -118,7 +121,6 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                     </div>
                 )}
 
-                {/* Form Content */}
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
                     <div className="flex gap-2 justify-between items-center">
                         <Input {...form.register("name")} required label="Tên" type="text" />
