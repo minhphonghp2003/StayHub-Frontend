@@ -26,16 +26,7 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
     let [parentMenus, setParentMenus] = useState<CategoryItem[]>([])
     let [icon, setIcon] = useState<string>("")
     let [isLoading, setIsLoading] = useState(true)
-    const form = useForm<FormValues>({
-        defaultValues: {
-            name: "",
-            path: "",
-            icon: "",
-            groupId: undefined,
-            parentId: undefined,
-            description: ""
-        },
-    });
+    const form = useForm<FormValues>();
 
     const handleSubmitForm: SubmitHandler<FormValues> = async (data,) => {
         const payload: UpdateMenuPayload = {
@@ -90,8 +81,6 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                     ? menuDetailResponse.parentId.toString()
                     : undefined,
             });
-            console.log(form.getValues("groupId"), menuGroupResponse);
-
             setIsLoading(false);
         });
 
@@ -136,25 +125,31 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                     />
 
                     <div className="flex gap-2">
-                        <FormSelect
-                            name="groupId"
-                            control={form.control}
-                            label="Nhóm menu"
-                            required
-                            options={menuGroups.map(g => ({
-                                value: g.id?.toString(),
-                                label: g.name,
-                            }))}
-                        />
-                        <FormSelect
-                            name="parentId"
-                            control={form.control}
-                            label="Thuộc Menu"
-                            options={parentMenus.map(g => ({
-                                value: g.id?.toString(),
-                                label: g.name,
-                            }))}
-                        />
+                        {
+
+                            menuGroups.length > 0 && <FormSelect
+                                name="groupId"
+                                control={form.control}
+                                label="Nhóm menu"
+                                required
+                                options={menuGroups.map(g => ({
+                                    value: g.id?.toString(),
+                                    label: g.name,
+                                }))}
+                            />
+                        }
+                        {
+                            parentMenus.length > 0 &&
+                            <FormSelect
+                                name="parentId"
+                                control={form.control}
+                                label="Thuộc Menu"
+                                options={parentMenus.map(g => ({
+                                    value: g.id?.toString(),
+                                    label: g.name,
+                                }))}
+                            />
+                        }
                     </div>
 
                     <TextArea {...form.register("description")} label="Mô tả" />
