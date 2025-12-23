@@ -5,8 +5,9 @@ import { UpdateCategoryPayload } from "@/core/payload/catalog/update-category-pa
 
 const baseUrl: string = "/category";
 
-const getAllCategories = async (): Promise<BaseResponse<Category[]>> => {
-    const response = await api.get(`${baseUrl}`);
+const getAllCategories = async (queryParam: { pageNumber?: number, pageSize?: number, search?: string }): Promise<BaseResponse<Category[]>> => {
+    queryParam.search = queryParam.search?.trim() || undefined;
+    const response = await api.get(`${baseUrl}`, { params: queryParam });
     return response.data;
 };
 

@@ -3,12 +3,16 @@ import { AddCategoryPayload } from "@/core/payload/catalog/add-category-payload"
 import { UpdateCategoryPayload } from "@/core/payload/catalog/update-category-payload";
 import { categoryRepository } from "@/core/repository/catalog/category-repository";
 
-const getAllCategories = async (): Promise<Category[]> => {
-    const result = await categoryRepository.getAllCategories();
+const getAllCategories = async ({ pageNumber, pageSize, search }: any): Promise<{ data: Category[], pageInfo: PageInfo } | null> => {
+    const result = await categoryRepository.getAllCategories({ pageNumber, pageSize, search });
     if (result.success) {
-        return result.data ?? [];
+        return {
+
+            data: result.data ?? [],
+            pageInfo: result ?? null
+        };
     }
-    return [];
+    return null;
 };
 
 const getCategoryById = async (id: number): Promise<Category | null> => {
