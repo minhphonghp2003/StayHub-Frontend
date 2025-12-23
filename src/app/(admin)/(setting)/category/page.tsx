@@ -1,6 +1,13 @@
 "use client"
+import AddMenuModal from "@/app/(admin)/(RBAC)/menu/menu-items/add-menu-modal";
+import MenuDeleteDialog from "@/app/(admin)/(RBAC)/menu/menu-items/menu-delete-dialog";
+import UpdateMenuModal from "@/app/(admin)/(RBAC)/menu/menu-items/update-menu-modal";
+import AddCategoryModal from "@/app/(admin)/(setting)/category/add-category-modal";
 import { getCategoryColumns } from "@/app/(admin)/(setting)/category/category-columns";
+import DeleteCategoryModal from "@/app/(admin)/(setting)/category/delete-category-modal";
+import UpdateCategoryModal from "@/app/(admin)/(setting)/category/update-category-modal";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb"
+import { DataTable } from "@/components/ui/table/data-table";
 import { Category } from "@/core/model/catalog/category";
 import { categoryService } from "@/core/service/catalog/category-service";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -48,6 +55,10 @@ function CategoryPage() {
     const columns = getCategoryColumns({ onDelete: (category) => setModalState({ type: 'DELETE', data: category }), onUpdate: (category) => setModalState({ type: 'UPDATE', data: category }), });
     return (
         <div><PageBreadcrumb pagePath='/category' pageTitle="Category" />
+            <DataTable search={search} columns={columns} data={categoryData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Category" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
+            <AddCategoryModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} />
+            <UpdateCategoryModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} category={modal.data} reload={fetchData} />
+            <DeleteCategoryModal isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} category={modal.data} reload={fetchData} />
         </div>
     )
 }
