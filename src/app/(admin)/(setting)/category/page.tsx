@@ -55,10 +55,13 @@ function CategoryPage() {
     const columns = getCategoryColumns({ onDelete: (category) => setModalState({ type: 'DELETE', data: category }), onUpdate: (category) => setModalState({ type: 'UPDATE', data: category }), });
     return (
         <div><PageBreadcrumb pagePath='/category' pageTitle="Category" />
-            <DataTable search={search} columns={columns} data={categoryData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Category" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
-            <AddCategoryModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} />
-            <UpdateCategoryModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} category={modal.data} reload={fetchData} />
-            <DeleteCategoryModal isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} category={modal.data} reload={fetchData} />
+            <div>
+
+                <DataTable search={search} columns={columns} data={categoryData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Category" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
+                <AddCategoryModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} />
+                <UpdateCategoryModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} category={modal.data} reload={fetchData} />
+                <DeleteCategoryModal isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} category={modal.data} reload={fetchData} />
+            </div>
         </div>
     )
 }

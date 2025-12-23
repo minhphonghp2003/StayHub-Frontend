@@ -1,9 +1,8 @@
-import { AlertDialogHeader, AlertDialogFooter } from '@/components/ui/shadcn/alert-dialog';
+import { AlertDialogHeader, AlertDialogFooter, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@/components/ui/shadcn/alert-dialog';
 import { Button } from '@/components/ui/shadcn/button';
 import { Category } from '@/core/model/catalog/category';
 import { categoryService } from '@/core/service/catalog/category-service';
 import { toastPromise } from '@/lib/alert-helper';
-import { AlertDialog, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from '@radix-ui/react-alert-dialog';
 import { Trash2 } from 'lucide-react';
 import React from 'react'
 
