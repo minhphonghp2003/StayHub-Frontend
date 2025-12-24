@@ -89,7 +89,7 @@ export function PaginationComponent({
                                 isActive={page === currentPage}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    if (typeof page === "number") onPageChange(page);
+                                    if (typeof page === "number" && page != currentPage) onPageChange(page);
                                 }}
                             >
                                 {page}

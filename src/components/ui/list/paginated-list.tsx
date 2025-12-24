@@ -1,8 +1,14 @@
 // pages/list.tsx
+import { PaginationComponent } from '@/components/ui/pagination/pagination-component';
 import { CategoryItem } from '@/core/model/catalog/category-item';
 
+interface Item {
+    id?: number;
+    name?: string;
+    code?: string;
+}
 
-function List({ items, onClick, selected }: { items?: CategoryItem[], onClick?: any, selected?: any }) {
+function PaginatedList({ items, onClick, selected, pageInfo, onPageChanged }: { items?: Item[], onClick?: any, selected?: any, onPageChanged?: any, pageInfo?: PageInfo | null }) {
     return (
         <div>
 
@@ -20,10 +26,12 @@ function List({ items, onClick, selected }: { items?: CategoryItem[], onClick?: 
                     );
                 })}
             </ul>
+            <PaginationComponent visibleCount={3} currentPage={pageInfo?.currentPage ?? 1} totalPages={pageInfo?.totalPages ?? 1} onPageChange={onPageChanged} />
+
         </div>
     );
 }
 
 
 
-export default List;
+export default PaginatedList;

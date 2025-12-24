@@ -2,6 +2,7 @@
 import AddItemModal from '@/app/(admin)/(setting)/categoryItem/add-item-modal';
 import DeleteItemDialog from '@/app/(admin)/(setting)/categoryItem/delete-item-dialog';
 import { getcategoryItemColumns } from '@/app/(admin)/(setting)/categoryItem/item-columns';
+import ItemFilter from '@/app/(admin)/(setting)/categoryItem/item-filter';
 import UpdateItemModal from '@/app/(admin)/(setting)/categoryItem/update-item-modal';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import { DataTable } from '@/components/ui/table/data-table';
@@ -84,7 +85,7 @@ function CategoryItemPage() {
             <AddItemModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} categoryId={categoryId ? parseInt(categoryId) : undefined} />
             <UpdateItemModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} item={modal.data} reload={fetchData} />
             <DeleteItemDialog isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} item={modal.data} reload={fetchData} />
-
+            <ItemFilter isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter} />
         </div>
     )
 }
