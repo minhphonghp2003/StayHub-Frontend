@@ -71,7 +71,7 @@ function CategoryItemPage() {
     }
     let onRemoveAllFilter = () => {
         const currentParams = new URLSearchParams(searchParams.toString());
-        currentParams.delete('group');
+        currentParams.delete('category');
         router.push(`?${currentParams.toString()}`);
     }
     let closeModal = () => {

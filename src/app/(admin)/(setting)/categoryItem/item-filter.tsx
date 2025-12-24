@@ -5,6 +5,7 @@ import { TableFitler } from '@/core/model/application/filter'
 import { Category } from '@/core/model/catalog/category'
 import { categoryService } from '@/core/service/catalog/category-service'
 import React, { useEffect, useState } from 'react'
+// TODO fix get all cate on apply
 
 function ItemFilter({ isOpen, setOpenFilter, initFilter, onRemoveAllFilters, onFiltered }: { isOpen: boolean, setOpenFilter: any, initFilter?: TableFitler[], onFiltered: (filtered: TableFitler[]) => void, onRemoveAllFilters?: any }) {
     // Selected

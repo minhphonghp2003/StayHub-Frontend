@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
                                         <TableRow
                                             key={row.id}
                                             data-state={row.getIsSelected() && "selected"}
-                                            className={`transition-all  [&>td]:py-5 [&>td]:px-4`}
+                                            className={`transition-all  [&>td]:py-3 [&>td]:px-3`}
                                         >
                                             {row.getVisibleCells().map((cell) => {
                                                 if (cell.column.id === "index") {
@@ -134,7 +134,7 @@ export function DataTable<TData, TValue>({
                                                     );
                                                 }
                                                 return (
-                                                    <TableCell className="border-r border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
+                                                    <TableCell className="border-r text-sm border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </TableCell>
                                                 )
