@@ -1,7 +1,7 @@
 'use client'
 import AddMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/add-menu-modal';
 import { getMenuColumns } from '@/app/(admin)/(RBAC)/menu/menu-items/menu-columns';
-import MenuDeleteDialog from '@/app/(admin)/(RBAC)/menu/menu-items/menu-delete-dialog';
+import DeleteMenuDialog from '@/app/(admin)/(RBAC)/menu/menu-items/delete-menu-dialog';
 import MenuFilterDrawer from '@/app/(admin)/(RBAC)/menu/menu-items/menu-filter';
 import UpdateMenuModal from '@/app/(admin)/(RBAC)/menu/menu-items/update-menu-modal';
 import Switch from '@/components/form/Switch';
@@ -107,7 +107,7 @@ function MenuItem() {
             <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={menuData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
             <AddMenuModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} groupId={menuGroup ? parseInt(menuGroup) : undefined} />
             <UpdateMenuModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} menu={modal.data} reload={fetchData} />
-            <MenuDeleteDialog isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} menu={modal.data} reload={fetchData} />
+            <DeleteMenuDialog isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} menu={modal.data} reload={fetchData} />
             <MenuFilterDrawer isOpen={openFilter} setOpenFilter={setOpenFilter} initFilter={filter} onFiltered={onFilter} onRemoveAllFilters={onRemoveAllFilter}></MenuFilterDrawer>
         </div>
     )

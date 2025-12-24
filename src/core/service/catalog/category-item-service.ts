@@ -18,9 +18,9 @@ const getCategoryItemsByCategoryCode = async (categoryCode: string): Promise<Cat
     return result.success ? result.data ?? [] : [];
 };
 
-const getCategoryItemsByCategoryId = async (categoryId: number): Promise<CategoryItem[]> => {
-    const result = await categoryItemRepository.getCategoryItemByCategoryId(categoryId);
-    return result.success ? result.data ?? [] : [];
+const getCategoryItemsByCategoryId = async ({ categoryId, pageNumber, pageSize, search }: any): Promise<BaseResponse<CategoryItem[]> | null> => {
+    const result = await categoryItemRepository.getCategoryItemByCategoryId(categoryId, { pageNumber, pageSize, search });
+    return result.success ? result ?? [] : null;
 };
 
 const createCategoryItem = async (payload: AddCategoryItemPayload): Promise<CategoryItem | null> => {

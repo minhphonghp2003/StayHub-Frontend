@@ -13,7 +13,7 @@ import { Menu } from '@/core/model/RBAC/Menu'
 import menuService from '@/core/service/RBAC/menu-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { Trash2 } from 'lucide-react'
-function MenuDeleteDialog({ isOpen, closeModal, reload, menu }: { isOpen: boolean, closeModal: any, reload?: any, menu?: Menu | null }) {
+function DeleteMenuDialog({ isOpen, closeModal, reload, menu }: { isOpen: boolean, closeModal: any, reload?: any, menu?: Menu | null }) {
 
     const deleteMenu = async () => {
         const result = menu?.id ? await toastPromise(
@@ -59,4 +59,4 @@ function MenuDeleteDialog({ isOpen, closeModal, reload, menu }: { isOpen: boolea
     )
 }
 
-export default MenuDeleteDialog
+export default DeleteMenuDialog

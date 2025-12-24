@@ -23,9 +23,10 @@ const getCategoryItemByCategoryCode = async (
 };
 
 const getCategoryItemByCategoryId = async (
-    categoryId: number
+    categoryId: number,
+    queryParam: { pageNumber?: number, pageSize?: number, search?: string }
 ): Promise<BaseResponse<CategoryItem[]>> => {
-    const response = await api.get(`${baseUrl}/by-category-id/${categoryId}`);
+    const response = await api.get(`${baseUrl}/by-category-id/${categoryId}`, { params: queryParam });
     return response.data;
 };
 
