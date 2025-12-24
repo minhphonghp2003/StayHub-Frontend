@@ -14,6 +14,13 @@ const getAllCategories = async ({ pageNumber, pageSize, search }: any): Promise<
     }
     return null;
 };
+const getAllFlatCategories = async (): Promise<Category[]> => {
+    const result = await categoryRepository.getAllFlatCategories();
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
 
 const getCategoryById = async (id: number): Promise<Category | null> => {
     const result = await categoryRepository.getCategoryById(id);
@@ -43,5 +50,6 @@ export const categoryService = {
     getCategoryById,
     createCategory,
     updateCategory,
+    getAllFlatCategories,
     deleteCategory,
 };

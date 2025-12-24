@@ -1,5 +1,8 @@
 "use client"
+import AddItemModal from '@/app/(admin)/(setting)/categoryItem/add-item-modal';
+import DeleteItemDialog from '@/app/(admin)/(setting)/categoryItem/delete-item-dialog';
 import { getcategoryItemColumns } from '@/app/(admin)/(setting)/categoryItem/item-columns';
+import UpdateItemModal from '@/app/(admin)/(setting)/categoryItem/update-item-modal';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import { DataTable } from '@/components/ui/table/data-table';
 import { TableFitler } from '@/core/model/application/filter';
@@ -70,11 +73,18 @@ function CategoryItemPage() {
         currentParams.delete('group');
         router.push(`?${currentParams.toString()}`);
     }
+    let closeModal = () => {
+        setModalState({ type: null, data: null });
+    }
     const columns = getcategoryItemColumns({ onDelete: (categoryItem) => setModalState({ type: 'DELETE', data: categoryItem }), onUpdate: (categoryItem) => setModalState({ type: 'UPDATE', data: categoryItem }), });
     return (
         <div>
             <PageBreadcrumb pagePath='/categoryItem' pageTitle="Category Item" />
             <DataTable search={search} onFilterClicked={() => setOpenFilter(true)} columns={columns} data={categoryItemData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} onSearch={onSearch} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Category Item" loading={loading} pageSize={pageInfo?.pageSize ?? 0} />
+            <AddItemModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} categoryId={categoryId ? parseInt(categoryId) : undefined} />
+            <UpdateItemModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} item={modal.data} reload={fetchData} />
+            <DeleteItemDialog isOpen={modal.type === 'DELETE' && modal.data !== null} closeModal={closeModal} item={modal.data} reload={fetchData} />
+
         </div>
     )
 }

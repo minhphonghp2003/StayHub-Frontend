@@ -10,7 +10,10 @@ const getAllCategories = async (queryParam: { pageNumber?: number, pageSize?: nu
     const response = await api.get(`${baseUrl}`, { params: queryParam });
     return response.data;
 };
-
+const getAllFlatCategories = async (): Promise<BaseResponse<Category[]>> => {
+    const response = await api.get(`${baseUrl}/flat`);
+    return response.data;
+};
 const getCategoryById = async (id: number): Promise<BaseResponse<Category | null>> => {
     const response = await api.get(`${baseUrl}/${id}`);
     return response.data;
@@ -42,4 +45,5 @@ export const categoryRepository = {
     createCategory,
     updateCategory,
     deleteCategory,
+    getAllFlatCategories
 };
