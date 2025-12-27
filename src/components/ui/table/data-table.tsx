@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
                                         <TableRow
                                             key={row.id}
                                             data-state={row.getIsSelected() && "selected"}
-                                            className={`transition-all  [&>td]:py-3 [&>td]:px-3`}
+                                            className={`transition-all [&>td]:text-sm [&>td]:py-3 [&>td]:px-3`}
                                         >
                                             {row.getVisibleCells().map((cell) => {
                                                 if (cell.column.id === "index") {

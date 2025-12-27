@@ -81,6 +81,21 @@ export const getMenuColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
         },
     },
     {
+        accessorKey: "parentName",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Thuộc menu
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
         accessorKey: "isActive",
         id: "isActive",
         header: ({ column }) => {

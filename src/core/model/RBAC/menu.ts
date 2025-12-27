@@ -9,6 +9,7 @@ export interface Menu extends BaseModel {
     parentId?: number;
     isActive?: boolean;
     description?: string;
+    parentName?: string;
     groupName?: string;
     groupId?: number;
     children?: Menu[];

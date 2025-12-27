@@ -37,7 +37,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
     navItems: Menu[],
     menuType: any
   ) => (
-    <ul className="flex flex-col gap-4">
+    <ul className="flex flex-col gap-2">
       {navItems.map((nav, index) => (
         <li key={nav.path}>
           {nav.children?.length ?? 0 > 0 ? (
