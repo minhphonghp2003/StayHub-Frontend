@@ -34,6 +34,30 @@ export const getMenuColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
         enableHiding: false,
         size: 50,
     },
+
+    // center
+    {
+
+        accessorKey: "order",
+
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    STT
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => (
+            <div className="text-center">
+                {row.getValue("order")}
+            </div>
+        ),
+    },
     {
         accessorKey: "name",
         header: ({ column }) => {

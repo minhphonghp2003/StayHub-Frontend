@@ -20,6 +20,7 @@ type FormValues = {
     groupId?: string;
     parentId?: string;
     description?: string;
+    order?: number;
 };
 function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean, closeModal: any, menu?: Menu | null, reload: any }) {
     let [menuGroups, setMenuGroup] = useState<CategoryItem[]>([])
@@ -36,6 +37,7 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
             groupId: data.groupId ? Number(data.groupId) : 0,
             parentId: data.parentId ? Number(data.parentId) : undefined,
             description: data.description || undefined,
+            order: data.order,
         };
         try {
             const result = await toastPromise(
@@ -80,6 +82,8 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                 parentId: menuDetailResponse?.parentId
                     ? menuDetailResponse.parentId.toString()
                     : undefined,
+
+                order: menuDetailResponse?.order,
             });
             setIsLoading(false);
         });
@@ -93,6 +97,7 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                 groupId: undefined,
                 parentId: undefined,
                 description: "",
+                order: undefined,
             })
         };
     }, [isOpen])
@@ -151,7 +156,7 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                             />
                         }
                     </div>
-
+                    <Input {...form.register("order")} type="number" label="Thứ tự" min={1} />
                     <TextArea {...form.register("description")} label="Mô tả" />
                 </div>
             </div>

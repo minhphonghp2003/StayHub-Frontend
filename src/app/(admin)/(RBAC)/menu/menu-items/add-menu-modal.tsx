@@ -19,6 +19,7 @@ type FormValues = {
     groupId?: string;
     parentId?: string;
     description?: string;
+    order?: number;
 };
 
 function AddMenuModal({
@@ -45,6 +46,7 @@ function AddMenuModal({
             groupId: groupId ? groupId.toString() : undefined,
             parentId: undefined,
             description: "",
+            order: undefined,
         },
     });
 
@@ -56,6 +58,7 @@ function AddMenuModal({
             description: data.description || undefined,
             groupId: data.groupId ? Number(data.groupId) : 0,
             parentId: data.parentId ? Number(data.parentId) : undefined,
+            order: data.order,
         };
 
         try {
@@ -101,6 +104,7 @@ function AddMenuModal({
                 description: "",
                 groupId: undefined,
                 parentId: undefined,
+                order: undefined,
             });
         };
     }, [isOpen]);
@@ -148,7 +152,6 @@ function AddMenuModal({
                             }))}
                         />
                     }
-
                     {
 
                         parentMenus.length > 0 && <FormSelect
@@ -162,6 +165,7 @@ function AddMenuModal({
                         />
                     }
                 </div>
+                <Input {...form.register("order")} type="number" label="Thứ tự" min={1} />
 
                 <TextArea {...form.register("description")} label="Mô tả" />
             </div>

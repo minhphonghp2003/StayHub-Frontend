@@ -13,4 +13,5 @@ export interface Menu extends BaseModel {
     groupName?: string;
     groupId?: number;
     children?: Menu[];
+    order?: number;
 }

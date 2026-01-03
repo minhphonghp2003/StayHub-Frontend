@@ -5,4 +5,5 @@ export interface UpdateMenuPayload {
     description?: string;
     icon?: string;
     parentId?: number;
+    order?: number;
 }
