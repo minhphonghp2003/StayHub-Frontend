@@ -1,8 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/shadcn/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu"
 import { Role } from "@/core/model/RBAC/Role"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react"
 const formatter = new Intl.DateTimeFormat('en-GB', {

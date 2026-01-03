@@ -44,7 +44,7 @@ function RolePage() {
     return (
         <div>
             <PageBreadcrumb pagePath='/role' pageTitle="Role" />
-            <DataTable columns={columns} data={roleData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} name="Danh sách Role" loading={loading} currentPage={0} totalPage={0} totalItems={0} pageSize={0} onPageChange={function (page: number): void {
+            <DataTable columns={columns} data={roleData} onAddClicked={() => setModalState({ type: 'ADD', data: null })} name="Danh sách Role" loading={loading} currentPage={0} totalPage={1} totalItems={roleData.length} pageSize={0} onPageChange={function (page: number): void {
             }} />
             <AddRoleModal isOpen={modal.type === 'ADD'} closeModal={closeModal} reload={fetchData} />
             <UpdateRoleModal isOpen={modal.type === 'UPDATE' && modal.data !== null} closeModal={closeModal} role={modal.data} reload={fetchData} />
