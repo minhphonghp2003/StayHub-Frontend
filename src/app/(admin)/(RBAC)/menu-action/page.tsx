@@ -1,5 +1,5 @@
 "use client"
-import ActionList from '@/components/permission/action-list'
+import ActionList from '@/app/(admin)/(RBAC)/menu-action/action-list'
 import MenuList from '@/app/(admin)/(RBAC)/menu-action/menu-list'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import React from 'react'
@@ -10,11 +10,10 @@ function MenuActionPage() {
     return (
         <div>
             <PageBreadcrumb pagePath='/menu-action' pageTitle="Phân quyền Menu" />
-            <div className='grid grid-cols-4 gap-4'>
+            <div className='grid grid-cols-4 gap-6'>
                 <MenuList selectedMenu={selectedMenu} onSelectMenu={setSelectedMenu} />
                 <div className='col-span-3'>
-                    {selectedMenu?.name}
-                    <ActionList />
+                    <ActionList selectedMenu={selectedMenu} />
                 </div>
             </div>
         </div>
