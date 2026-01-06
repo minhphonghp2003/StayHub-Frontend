@@ -20,6 +20,17 @@ const getAllMenu = async ({ search, pageNumber, pageSize, menuGroupId }: any): P
     const response = await api.get(`${baseUrl}`, { params });
     return response.data;
 };
+const getAllMenuCompact = async ({ search, pageNumber, pageSize, menuGroupId }: any): Promise<BaseResponse<Menu[]>> => {
+
+    const params = {
+        search: search?.trim() || undefined,
+        pageNumber,
+        pageSize,
+        menuGroupId
+    };
+    const response = await api.get(`${baseUrl}/compact`, { params });
+    return response.data;
+};
 const getAllNoPaginateMenu = async (): Promise<BaseResponse<CategoryItem[]>> => {
     const response = await api.get(`${baseUrl}/all`);
     return response.data;
@@ -58,6 +69,7 @@ export default {
     getAllMenu,
     getMenuById,
     createMenu,
+    getAllMenuCompact,
     updateMenu,
     setActivateMenu,
     deleteMenu,

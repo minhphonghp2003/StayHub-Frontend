@@ -21,6 +21,16 @@ const getAllMenus = async (params: any): Promise<{ data: Menu[], pageInfo?: Page
     }
     return null;
 }
+const getAllMenusCompact = async (params: any): Promise<{ data: Menu[], pageInfo?: PageInfo } | null> => {
+    var result = await menuRepository.getAllMenuCompact(params)
+    if (result.success) {
+        return {
+            data: result.data ?? [],
+            pageInfo: result
+        };
+    }
+    return null;
+}
 const getAllNoPaginateMenus = async (): Promise<CategoryItem[]> => {
     var result = await menuRepository.getAllNoPaginateMenu()
     if (result.success) {
@@ -58,6 +68,7 @@ export default {
     getMyMenus,
     getAllMenus,
     getMenuById,
+    getAllMenusCompact,
     createMenu,
     updateMenu,
     setActivateMenu,
