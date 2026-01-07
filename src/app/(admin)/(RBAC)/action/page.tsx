@@ -27,7 +27,6 @@ function ActionPage() {
 
     let fetchData = async () => {
         setLoading(true)
-        setActionData([])
         let result = await actionService.getAllActions({ pageNumber: page, search, })
         setActionData(result?.data ?? []);
         setPageInfo(result?.pageInfo ?? null);

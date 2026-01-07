@@ -29,7 +29,6 @@ function UserPage() {
 
     let fetchData = async () => {
         setLoading(true)
-        setUserData([])
         let result = await userService.getAllUsers({ pageNumber: page, search })
         setUserData(result?.data ?? []);
         setPageInfo(result?.pageInfo ?? null);

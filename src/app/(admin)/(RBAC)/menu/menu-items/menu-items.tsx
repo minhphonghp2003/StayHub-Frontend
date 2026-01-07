@@ -56,7 +56,6 @@ function MenuItem() {
     }
     let fetchData = async () => {
         setLoading(true)
-        setMenuData([])
         let result = await MenuService.getAllMenus({ pageNumber: page, search, menuGroupId: menuGroup })
         setMenuData(result?.data ?? []);
         setPageInfo(result?.pageInfo ?? null);

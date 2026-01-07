@@ -45,9 +45,10 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   }
   let onChangePage = useDebouncedCallback(async (page) => {
     setLoading(true)
+    
     await fetchActions(page)
     setLoading(false)
-  }, 500);
+  }, 200);
   const columns = getCompactActionColumns();
   return (
     <div>

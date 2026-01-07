@@ -34,7 +34,6 @@ function RolePage() {
     }
     let fetchData = async () => {
         setLoading(true)
-        setRoleData([])
         let result = await roleService.getAllRoles()
         setRoleData(result ?? []);
         setLoading(false);

@@ -1,6 +1,7 @@
 "use client"
 
 import ComponentCard from "@/components/common/ComponentCard"
+import Loading from "@/components/common/Loading"
 import Input from "@/components/form/InputField"
 import { PaginationComponent } from "@/components/ui/pagination/pagination-component"
 import { Button } from "@/components/ui/shadcn/button"
@@ -92,7 +93,7 @@ export function DataTable<TData, TValue>({
                 <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
 
                 <div className="overflow-hidden rounded-md border px-4  py-2">
-                    <Table>
+                    <Table className="relative">
                         <TableHeader >
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
@@ -147,19 +148,18 @@ export function DataTable<TData, TValue>({
                             ) : (
                                 <TableRow >
                                     <TableCell colSpan={columns.length} className="h-24 text-center ">
-                                        {
-                                            loading ? <Spinner className="size-8 mx-auto" /> :
-                                                <div>
-                                                    <Image color="red-100" className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
-                                                    <p >
-                                                        Chưa có dữ liệu
-                                                    </p>
-                                                </div>
-                                        }
+
+                                        <div>
+                                            <Image color="red-100" className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
+                                            <p >
+                                                Chưa có dữ liệu
+                                            </p>
+                                        </div>
                                     </TableCell>
 
                                 </TableRow>
                             )}
+                            {loading && <Loading />}
                         </TableBody>
                     </Table>
                 </div>
@@ -168,9 +168,8 @@ export function DataTable<TData, TValue>({
             </ComponentCard>
         </div > : <div >
             <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
-
             <div className="overflow-hidden rounded-md border px-4  py-2">
-                <Table>
+                <Table className="relative">
                     <TableHeader >
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
@@ -189,10 +188,9 @@ export function DataTable<TData, TValue>({
                             </TableRow>
                         ))}
                     </TableHeader>
-                    <TableBody>
+                    <TableBody className="">
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row, rowIndex) => {
-
                                 return (
                                     <TableRow
                                         key={row.id}
@@ -225,19 +223,18 @@ export function DataTable<TData, TValue>({
                         ) : (
                             <TableRow >
                                 <TableCell colSpan={columns.length} className="h-24 text-center ">
-                                    {
-                                        loading ? <Spinner className="size-8 mx-auto" /> :
-                                            <div>
-                                                <Image color="red-100" className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
-                                                <p >
-                                                    Chưa có dữ liệu
-                                                </p>
-                                            </div>
-                                    }
+
+                                    <div>
+                                        <Image color="red-100" className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
+                                        <p >
+                                            Chưa có dữ liệu
+                                        </p>
+                                    </div>
                                 </TableCell>
 
                             </TableRow>
                         )}
+                        {loading && <Loading />}
                     </TableBody>
                 </Table>
             </div>
