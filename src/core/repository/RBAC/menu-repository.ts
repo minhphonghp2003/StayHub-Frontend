@@ -1,10 +1,12 @@
 import { api } from "@/core/http-client/AxiosClient";
 import { CategoryItem } from "@/core/model/catalog/category-item";
+import { Action } from "@/core/model/RBAC/Action";
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
 import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
 import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
 
 const baseUrl: string = '/menu';
+const menuActionUrl: string = '/MenuAction';
 const getMyMenus = async (): Promise<BaseResponse<MenuGroup[]>> => {
     const response = await api.get(`${baseUrl}/my`);
     return response.data;
@@ -33,6 +35,10 @@ const getAllMenuCompact = async ({ search, pageNumber, pageSize, menuGroupId }: 
 };
 const getAllNoPaginateMenu = async (): Promise<BaseResponse<CategoryItem[]>> => {
     const response = await api.get(`${baseUrl}/all`);
+    return response.data;
+};
+const getActionOfMenu = async (id: number): Promise<BaseResponse<Action[]>> => {
+    const response = await api.get(`${menuActionUrl}/action-of-menu/${id}`);
     return response.data;
 };
 
@@ -73,5 +79,6 @@ export default {
     updateMenu,
     setActivateMenu,
     deleteMenu,
+    getActionOfMenu,
     getAllNoPaginateMenu
 };

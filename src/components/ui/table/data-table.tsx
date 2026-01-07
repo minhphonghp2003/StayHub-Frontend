@@ -43,7 +43,8 @@ interface DataTableProps<TData, TValue> {
     pageSize: number,
     onPageChange: (page: number) => void,
     name: string,
-    loading: boolean
+    loading: boolean,
+    inCard?: boolean,
 }
 
 export function DataTable<TData, TValue>({
@@ -61,7 +62,8 @@ export function DataTable<TData, TValue>({
     pageSize,
     onPageChange,
     name,
-    loading
+    loading,
+    inCard = true
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -85,7 +87,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div >
+        inCard ? <div >
             <ComponentCard desc={`Tổng cộng ${totalItems}`} title={name} >
                 <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
 
@@ -164,7 +166,84 @@ export function DataTable<TData, TValue>({
                 <PaginationComponent visibleCount={5} currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
 
             </ComponentCard>
-        </div >
+        </div > : <div >
+            <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
+
+            <div className="overflow-hidden rounded-md border px-4  py-2">
+                <Table>
+                    <TableHeader >
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead className=" text-sm font-medium  text-gray-500 tracking-wide" key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row, rowIndex) => {
+
+                                return (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className={`transition-all [&>td]:text-sm [&>td]:py-3 [&>td]:px-3`}
+                                    >
+                                        {row.getVisibleCells().map((cell) => {
+                                            if (cell.column.id === "index") {
+                                                const pageIndex = currentPage; // from your state
+                                                const globalIndex = (pageIndex - 1) * pageSize + rowIndex + 1;
+
+                                                return (
+                                                    <TableCell
+                                                        key={cell.id}
+                                                        className="border-r border-gray-100   dark:border-gray-800 text-center font-medium"
+                                                    >
+                                                        {globalIndex}
+                                                    </TableCell>
+                                                );
+                                            }
+                                            return (
+                                                <TableCell className="border-r text-sm border-gray-100   dark:border-gray-800 last:border-r-0" key={cell.id}>
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            )
+                                        })}
+                                    </TableRow>
+                                )
+                            })
+                        ) : (
+                            <TableRow >
+                                <TableCell colSpan={columns.length} className="h-24 text-center ">
+                                    {
+                                        loading ? <Spinner className="size-8 mx-auto" /> :
+                                            <div>
+                                                <Image color="red-100" className=" mx-auto" width={50} height={50} src={"/icons/box.png"} alt={""} />
+                                                <p >
+                                                    Chưa có dữ liệu
+                                                </p>
+                                            </div>
+                                    }
+                                </TableCell>
+
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            <PaginationComponent visibleCount={5} currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
+
+        </div>
     )
 }
 

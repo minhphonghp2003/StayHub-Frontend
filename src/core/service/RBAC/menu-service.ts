@@ -1,4 +1,5 @@
 import { CategoryItem } from "@/core/model/catalog/category-item";
+import { Action } from "@/core/model/RBAC/Action";
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
 import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
 import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
@@ -39,6 +40,15 @@ const getAllNoPaginateMenus = async (): Promise<CategoryItem[]> => {
     return [];
 }
 
+const getActionOfMenu = async (id: number): Promise<Action[]> => {
+    var result = await menuRepository.getActionOfMenu(id)
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
+
+
 const getMenuById = async (id: number): Promise<Menu | null> => {
     const result = await menuRepository.getMenuById(id);
     return result.success ? result.data ?? null : null;
@@ -72,6 +82,7 @@ export default {
     createMenu,
     updateMenu,
     setActivateMenu,
+    getActionOfMenu,
     getAllNoPaginateMenus,
     deleteMenu
 };

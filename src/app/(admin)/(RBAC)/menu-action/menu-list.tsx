@@ -34,7 +34,7 @@ function MenuList({ selectedMenu, onSelectMenu }: { selectedMenu: Menu | null, o
     }, [])
     return (
         <div className=''>
-            <div className="col-span-4  bg-white rounded-2xl border border-slate-200  dark:border-gray-800 dark:bg-white/[0.03] flex flex-col overflow-hidden shadow-sm ">
+            <div className="col-span-4  rounded-2xl border border-slate-200  dark:border-gray-800 bg-white dark:bg-white/[0.03] flex flex-col overflow-hidden shadow-sm ">
                 <div className="p-4 border-b dark:border-gray-800 border-slate-200">
                     <Input placeholder='Tìm kiếm' onChange={(e) => onSearch(e.target.value)} />
                 </div>
