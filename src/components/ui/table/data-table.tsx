@@ -92,8 +92,8 @@ export function DataTable<TData, TValue>({
             <ComponentCard desc={`Tổng cộng ${totalItems}`} title={name} >
                 <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
 
-                <div className="overflow-hidden rounded-md border px-4  py-2">
-                    <Table className="relative">
+                <div className="overflow-hidden rounded-md border px-4 relative py-2">
+                    <Table className="">
                         <TableHeader >
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
@@ -159,17 +159,17 @@ export function DataTable<TData, TValue>({
 
                                 </TableRow>
                             )}
-                            {loading && <Loading />}
                         </TableBody>
                     </Table>
+                    {loading && <Loading />}
                 </div>
                 <PaginationComponent visibleCount={5} currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
 
             </ComponentCard>
         </div > : <div >
             <DataTableHeader search={search} onFilterclicked={onFilterClicked} onAddClicked={onAddClicked} onExportClicked={onExportClicked} onSearch={onSearch} actions={actions} />
-            <div className="overflow-hidden rounded-md border px-4  py-2">
-                <Table className="relative">
+            <div className="overflow-hidden rounded-md border px-4 relative py-2">
+                <Table className="">
                     <TableHeader >
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
@@ -234,9 +234,9 @@ export function DataTable<TData, TValue>({
 
                             </TableRow>
                         )}
-                        {loading && <Loading />}
                     </TableBody>
                 </Table>
+                {loading && <Loading />}
             </div>
             <PaginationComponent visibleCount={5} currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
 
