@@ -41,6 +41,14 @@ const getActionOfMenu = async (id: number): Promise<BaseResponse<Action[]>> => {
     const response = await api.get(`${menuActionUrl}/action-of-menu/${id}`);
     return response.data;
 };
+const assignActionsToMenu = async (actionIds: number[], menuId: number): Promise<BaseResponse<number[]>> => {
+    const payload = {
+        actionIds,
+        menuId
+    };
+    const response = await api.post(`${menuActionUrl}/menu/assign-action`, payload);
+    return response.data;
+};
 
 
 const getMenuById = async (id: number): Promise<BaseResponse<Menu | null>> => {
@@ -80,5 +88,6 @@ export default {
     setActivateMenu,
     deleteMenu,
     getActionOfMenu,
-    getAllNoPaginateMenu
+    getAllNoPaginateMenu,
+    assignActionsToMenu
 };

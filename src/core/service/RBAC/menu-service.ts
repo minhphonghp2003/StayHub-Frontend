@@ -48,7 +48,13 @@ const getActionOfMenu = async (id: number): Promise<Action[]> => {
     return [];
 };
 
-
+const assignActionsToMenu = async (actionIds: number[], menuId: number): Promise<number[]> => {
+    var result = await menuRepository.assignActionsToMenu(actionIds, menuId)
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
 const getMenuById = async (id: number): Promise<Menu | null> => {
     const result = await menuRepository.getMenuById(id);
     return result.success ? result.data ?? null : null;
@@ -84,5 +90,6 @@ export default {
     setActivateMenu,
     getActionOfMenu,
     getAllNoPaginateMenus,
-    deleteMenu
+    deleteMenu,
+    assignActionsToMenu
 };

@@ -1,5 +1,6 @@
 import { getCompactActionColumns } from '@/app/(admin)/(RBAC)/menu-action/action-columns'
 import ComponentCard from '@/components/common/ComponentCard'
+import ConfirmDialog from '@/components/common/ConfirmDialog'
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
 import { Spinner } from '@/components/ui/shadcn/spinner'
@@ -9,6 +10,8 @@ import { Action } from '@/core/model/RBAC/Action'
 import { Menu } from '@/core/model/RBAC/Menu'
 import actionService from '@/core/service/RBAC/action-service'
 import menuService from '@/core/service/RBAC/menu-service'
+import { toastPromise } from '@/lib/alert-helper'
+import { Waypoints } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -19,6 +22,7 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   let [actionData, setActionData] = useState<Action[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
   let [loading, setLoading] = useState<boolean>(false)
+  let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
   useEffect(() => {
     fetchData()
   }, [selectedMenu])
@@ -43,6 +47,19 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   let resetSelected = () => {
     setAssignedActions(new Set(...[initAssignedActions]))
   }
+  // Can save
+  let canSave = useMemo(() => {
+    function areSetsEqual(setA: any, setB: any) {
+      if (setA.size !== setB.size) return false;
+
+      for (const value of setA) {
+        if (!setB.has(value)) return false;
+      }
+      return true;
+    }
+    let result = !areSetsEqual(initAssignedActions, assignedActions)
+    return result
+  }, [rowSelection])
   // Fetch data
   let fetchData = async () => {
     setLoading(true)
@@ -52,6 +69,20 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
         fetchAssignedActions()]);
     }
     setLoading(false)
+  }
+  let assignAction = async () => {
+    const result = await toastPromise(
+      menuService.assignActionsToMenu([...assignedActions], selectedMenu?.id ?? 0),
+      {
+        loading: "Đang gán action...",
+        success: "Gán action thành công!",
+        error: "Gán action thất bại!",
+      }
+    );
+    if (result) {
+      setInitAssignedActions(new Set(result))
+      setAssignedActions(new Set(result))
+    }
   }
   let fetchActions = async (page: number) => {
     let result = await actionService.getAllActions({ pageNumber: page })
@@ -99,13 +130,9 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
               <div>
                 <DataTable inCard={false} columns={columns} data={actionData} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Action" loading={loading} pageSize={pageInfo?.pageSize ?? 0} rowSelection={rowSelection} onRowSelectionChange={setRowSelection} />
                 {
-                  assignedActions.size > 0 && <div className='flex justify-end gap-2'>
-                    <Button className='' onClick={() => {
-                      console.log(assignedActions);
-                    }}> Save change</Button>
-                    <Button variant={"ghost"} className='' onClick={() => {
-                      resetSelected()
-                    }}> Cancel</Button>
+                  canSave && <div className='flex justify-end gap-2'>
+                    <Button className='' onClick={() => { setOpenConfirm(true) }}> Save change</Button>
+                    <Button variant={"ghost"} className='' onClick={resetSelected}> Cancel</Button>
 
                   </div>
                 }
@@ -114,6 +141,11 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
         </CardContent>
 
       </Card>
+      <ConfirmDialog isOpen={isOpenConfirm} closeModal={setOpenConfirm} title={`Phân quyền cho Menu`} desc={`Xác nhận gán ${assignedActions.size} action cho Menu ${selectedMenu?.name}`} action={
+        <Button variant="default" onClick={assignAction}>
+          Xác nhận
+        </Button>
+      } icon={<Waypoints className='' />} titleClassName={''} />
     </div>
   )
 }
