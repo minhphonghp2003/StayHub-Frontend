@@ -46,6 +46,8 @@ interface DataTableProps<TData, TValue> {
     name: string,
     loading: boolean,
     inCard?: boolean,
+    rowSelection?: Record<string, boolean>,
+    onRowSelectionChange?: any
 }
 
 export function DataTable<TData, TValue>({
@@ -64,7 +66,9 @@ export function DataTable<TData, TValue>({
     onPageChange,
     name,
     loading,
-    inCard = true
+    inCard = true,
+    rowSelection,
+    onRowSelectionChange
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -77,10 +81,11 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         state: {
             sorting,
-            columnFilters
+            columnFilters,
+            rowSelection
         },
         manualPagination: true,
-
+        onRowSelectionChange,
         getCoreRowModel: getCoreRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
