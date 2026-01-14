@@ -28,24 +28,41 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   }, [selectedMenu])
   // Fetch data selected
   useEffect(() => {
+
     const selection: Record<string, boolean> = {}
     actionData.forEach((action, index) => {
       selection[index] = assignedActions.has(action.id ?? 0);
     })
     setRowSelection(selection)
-  }, [assignedActions, actionData])
+  }, [actionData,])
   // On selected
-  useMemo(() => {
-    let result = Object.keys(rowSelection)
-      .filter(key => rowSelection[key])
-      .map(rowId => actionData[Number(rowId)])
-      .filter(Boolean)
-    result.forEach(e => assignedActions.add(e.id ?? 0));
-    return result
+  useEffect(() => {
+    const selectedIds = new Set(
+      Object.entries(rowSelection)
+        .filter(([, selected]) => selected)
+        .map(([rowId]) => Number(rowId))
+    );
+    let tempAssigned = new Set([...assignedActions])
+    actionData.forEach((item, index) => {
+      const id = item?.id;
+      if (!id) return;
+
+      if (selectedIds.has(index)) {
+        tempAssigned.add(id);
+      } else {
+        tempAssigned.delete(id);
+      }
+      setAssignedActions(new Set([...tempAssigned]))
+    });
   }, [rowSelection,])
   // Reset
   let resetSelected = () => {
-    setAssignedActions(new Set(...[initAssignedActions]))
+    setAssignedActions(new Set([...initAssignedActions]))
+    const selection: Record<string, boolean> = {}
+    actionData.forEach((action, index) => {
+      selection[index] = initAssignedActions.has(action.id ?? 0);
+    })
+    setRowSelection(selection)
   }
   // Can save
   let canSave = useMemo(() => {
@@ -59,7 +76,7 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
     }
     let result = !areSetsEqual(initAssignedActions, assignedActions)
     return result
-  }, [rowSelection])
+  }, [initAssignedActions, assignedActions])
   // Fetch data
   let fetchData = async () => {
     setLoading(true)
