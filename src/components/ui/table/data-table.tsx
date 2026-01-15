@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
                                     return (
                                         <TableRow
                                             key={row.id}
-                                            data-state={row.getIsSelected() && "selected"}
+                                            data-state={rowSelection && row?.getIsSelected() && "selected"}
                                             className={`transition-all [&>td]:text-sm [&>td]:py-3 [&>td]:px-3`}
                                         >
                                             {row.getVisibleCells().map((cell) => {
