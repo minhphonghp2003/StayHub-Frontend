@@ -4,7 +4,7 @@ import { Action } from "@/core/model/RBAC/Action";
 
 const baseUrl: string = '/action';
 
-const getAllAction = async ({ search, pageNumber, pageSize, menuGroupId }: any): Promise<BaseResponse<Action[]>> => {
+const getAllAction = async ({ search, pageNumber, pageSize, menuGroupId, signal }: any): Promise<BaseResponse<Action[]>> => {
 
     const params = {
         search: search?.trim() || undefined,
@@ -12,8 +12,9 @@ const getAllAction = async ({ search, pageNumber, pageSize, menuGroupId }: any):
         pageSize,
         menuGroupId
     };
-    const response = await api.get(`${baseUrl}`, { params });
-    return response.data;
+    const response = await api.get(`${baseUrl}`, { params, signal });
+
+    return response?.data ?? null;
 };
 const generateAction = async (): Promise<BaseResponse<boolean>> => {
     const response = await api.post(`${baseUrl}/generate`);

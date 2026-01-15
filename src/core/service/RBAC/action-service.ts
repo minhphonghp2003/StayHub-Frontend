@@ -3,9 +3,9 @@ import { Action, } from "@/core/model/RBAC/Action";
 import actionRepository from "@/core/repository/RBAC/action-repository";
 
 
-const getAllActions = async (params: any): Promise<{ data: Action[], pageInfo?: PageInfo } | null> => {
-    var result = await actionRepository.getAllAction(params)
-    if (result.success) {
+const getAllActions = async (params: any, signal: any): Promise<{ data: Action[], pageInfo?: PageInfo } | null> => {
+    var result = await actionRepository.getAllAction({ ...params, signal })
+    if (result?.success) {
         return {
             data: result.data ?? [],
             pageInfo: result

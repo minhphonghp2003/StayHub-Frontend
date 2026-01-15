@@ -37,9 +37,9 @@ const getAllNoPaginateMenu = async (): Promise<BaseResponse<CategoryItem[]>> => 
     const response = await api.get(`${baseUrl}/all`);
     return response.data;
 };
-const getActionOfMenu = async (id: number): Promise<BaseResponse<Action[]>> => {
-    const response = await api.get(`${menuActionUrl}/action-of-menu/${id}`);
-    return response.data;
+const getActionOfMenu = async (id: number, signal: any): Promise<BaseResponse<Action[]>> => {
+    const response = await api.get(`${menuActionUrl}/action-of-menu/${id}`, { signal });
+    return response?.data ?? null;
 };
 const assignActionsToMenu = async (actionIds: number[], menuId: number): Promise<BaseResponse<number[]>> => {
     const payload = {

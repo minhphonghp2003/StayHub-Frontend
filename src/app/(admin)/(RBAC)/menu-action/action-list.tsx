@@ -12,9 +12,7 @@ import actionService from '@/core/service/RBAC/action-service'
 import menuService from '@/core/service/RBAC/menu-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { Waypoints } from 'lucide-react'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
-
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   let [initAssignedActions, setInitAssignedActions] = useState<Set<number>>(new Set())
   let [assignedActions, setAssignedActions] = useState<Set<number>>(new Set())
@@ -23,6 +21,17 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
   let [loading, setLoading] = useState<boolean>(false)
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
+  const actionListControllerRef = useRef<AbortController | null>(null)
+  const assignedActionControllerRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    return () => {
+
+      actionListControllerRef.current?.abort();
+      assignedActionControllerRef.current?.abort()
+    }
+  }, [])
+
   useEffect(() => {
     fetchData()
   }, [selectedMenu])
@@ -79,13 +88,22 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   }, [initAssignedActions, assignedActions])
   // Fetch data
   let fetchData = async () => {
+    actionListControllerRef.current?.abort()
+    const actionListController = new AbortController()
+    actionListControllerRef.current = actionListController
+    assignedActionControllerRef.current?.abort()
+    const assignedActionController = new AbortController()
+    assignedActionControllerRef.current = assignedActionController
     setLoading(true)
     if (selectedMenu) {
       await Promise.all([
-        fetchActions(1),
-        fetchAssignedActions()]);
+        fetchActions(1, actionListController.signal),
+        fetchAssignedActions(assignedActionController.signal)]);
     }
-    setLoading(false)
+    if (!actionListController.signal.aborted && !assignedActionController.signal.aborted) {
+
+      setLoading(false)
+    }
   }
   let assignAction = async () => {
     const result = await toastPromise(
@@ -101,24 +119,28 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
       setAssignedActions(new Set(result))
     }
   }
-  let fetchActions = async (page: number) => {
-    let result = await actionService.getAllActions({ pageNumber: page })
+  let fetchActions = async (page: number, signal: any) => {
+    let result = await actionService.getAllActions({ pageNumber: page, }, signal)
     if (result) {
       setActionData(result.data)
       setPageInfo(result.pageInfo ?? null)
     }
   }
-  let fetchAssignedActions = async () => {
+  let fetchAssignedActions = async (signal: any) => {
     if (!selectedMenu) return;
-    let result = await menuService.getActionOfMenu(selectedMenu.id ?? 0)
+
+    let result = await menuService.getActionOfMenu(selectedMenu.id ?? 0, signal)
     if (result) {
       setAssignedActions(new Set(result.map(e => e.id ?? 0)))
       setInitAssignedActions(new Set(result.map(e => e.id ?? 0)))
     }
   }
   let onChangePage = async (page: number) => {
+    actionListControllerRef.current?.abort()
+    const controller = new AbortController()
+    actionListControllerRef.current = controller
     setLoading(true)
-    await fetchActions(page)
+    await fetchActions(page, controller.signal)
     setLoading(false)
   };
   const columns = getCompactActionColumns();

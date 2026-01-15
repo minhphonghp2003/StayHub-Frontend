@@ -40,9 +40,9 @@ const getAllNoPaginateMenus = async (): Promise<CategoryItem[]> => {
     return [];
 }
 
-const getActionOfMenu = async (id: number): Promise<Action[]> => {
-    var result = await menuRepository.getActionOfMenu(id)
-    if (result.success) {
+const getActionOfMenu = async (id: number, signal: any): Promise<Action[]> => {
+    var result = await menuRepository.getActionOfMenu(id, signal)
+    if (result?.success) {
         return result.data ?? [];
     }
     return [];

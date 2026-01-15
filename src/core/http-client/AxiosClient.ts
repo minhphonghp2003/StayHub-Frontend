@@ -12,6 +12,7 @@ const createAxiosInstance = (): AxiosInstance => {
             'Content-Type': 'application/json',
         },
         withCredentials: true,
+        
     });
 
     instance.interceptors.request.use(

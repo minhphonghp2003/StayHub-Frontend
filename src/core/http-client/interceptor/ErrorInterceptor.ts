@@ -4,6 +4,10 @@ import axios from "axios";
 import { api } from "../AxiosClient";
 
 export const errorInterceptor = async (error: any) => {
+    if (error?.name === "CanceledError" || error?.code === "ERR_CANCELED") {
+        // return Promise.reject(error)
+        return Promise.resolve()
+    }
     const status = error.response?.status;
     const originalRequest = error.config;
 
@@ -46,11 +50,7 @@ export const errorInterceptor = async (error: any) => {
         case 500:
             console.error('[Axios] Server Error:', error.response?.data);
             break;
-        default:
-            console.error('[Axios] Unknown Error:', error.message);
-            break;
     }
-
     const customError = {
         status,
         message:
