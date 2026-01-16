@@ -1,6 +1,8 @@
 "use client"
 import ActionList from '@/app/(admin)/(RBAC)/role-action/action-list'
+import MenuList from '@/app/(admin)/(RBAC)/role-action/menu-list'
 import RoleList from '@/app/(admin)/(RBAC)/role-action/role-list'
+import UserList from '@/app/(admin)/(RBAC)/role-action/user-list'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import { Alert, AlertTitle } from '@/components/ui/shadcn/alert'
 import { Button } from '@/components/ui/shadcn/button'
@@ -53,8 +55,8 @@ function RoleActionPage() {
                                             </Alert>
                                             <ActionList selectedRole={selectedRole} />
                                         </TabsContent>
-                                        <TabsContent value="menu">Change your password here.</TabsContent>
-                                        <TabsContent value="user">Change your password here.</TabsContent>
+                                        <TabsContent value="menu"><MenuList /></TabsContent>
+                                        <TabsContent value="user"><UserList /></TabsContent>
                                     </Tabs>
                             }
                         </CardContent>
