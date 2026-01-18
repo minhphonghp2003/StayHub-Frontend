@@ -1,4 +1,6 @@
 import { CategoryItem } from "@/core/model/catalog/category-item";
+import { Action } from "@/core/model/RBAC/Action";
+import { Menu } from "@/core/model/RBAC/Menu";
 import { Role } from "@/core/model/RBAC/Role";
 import { RolePayload } from "@/core/payload/RBAC/role-payload";
 import roleRepository from "@/core/repository/RBAC/role-repository";
@@ -31,10 +33,46 @@ const deleterole = async (id: number): Promise<boolean | null> => {
     return result.success ? result.data ?? null : null;
 };
 
+
+const getActionOfRole = async (id: number, signal: any): Promise<Action[]> => {
+    var result = await roleRepository.getActionOfRole(id, signal)
+    if (result?.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
+
+const assignActionsToRole = async (actionIds: number[], roleId: number): Promise<number[]> => {
+    var result = await roleRepository.assignActionsToRole(actionIds, roleId)
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
+const getMenusOfRole = async (id: number, signal: any): Promise<Menu[]> => {
+    var result = await roleRepository.getMenuOfRole(id, signal)
+    if (result?.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
+
+const assignMenusToRole = async (actionIds: number[], roleId: number): Promise<number[]> => {
+    var result = await roleRepository.assignMenusToRole(actionIds, roleId)
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
+
 export default {
     getAllRoles,
     getroleById,
     createrole,
     updaterole,
-    deleterole
+    deleterole,
+    getActionOfRole,
+    getMenusOfRole,
+    assignActionsToRole,
+    assignMenusToRole
 };

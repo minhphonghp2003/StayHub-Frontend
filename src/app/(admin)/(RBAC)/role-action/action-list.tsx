@@ -20,7 +20,7 @@ function ActionList({ selectedRole }: { selectedRole?: Role | null }) {
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
   const actionListControllerRef = useRef<AbortController | null>(null)
   const assignedActionControllerRef = useRef<AbortController | null>(null)
-
+  // TODO fix assigned not set on init
   useEffect(() => {
     return () => {
       actionListControllerRef.current?.abort();
@@ -102,18 +102,18 @@ function ActionList({ selectedRole }: { selectedRole?: Role | null }) {
     }
   }
   let assignAction = async () => {
-    // const result = await toastPromise(
-    //   roleService.assignActionsToRole([...assignedActions], selectedRole?.id ?? 0),
-    //   {
-    //     loading: "Đang gán action...",
-    //     success: "Gán action thành công!",
-    //     error: "Gán action thất bại!",
-    //   }
-    // );
-    // if (result) {
-    //   setInitAssignedActions(new Set(result))
-    //   setAssignedActions(new Set(result))
-    // }
+    const result = await toastPromise(
+      roleService.assignActionsToRole([...assignedActions], selectedRole?.id ?? 0),
+      {
+        loading: "Đang gán action...",
+        success: "Gán action thành công!",
+        error: "Gán action thất bại!",
+      }
+    );
+    if (result) {
+      setInitAssignedActions(new Set(result))
+      setAssignedActions(new Set(result))
+    }
   }
   let fetchActions = async (page: number, signal: any) => {
     let result = await actionService.getAllActions({ pageNumber: page, }, signal)
@@ -123,13 +123,13 @@ function ActionList({ selectedRole }: { selectedRole?: Role | null }) {
     }
   }
   let fetchAssignedActions = async (signal: any) => {
-    // if (!selectedRole) return;
+    if (!selectedRole) return;
 
-    // let result = await roleService.getActionOfRole(selectedRole.id ?? 0, signal)
-    // if (result) {
-    //   setAssignedActions(new Set(result.map(e => e.id ?? 0)))
-    //   setInitAssignedActions(new Set(result.map(e => e.id ?? 0)))
-    // }
+    let result = await roleService.getActionOfRole(selectedRole.id ?? 0, signal)
+    if (result) {
+      setAssignedActions(new Set(result.map(e => e.id ?? 0)))
+      setInitAssignedActions(new Set(result.map(e => e.id ?? 0)))
+    }
   }
   let onChangePage = async (page: number) => {
     actionListControllerRef.current?.abort()
