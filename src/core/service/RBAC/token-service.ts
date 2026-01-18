@@ -9,15 +9,16 @@ const setAuthInfo = async (info: AuthModel) => {
     localStorage.setItem('user', JSON.stringify(info));
     localStorage.setItem('access_token', info.token);
     localStorage.setItem('refresh', info.refreshToken);
+    localStorage.setItem('expiresDate', info.expiresDate);
 }
 const getAuthInfo = () => {
     let userStr = localStorage.getItem('user');
     let access_token = localStorage.getItem('access_token');
     let refresh = localStorage.getItem('refresh',);
-
+    let expiresDate = localStorage.getItem('expiresDate');
     const user = userStr ? JSON.parse(userStr) : null;
     return {
-        user, access_token, refresh
+        user, access_token, refresh, expiresDate
     }
 }
 const decodeJWT = (token: string) => {
@@ -48,4 +49,4 @@ const isJWTExpired = (token: string) => {
     return decoded.exp < currentTime;
 }
 
-export { getAuthInfo, removeAuthInfo, setAuthInfo };
+export { getAuthInfo, removeAuthInfo, setAuthInfo,isJWTExpired };

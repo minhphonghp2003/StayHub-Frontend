@@ -1,8 +1,7 @@
 import { AuthModel } from "@/core/model/RBAC/Auth";
-import { getAuthInfo, removeAuthInfo, setAuthInfo } from "@/core/service/RBAC/token-service";
+import { getAuthInfo, isJWTExpired, removeAuthInfo, setAuthInfo } from "@/core/service/RBAC/token-service";
 import axios from "axios";
 import { api } from "../AxiosClient";
-
 export const errorInterceptor = async (error: any) => {
     if (error?.name === "CanceledError" || error?.code === "ERR_CANCELED") {
         // return Promise.reject(error)
@@ -18,7 +17,8 @@ export const errorInterceptor = async (error: any) => {
         case 401:
             try {
                 const refreshToken = await getRefreshToken()
-                if (refreshToken == null) {
+                const accessToken = await getAccessToken()
+                if (!isJWTExpired(accessToken ?? "") || refreshToken == null) {
                     // await removeToken()
                     window.location.href = '/signin';
                     return Promise.reject();
@@ -75,7 +75,18 @@ const getRefreshToken = async (): Promise<string | undefined> => {
         }
     }
 };
-
+const getAccessToken = async (): Promise<string | undefined> => {
+    if (isBrowser) {
+        return (getAuthInfo()).access_token || undefined;
+    } else {
+        try {
+            const { cookies } = await import('next/headers');
+            return (await cookies()).get(accessToken || "refresh")?.value;
+        } catch {
+            return undefined;
+        }
+    }
+};
 const removeToken = async () => {
     if (isBrowser) {
         await removeAuthInfo();
