@@ -12,7 +12,7 @@ const getMyMenus = async (): Promise<MenuGroup[]> => {
     }
     return [];
 }
-const getAllMenus = async (params: any): Promise<{ data: Menu[], pageInfo?: PageInfo } | null> => {
+const getAllMenus = async (params: any, signal: any): Promise<{ data: Menu[], pageInfo?: PageInfo } | null> => {
     var result = await menuRepository.getAllMenu(params)
     if (result.success) {
         return {

@@ -55,7 +55,7 @@ function RoleActionPage() {
                                             </Alert>
                                             <ActionList selectedRole={selectedRole} />
                                         </TabsContent>
-                                        <TabsContent value="menu"><MenuList /></TabsContent>
+                                        <TabsContent value="menu"><MenuList selectedRole={selectedRole} /></TabsContent>
                                         <TabsContent value="user"><UserList /></TabsContent>
                                     </Tabs>
                             }
