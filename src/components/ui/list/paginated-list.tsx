@@ -9,7 +9,7 @@ interface Item {
     desc?: string
 }
 
-function PaginatedList({ items, onClick, selectedId, pageInfo, onPageChanged }: { items?: Item[], onClick?: any, selectedId?: number, onPageChanged?: any, pageInfo?: PageInfo | null }) {
+function PaginatedList({ items, onClick, selectedId, pageInfo, onPageChanged }: { items?: Item[], onClick?: any, selectedId?: number | null, onPageChanged?: any, pageInfo?: PageInfo | null }) {
     return (
         <div>
 

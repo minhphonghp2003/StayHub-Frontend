@@ -3,6 +3,7 @@ import { User } from "@/core/model/RBAC/User";
 
 const baseUrl: string = '/user';
 
+const userRoleUrl: string = '/UserRole';
 const getAllUser = async ({ search, pageNumber, pageSize, menuGroupId }: any): Promise<BaseResponse<User[]>> => {
 
     const params = {
@@ -20,7 +21,14 @@ const getUserById = async (id: number): Promise<BaseResponse<User | null>> => {
     return response.data;
 };
 
-
+const getUserOfRole = async ({ pageNumber, pageSize, id, signal }: any): Promise<BaseResponse<User[]>> => {
+    const params = {
+        pageNumber,
+        pageSize,
+    };
+    const response = await api.get(`${userRoleUrl}/user-of-role/${id}`, { params, signal });
+    return response?.data ?? null;
+};
 const setActivateUser = async (id: number, activated: boolean): Promise<BaseResponse<boolean>> => {
     const response = await api.patch(`${baseUrl}/set-activated/${id}`, null, {
         params: { activated }
@@ -33,4 +41,5 @@ export default {
     getAllUser,
     getUserById,
     setActivateUser,
+    getUserOfRole
 };

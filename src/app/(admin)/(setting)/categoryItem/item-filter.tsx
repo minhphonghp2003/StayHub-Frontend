@@ -42,7 +42,7 @@ function ItemFilter({ isOpen, setOpenFilter, initFilter, onRemoveAllFilters, onF
         }} >
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <label className="text-md font-semibold mb-2 block ">Category</label>
-                <PaginatedList items={category.map(e => ({ id: e.id, name: e.name, code: e.code }))} onClick={(e: any) => setSelectedCategoryFilter(e.id)} selected={selectedCategoryFilter} pageInfo={pageInfo} onPageChanged={(page: number) => {
+                <PaginatedList items={category.map(e => ({ id: e.id, name: e.name, code: e.code }))} onClick={(e: any) => setSelectedCategoryFilter(e.id)} selectedId={selectedCategoryFilter} pageInfo={pageInfo} onPageChanged={(page: number) => {
                     categoryService.getAllCategories({ pageNumber: page, pageSize: pageInfo?.pageSize ?? 10 }).then(e => {
                         setCategory(e?.data ?? [])
                         setPageInfo(e?.pageInfo ?? null)

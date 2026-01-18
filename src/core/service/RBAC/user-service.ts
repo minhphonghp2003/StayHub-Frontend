@@ -21,9 +21,19 @@ const setActivateUser = async (id: number, activated: boolean): Promise<boolean 
     const result = await userRepository.setActivateUser(id, activated);
     return result.success ? result.data ?? null : null;
 };
-
+const getUserOfRole = async (id: number, params: any, signal: any): Promise<{ data: User[], pageInfo?: PageInfo } | null> => {
+    var result = await userRepository.getUserOfRole({ ...params, id, signal })
+    if (result.success) {
+        return {
+            data: result.data ?? [],
+            pageInfo: result
+        };
+    }
+    return null;
+};
 export default {
     getAllUsers,
     getUserById,
     setActivateUser,
+    getUserOfRole
 };
