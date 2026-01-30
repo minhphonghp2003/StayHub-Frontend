@@ -52,7 +52,7 @@ const assignMenusToRole = async (menuIds: number[], roleId: number): Promise<Bas
     const response = await api.post(`${roleMenuUrl}/role/assign-menu`, payload);
     return response.data;
 };
-const getMenuOfRole = async (id: number, signal: any): Promise<BaseResponse<Menu[]>> => {
+const getMenuOfRole = async (id: number, signal: any): Promise<BaseResponse<number[]>> => {
     const response = await api.get(`${roleMenuUrl}/menu-of-role/${id}`, { signal });
     return response?.data ?? null;
 };

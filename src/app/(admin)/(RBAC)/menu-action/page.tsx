@@ -4,7 +4,6 @@ import MenuList from '@/app/(admin)/(RBAC)/menu-action/menu-list'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import React from 'react'
 import { Menu } from '@/core/model/RBAC/Menu'
-
 function MenuActionPage() {
     let [selectedMenu, setSelectedMenu] = React.useState<Menu | null>(null)
     return (

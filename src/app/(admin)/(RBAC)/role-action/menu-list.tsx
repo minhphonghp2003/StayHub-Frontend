@@ -20,7 +20,6 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
   const menuListControllerRef = useRef<AbortController | null>(null)
   const assignedMenuControllerRef = useRef<AbortController | null>(null)
-  // TODO fix assigned not set on init
   useEffect(() => {
     return () => {
       menuListControllerRef.current?.abort();
@@ -33,13 +32,12 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
   }, [selectedRole])
   // Fetch data selected
   useEffect(() => {
-
     const selection: Record<string, boolean> = {}
     menuData.forEach((menu, index) => {
       selection[index] = assignedMenus.has(menu.id ?? 0);
     })
     setRowSelection(selection)
-  }, [menuData,])
+  }, [menuData, initAssignedMenus])
   // On selected
   useEffect(() => {
     const selectedIds = new Set(
@@ -127,8 +125,8 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
 
     let result = await roleService.getMenusOfRole(selectedRole.id ?? 0, signal)
     if (result) {
-      setAssignedMenus(new Set(result.map(e => e.id ?? 0)))
-      setInitAssignedMenus(new Set(result.map(e => e.id ?? 0)))
+      setAssignedMenus(new Set(result))
+      setInitAssignedMenus(new Set(result))
     }
   }
   let onChangePage = async (page: number) => {

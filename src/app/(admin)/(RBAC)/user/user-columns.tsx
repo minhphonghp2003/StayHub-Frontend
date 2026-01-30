@@ -8,6 +8,7 @@ import { User } from "@/core/model/RBAC/User"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, Edit2, Menu, MoreHorizontal, Trash2 } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: '2-digit',
@@ -60,7 +61,7 @@ export const getUserColumns = ({ onToggleActive }: ColumnProp): ColumnDef<User>[
                             alt="User"
                         />
                     </span>
-                    <div>{user.fullname}</div>
+                    <Link href={"/user-profile/" + user.id} className="text-blue-700">{user.fullname}</Link>
                 </div>
             );
         },

@@ -37,13 +37,12 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   }, [selectedMenu])
   // Fetch data selected
   useEffect(() => {
-
     const selection: Record<string, boolean> = {}
     actionData.forEach((action, index) => {
       selection[index] = assignedActions.has(action.id ?? 0);
     })
     setRowSelection(selection)
-  }, [actionData,])
+  }, [actionData, initAssignedActions])
   // On selected
   useEffect(() => {
     const selectedIds = new Set(

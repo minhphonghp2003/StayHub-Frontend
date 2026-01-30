@@ -20,7 +20,6 @@ function ActionList({ selectedRole }: { selectedRole?: Role | null }) {
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
   const actionListControllerRef = useRef<AbortController | null>(null)
   const assignedActionControllerRef = useRef<AbortController | null>(null)
-  // TODO fix assigned not set on init
   useEffect(() => {
     return () => {
       actionListControllerRef.current?.abort();
@@ -39,7 +38,7 @@ function ActionList({ selectedRole }: { selectedRole?: Role | null }) {
       selection[index] = assignedActions.has(action.id ?? 0);
     })
     setRowSelection(selection)
-  }, [actionData,])
+  }, [actionData, initAssignedActions])
   // On selected
   useEffect(() => {
     const selectedIds = new Set(

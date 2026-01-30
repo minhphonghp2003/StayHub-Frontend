@@ -49,7 +49,7 @@ const assignActionsToRole = async (actionIds: number[], roleId: number): Promise
     }
     return [];
 };
-const getMenusOfRole = async (id: number, signal: any): Promise<Menu[]> => {
+const getMenusOfRole = async (id: number, signal: any): Promise<number[]> => {
     var result = await roleRepository.getMenuOfRole(id, signal)
     if (result?.success) {
         return result.data ?? [];
