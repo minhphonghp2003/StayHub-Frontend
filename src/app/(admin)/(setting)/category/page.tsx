@@ -1,10 +1,9 @@
 "use client"
-import AddMenuModal from "@/app/(admin)/(RBAC)/menu/menu-items/add-menu-modal";
 import AddCategoryModal from "@/app/(admin)/(setting)/category/add-category-modal";
 import { getCategoryColumns } from "@/app/(admin)/(setting)/category/category-columns";
 import DeleteCategoryModal from "@/app/(admin)/(setting)/category/delete-category-modal";
 import UpdateCategoryModal from "@/app/(admin)/(setting)/category/update-category-modal";
-import PageBreadcrumb from "@/components/common/PageBreadCrumb"
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
 import { Category } from "@/core/model/catalog/category";
 import { categoryService } from "@/core/service/catalog/category-service";

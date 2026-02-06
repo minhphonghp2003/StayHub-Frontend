@@ -6,7 +6,7 @@ import { errorInterceptor } from './interceptor/ErrorInterceptor';
 let axiosInstance: AxiosInstance | null = null;
 const createAxiosInstance = (): AxiosInstance => {
     const instance = axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7047/api',
+        baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7074/api',
         timeout: 10000,
         headers: {
             'Content-Type': 'application/json',
