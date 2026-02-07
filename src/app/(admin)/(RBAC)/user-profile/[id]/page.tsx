@@ -3,6 +3,7 @@ import AccountTab from "@/app/(admin)/(RBAC)/user-profile/[id]/user-profile/Acco
 import LeftProfileCard from "@/app/(admin)/(RBAC)/user-profile/[id]/user-profile/LeftProfileCard";
 import RecentLoginTab from "@/app/(admin)/(RBAC)/user-profile/[id]/user-profile/RecentLoginTab";
 import Loading from "@/components/common/Loading";
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/shadcn/tabs";
 
@@ -70,13 +71,16 @@ function UserProfile() {
 
 
 
-    if (loading) {
-        return <Loading />;
-    }
+
 
     return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-12 gap-6">
+        <div className="space-y-6 ">
+            <PageBreadcrumb pagePath='/user' pageTitle="Người dùng" subTitle={["Chi tiết"]} />
+
+            <div className="grid grid-cols-12 gap-6 relative">
+                {loading ? (
+                    <Loading />
+                ) : null}
                 {/* Left column: basic info */}
                 <LeftProfileCard profile={profile} />
 

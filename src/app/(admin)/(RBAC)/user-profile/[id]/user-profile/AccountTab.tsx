@@ -3,18 +3,46 @@ import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Role } from "@/core/model/RBAC/Role";
 import { Profile } from "@/core/model/RBAC/profile";
+import roleService from "@/core/service/RBAC/role-service";
+import userService from "@/core/service/RBAC/user-service";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-export default function AccountTab({ profile }: { profile: Profile | null }) {
-    if (profile) {
-
-        profile.roles = [
-            { id: 1, name: 'Tenant', description: 'Standard tenant role with basic permissions.' },
-            { id: 2, name: 'Premium Tenant', description: 'Premium tenant role with extended permissions.' },
-            { id: 3, name: 'Maintenance', description: 'Role for maintenance staff with specific access rights.' },
-            { id: 4, name: 'Admin', description: 'Administrator role with full access to the system.' },
-
-        ]
+export default function AccountTab({ profile, onRoleChange }: { profile: Profile | null, onRoleChange?: (roles: Role[]) => void }) {
+    const [roles, setRoles] = useState<Role[]>([]);
+    const [selectedRoles, setSelectedRoles] = useState<Role[]>(profile?.roles || []);
+    let fetchData = async () => {
+        const roles = await roleService.getAllRoles();
+        if (roles && roles.length > 0) {
+            setRoles(roles);
+            if (profile?.roles) {
+                setSelectedRoles(profile.roles);
+            }
+        }
     }
+    let assignRoles = async (selectedRoleIds: number[]) => {
+        const toastId = toast.loading("Đang cập nhật vai trò...");
+
+        try {
+            let result = await userService.assignRoleToUser(profile?.id || 0, selectedRoleIds);
+            if (result) {
+                setSelectedRoles(roles.filter(r => selectedRoleIds.includes(r.id ?? 0)));
+                if (onRoleChange) {
+                    onRoleChange(roles.filter(r => selectedRoleIds.includes(r.id ?? 0)));
+                }
+                toast.update(toastId, { render: "Cập nhật vai trò thành công", type: "success", isLoading: false });
+            }
+        } catch (error) {
+            toast.update(toastId, { render: "Lỗi khi cập nhật vai trò", type: "error", isLoading: false });
+        }
+    }
+
+    useEffect(() => {
+        if (profile) {
+            fetchData();
+        }
+    }, [profile]);
+
     return (
         <div className="grid grid-cols-12 gap-6 mt-6">
             {/* Role & Permissions */}
@@ -29,19 +57,25 @@ export default function AccountTab({ profile }: { profile: Profile | null }) {
                         <div>
                             <h4 className="text-sm font-bold mb-3">Assigned Roles</h4>
                             <div className="space-y-2 mb-4">
-                                {profile?.roles && profile.roles.length > 0 ? (
-                                    profile.roles.map((role: Role, idx: number) => (
+                                {roles && roles.length > 0 ? (
+                                    roles.map((role: Role, idx: number) => (
                                         <label key={idx} className="flex items-center gap-3 cursor-pointer">
                                             <input
                                                 type="checkbox"
-                                                defaultChecked
+                                                checked={selectedRoles.some(r => r.id === role.id)}
+                                                onChange={(e) => {
+                                                    const selectedIds = e.target.checked
+                                                        ? [...selectedRoles.map(r => r.id ?? 0), role.id ?? 0]
+                                                        : selectedRoles.filter(r => r.id !== role.id).map(r => r.id ?? 0);
+                                                    assignRoles(selectedIds);
+                                                }}
                                                 className="w-4 h-4 rounded border-gray-300"
                                             />
                                             <span className="text-sm ">{role.name}</span>
                                         </label>
                                     ))
                                 ) : (
-                                    <div className="text-sm text-gray-500">Chưa được gán vai trò nào.</div>
+                                    <div className="text-sm text-gray-500">Chưa có vai trò nào được tạo.</div>
                                 )}
                             </div>
                             <p className="text-xs text-gray-400 mb-6">Chọn vai trò để cấp quyền.</p>
@@ -50,20 +84,17 @@ export default function AccountTab({ profile }: { profile: Profile | null }) {
                         <div>
                             <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Quyền hạn hiệu lực</h4>
                             <div className="space-y-2">
-                                <label className="flex items-center gap-3">
-                                    <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                                    <span className="text-sm ">Quyền xem thông tin tài khoản</span>
-                                </label>
-                                <label className="flex items-center gap-3">
+                                {
+                                    selectedRoles.length !== 0 && selectedRoles.map((role: Role, idx: number) => role.description && (
 
-                                    <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                                    <span className="text-sm ">Quyền chỉnh sửa thông tin tài khoản  </span>
-                                </label>
-                                <label className="flex items-center gap-3">
+                                        <label key={idx} className="flex items-center gap-3">
+                                            <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                                            <span className="text-sm ">{role.description}</span>
+                                        </label>
 
-                                    <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                                    <span className="text-sm ">Quyền xóa tài khoản</span>
-                                </label>
+                                    ))
+
+                                }
 
                             </div>
                         </div>

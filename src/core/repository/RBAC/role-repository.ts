@@ -1,6 +1,5 @@
 import { api } from "@/core/http-client/AxiosClient";
 import { Action } from "@/core/model/RBAC/Action";
-import { Menu } from "@/core/model/RBAC/Menu";
 import { Role } from "@/core/model/RBAC/Role";
 import { RolePayload } from "@/core/payload/RBAC/role-payload";
 

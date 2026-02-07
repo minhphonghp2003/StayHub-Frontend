@@ -19,16 +19,23 @@ export default function LeftProfileCard({ profile }: { profile: Profile | null }
                                 <div className="w-full h-full flex items-center justify-center text-gray-500 font-semibold text-lg">{(profile?.fullname ?? 'U').charAt(0)}</div>
                             )}
                         </div>
-                        <div className="self-end">
-                            <h2 className="text-xl font-bold self-center">{profile?.fullname ?? 'Unknown User'}</h2>
-                            <div className="mt-2 flex flex-wrap gap-2 items-center">
-                                {profile?.roles && profile.roles.length > 0 ? (
-                                    <span className="px-2.5 py-1 bg-brand-200 text-brand-900 rounded text-xs font-medium">{profile.roles[0].name}</span>
-                                ) : (
-                                    <span className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">No role</span>
-                                )}
+
+                        <div className="self-end flex-1">
+                            <div className="flex items-top justify-between gap-4">
+                                <div>
+                                    <h2 className="text-xl font-bold">{profile?.fullname ?? 'Unknown User'}</h2>
+                                    <p className="text-xs italic text-gray-500">{profile?.username ?? 'Position not set'}</p>
+                                </div>
+                                <div className="flex-shrink-0">
+                                    {profile?.isActive ? (
+                                        <div className="w-4 h-4 rounded-full bg-green-500 ring-2 ring-green-200" title="Hoạt động"></div>
+                                    ) : (
+                                        <div className="w-4 h-4 rounded-full bg-red-500 ring-2 ring-red-200" title="Không hoạt động"></div>
+                                    )}
+                                </div>
                             </div>
                         </div>
+
                     </div>
 
                     {profile?.address && (
