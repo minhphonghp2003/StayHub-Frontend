@@ -76,7 +76,7 @@ export default function AccountTab({ profile, onRoleChange }: { profile: Profile
                         </div>
 
                         <div>
-                            <h4 className="text-sm font-bold mb-3">Assigned Roles</h4>
+                            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Vai trò được gán</h4>
                             <div className="space-y-2 mb-4">
                                 {roles && roles.length > 0 ? (
                                     roles.map((role: Role, idx: number) => (
