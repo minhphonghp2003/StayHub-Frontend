@@ -1,4 +1,5 @@
 "use client"
+import ImageViewerDialog from "@/components/common/ImageViewerDialog"
 import FileInput from "@/components/form/FileInput"
 import InputField from "@/components/form/InputField"
 import TextArea from "@/components/form/TextArea"
@@ -14,6 +15,7 @@ function MyProfile() {
     const [profile, setProfile] = useState<Profile | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
+    const [isImageViewerOpen, setIsImageViewerOpen] = useState(false)
     const [formData, setFormData] = useState({
         fullname: "",
         email: "",
@@ -77,7 +79,7 @@ function MyProfile() {
         setIsSaving(true)
 
         const result = await toastPromise(
-            userService.updateProfile(profile?.id ?? 0, formData),
+            userService.updateProfile(profile?.id || 0, formData),
             {
                 loading: "Đang cập nhật hồ sơ...",
                 success: "Cập nhật hồ sơ thành công!",
@@ -111,26 +113,35 @@ function MyProfile() {
                 <div className="col-span-12 lg:col-span-4">
                     <Card>
                         <CardContent className="flex flex-col items-center pt-6">
-                            <div className="mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-200 bg-gray-100">
+                            <button
+                                type="button"
+                                onClick={() => setIsImageViewerOpen(true)}
+                                className="group relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-200 bg-gray-100 hover:border-brand-300 transition-colors cursor-pointer"
+                            >
                                 {imagePreview ? (
                                     <img
                                         src={imagePreview}
                                         alt="Profile"
-                                        className="h-full w-full object-cover"
+                                        className="h-full w-full object-cover group-hover:opacity-75 transition-opacity"
                                     />
                                 ) : (
                                     <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-gray-400">
                                         {profile?.fullname?.charAt(0).toUpperCase() || "U"}
                                     </div>
                                 )}
-                            </div>
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
+                                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold">
+                                        Xem
+                                    </span>
+                                </div>
+                            </button>
 
                             <FileInput
                                 onChange={handleImageChange}
                             />
 
                             <div className="mt-4 w-full border-t pt-4 text-center text-xs text-gray-500">
-                                <p>Username: {profile?.username}</p>
+                                <p>Username: {profile?.username || "N/A"}</p>
                                 <p>Email: {profile?.email}</p>
                             </div>
                         </CardContent>
@@ -205,6 +216,29 @@ function MyProfile() {
                     </Card>
                 </div>
             </form>
+
+            {/* Image Viewer Dialog */}
+            <ImageViewerDialog
+                isOpen={isImageViewerOpen}
+                imageUrl={imagePreview}
+                imageAlt={profile?.fullname || "Profile"}
+                images={[
+                    {
+                        url: imagePreview,
+                        alt: profile?.fullname || "Profile"
+                    },
+                    {
+                        url: "https://plus.unsplash.com/premium_photo-1770416629652-962a91120bf5?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        alt: profile?.fullname || "Profile"
+                    },
+                    {
+                        url: "https://images.unsplash.com/photo-1761839257469-96c78a7c2dd3?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        alt: profile?.fullname || "Profile"
+                    },
+
+                ]}
+                onClose={() => setIsImageViewerOpen(false)}
+            />
         </div>
     )
 }
