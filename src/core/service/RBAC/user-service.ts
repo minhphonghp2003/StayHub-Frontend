@@ -1,7 +1,8 @@
-import { Profile } from "@/core/model/RBAC/profile";
-import { Role } from "@/core/model/RBAC/Role";
-import { User } from "@/core/model/RBAC/User";
-import userRepository from "@/core/repository/RBAC/user-repository";
+import { Profile } from "@/core/model/RBAC/profile"
+import { Role } from "@/core/model/RBAC/Role"
+import { User } from "@/core/model/RBAC/User"
+import { UpdateProfilePayload } from "@/core/payload/RBAC/update-profile-payload"
+import userRepository from "@/core/repository/RBAC/user-repository"
 
 const getAllUsers = async (params: any): Promise<{ data: User[], pageInfo?: PageInfo } | null> => {
     var result = await userRepository.getAllUser(params)
@@ -39,10 +40,12 @@ const getUserOfRole = async (id: number, params: any, signal: any): Promise<{ da
     }
     return null;
 };
-const assignRoleToUser = async (userId: number, roleIds: number[]): Promise<number[] | null> => {
-    const result = await userRepository.assignRoleToUser(roleIds, userId);
-    return result.success ? result.data ?? null : null;
-};
+const assignRoleToUser = async (userId: number, roleIds: number[]): Promise<any> => {
+    return await userRepository.assignRoleToUser(roleIds, userId)
+}
+const updateProfile = async (userId: number, payload: UpdateProfilePayload): Promise<BaseResponse<Profile>> => {
+    return await userRepository.updateProfile(userId, payload)
+}
 
 const getRoleOfUser = async (userId: number): Promise<Role[] | null> => {
     const result = await userRepository.getRoleOfUser({ id: userId });
@@ -54,6 +57,7 @@ export default {
     getUserById,
     getProfileById,
     getMyProfile,
+    updateProfile,
     setActivateUser,
     getUserOfRole,
     assignRoleToUser,

@@ -2,6 +2,7 @@ import { api } from "@/core/http-client/AxiosClient";
 import { Profile } from "@/core/model/RBAC/profile";
 import { Role } from "@/core/model/RBAC/Role";
 import { User } from "@/core/model/RBAC/User";
+import { UpdateProfilePayload } from "@/core/payload/RBAC/update-profile-payload";
 
 const baseUrl: string = '/user';
 const userRoleUrl: string = '/UserRole';
@@ -56,6 +57,10 @@ const assignRoleToUser = async (roleIds: number[], userId: number): Promise<Base
     const response = await api.post(`${userRoleUrl}/user/assignRole`, payload);
     return response.data;
 };
+const updateProfile = async (userId: number, payload: UpdateProfilePayload): Promise<BaseResponse<Profile>> => {
+    const response = await api.put(`${baseUrl}/${userId}`, payload);
+    return response.data;
+};
 export default {
     getAllUser,
     getUserById,
@@ -64,6 +69,6 @@ export default {
     getMyProfile,
     assignRoleToUser,
     getRoleOfUser,
-    getUserOfRole
-
+    getUserOfRole,
+    updateProfile
 };
