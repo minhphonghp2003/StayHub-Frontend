@@ -1,6 +1,4 @@
-import { CategoryItem } from "@/core/model/catalog/category-item";
 import { Action } from "@/core/model/RBAC/Action";
-import { Menu } from "@/core/model/RBAC/Menu";
 import { Role } from "@/core/model/RBAC/Role";
 import { RolePayload } from "@/core/payload/RBAC/role-payload";
 import roleRepository from "@/core/repository/RBAC/role-repository";

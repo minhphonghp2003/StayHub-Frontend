@@ -9,18 +9,50 @@ export const authInterceptor = async (config: any) => {
 };
 const getToken = async (): Promise<string | undefined> => {
     if (isBrowser) {
-        return (getAuthInfo()).access_token || undefined;
-    } else {
         try {
-            const { cookies } = await import('next/headers');
-            return (await cookies()).get(accessTokenKey || "access_token")?.value;
-        } catch {
+            // Client-side: read from localStorage (fastest)
+            const auth = getAuthInfo();
+            if (auth?.access_token) {
+                return auth.access_token;
+            }
+
+            // Fallback: try to read from document.cookie (non-HttpOnly cookies)
+            if (typeof document !== "undefined" && document.cookie) {
+                const cookieName = parseCookieName(accessTokenKey || "access_token");
+                const match = document.cookie.split("; ").find((c) => c.startsWith(`${cookieName}=`));
+                if (match) {
+                    return decodeURIComponent(match.split("=")[1] || "");
+                }
+            }
+        } catch (e) {
+            console.error("[AuthInterceptor] Client token read error:", e);
+        }
+        return undefined;
+    } else {
+        // Server-side: read from request cookies
+        try {
+            const mod = await import("next/headers");
+            const cookieStore = typeof mod.cookies === "function" ? await mod.cookies() : undefined;
+            if (!cookieStore) {
+                return undefined;
+            }
+            const cookieName = parseCookieName(accessTokenKey || "access_token");
+            return cookieStore.get(cookieName)?.value;
+        } catch (e) {
             return undefined;
         }
     }
 };
 
+const parseCookieName = (name: string): string => {
+    let cleanName = name.trim();
+    if (cleanName.startsWith('"') && cleanName.endsWith('"')) {
+        cleanName = cleanName.slice(1, -1);
+    }
+    return cleanName;
+};
+
 const isBrowser = typeof window !== 'undefined';
-const accessTokenKey = process.env.NEXT_PUBLIC_ACCESS_TOKEN
+const accessTokenKey = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
 
 

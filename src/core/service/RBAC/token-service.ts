@@ -4,12 +4,25 @@ const removeAuthInfo = async () => {
     localStorage.removeItem('user');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh');
+    // Clear cookies on client side
+    if (typeof document !== "undefined") {
+        document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        document.cookie = "refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    }
 }
 const setAuthInfo = async (info: AuthModel) => {
     localStorage.setItem('user', JSON.stringify(info));
     localStorage.setItem('access_token', info.token);
     localStorage.setItem('refresh', info.refreshToken);
     localStorage.setItem('expiresDate', info.expiresDate);
+    
+    // Also set cookies for server-side access
+    if (typeof document !== "undefined") {
+        const oneDay = 30 * 24 * 60 * 60 * 1000; // 30 days
+        const expiryDate = new Date(Date.now() + oneDay).toUTCString();
+        document.cookie = `access_token=${encodeURIComponent(info.token)}; path=/; expires=${expiryDate}; SameSite=Lax`;
+        document.cookie = `refresh_token=${encodeURIComponent(info.refreshToken)}; path=/; expires=${expiryDate}; SameSite=Lax`;
+    }
 }
 const getAuthInfo = () => {
     let userStr = localStorage.getItem('user');
@@ -49,4 +62,5 @@ const isJWTExpired = (token: string) => {
     return decoded.exp < currentTime;
 }
 
-export { getAuthInfo, removeAuthInfo, setAuthInfo,isJWTExpired };
+export { getAuthInfo, isJWTExpired, removeAuthInfo, setAuthInfo };
+
