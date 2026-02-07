@@ -122,14 +122,7 @@ function MyProfile() {
                                             url: imagePreview,
                                             alt: profile?.fullname || "Profile"
                                         },
-                                        {
-                                            url: "https://plus.unsplash.com/premium_photo-1708630833427-be145ebe474b?q=80&w=781&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                            alt: profile?.fullname || "Profile"
-                                        },
-                                        {
-                                            url: "https://images.unsplash.com/photo-1769006352025-1a429e69398f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                            alt: profile?.fullname || "Profile"
-                                        },
+
                                     ])
                                     )
                                 }}

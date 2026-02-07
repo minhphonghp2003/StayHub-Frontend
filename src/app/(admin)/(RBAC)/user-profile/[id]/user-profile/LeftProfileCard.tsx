@@ -2,8 +2,11 @@
 import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Profile } from "@/core/model/RBAC/profile";
+import { setImage } from "@/redux/features/images/ImageSlice";
+import { useDispatch } from "react-redux";
 
 export default function LeftProfileCard({ profile }: { profile: Profile | null }) {
+    const dispatch = useDispatch()
     return (
         <aside className="col-span-12 lg:col-span-3">
             <Card className="overflow-hidden pt-0">
@@ -11,30 +14,45 @@ export default function LeftProfileCard({ profile }: { profile: Profile | null }
 
                 <CardContent className="pt-0">
                     <div className="flex gap-4 -mt-14 mb-4">
-                        <div className="w-24 h-24 rounded-full ring-4 ring-white dark:ring-slate-900 overflow-hidden bg-gray-100 flex-shrink-0">
-                            {profile?.image ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={profile.image} alt={profile.fullname ?? 'avatar'} className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-500 font-semibold text-lg">{(profile?.fullname ?? 'U').charAt(0)}</div>
-                            )}
-                        </div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                dispatch(setImage([
+                                    {
+                                        url: profile?.image || '',
+                                        alt: profile?.fullname || "Profile"
+                                    },
 
-                        <div className="self-end flex-1">
-                            <div className="flex items-top justify-between gap-4">
-                                <div>
-                                    <h2 className="text-xl font-bold">{profile?.fullname ?? 'Unknown User'}</h2>
-                                    <p className="text-xs italic text-gray-500">{profile?.username ?? 'Position not set'}</p>
-                                </div>
-                                <div className="flex-shrink-0">
-                                    {profile?.isActive ? (
-                                        <div className="w-4 h-4 rounded-full bg-green-500 ring-2 ring-green-200" title="Hoạt động"></div>
-                                    ) : (
-                                        <div className="w-4 h-4 rounded-full bg-red-500 ring-2 ring-red-200" title="Không hoạt động"></div>
-                                    )}
+                                ])
+                                )
+                            }}
+                            className=""
+                        >
+                            <div className="w-24 h-24 rounded-full ring-4 ring-white dark:ring-slate-900 overflow-hidden bg-gray-100 flex-shrink-0">
+                                {profile?.image ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={profile.image} alt={profile.fullname ?? 'avatar'} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-500 font-semibold text-lg">{(profile?.fullname ?? 'U').charAt(0)}</div>
+                                )}
+                            </div>
+
+                            <div className="self-end flex-1">
+                                <div className="flex items-top justify-between gap-4">
+                                    <div>
+                                        <h2 className="text-xl font-bold">{profile?.fullname ?? 'Unknown User'}</h2>
+                                        <p className="text-xs italic text-gray-500">{profile?.username ?? 'Position not set'}</p>
+                                    </div>
+                                    <div className="flex-shrink-0">
+                                        {profile?.isActive ? (
+                                            <div className="w-4 h-4 rounded-full bg-green-500 ring-2 ring-green-200" title="Hoạt động"></div>
+                                        ) : (
+                                            <div className="w-4 h-4 rounded-full bg-red-500 ring-2 ring-red-200" title="Không hoạt động"></div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </button>
 
                     </div>
 
