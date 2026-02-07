@@ -1,6 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/shadcn/select";
 import { Role } from "@/core/model/RBAC/Role";
 import { Profile } from "@/core/model/RBAC/profile";
 import roleService from "@/core/service/RBAC/role-service";
@@ -11,6 +12,7 @@ import { toast } from "react-toastify";
 export default function AccountTab({ profile, onRoleChange }: { profile: Profile | null, onRoleChange?: (roles: Role[]) => void }) {
     const [roles, setRoles] = useState<Role[]>([]);
     const [selectedRoles, setSelectedRoles] = useState<Role[]>(profile?.roles || []);
+    const [userStatus, setUserStatus] = useState<string>(profile?.isActive ? "active" : "inactive");
     let fetchData = async () => {
         const roles = await roleService.getAllRoles();
         if (roles && roles.length > 0) {
@@ -38,10 +40,27 @@ export default function AccountTab({ profile, onRoleChange }: { profile: Profile
             toast.dismiss(toastId);
         }
     }
+    let handleStatusChange = async (newStatus: string) => {
+        const toastId = toast.loading("Đang cập nhật trạng thái...");
+        const isActive = newStatus === "active";
 
+        try {
+            let result = await userService.setActivateUser(profile?.id || 0, isActive);
+            if (result) {
+                setUserStatus(newStatus);
+                toast.update(toastId, { render: "Cập nhật trạng thái thành công", type: "success", isLoading: false });
+            }
+        } catch (error) {
+            toast.update(toastId, { render: "Lỗi khi cập nhật trạng thái", type: "error", isLoading: false });
+        } finally {
+            toast.dismiss(toastId);
+        }
+    }
     useEffect(() => {
         if (profile) {
             fetchData();
+            setUserStatus(profile.isActive ? "active" : "inactive");
+
         }
     }, [profile]);
 
@@ -116,12 +135,15 @@ export default function AccountTab({ profile, onRoleChange }: { profile: Profile
                         <div className="space-y-4">
                             <div>
                                 <label className="text-xs font-medium text-gray-600 block mb-2">Trạng thái</label>
-                                <input
-                                    type="text"
-                                    value="Active"
-                                    className="w-full px-4 py-2 border-2 border-brand-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-300"
-                                    readOnly
-                                />
+                                <Select value={userStatus} onValueChange={handleStatusChange}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Chọn trạng thái" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="active">Hoạt động</SelectItem>
+                                        <SelectItem value="inactive">Không hoạt động</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div className="flex justify-between pt-2">
