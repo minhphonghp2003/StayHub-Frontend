@@ -26,6 +26,11 @@ const register = async (payload: RegisterPayload): Promise<BaseResponse<AuthMode
     }
     return result;
 }
+const revokeAllToken = async ({ userId }: { userId: number }): Promise<BaseResponse<boolean>> => {
+    var result = await authRepository.revokeAllToken({ userId })
+    return result;
+}
+
 export default {
-    login, logout, register
+    login, logout, register, revokeAllToken
 };

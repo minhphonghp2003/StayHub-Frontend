@@ -8,5 +8,6 @@ export interface Profile extends BaseModel {
     phone?: string;
     image?: string;
     address?: string;
-    roles?: Role[]
+    roles?: Role[],
+    lastLoginAt?: string;
 }

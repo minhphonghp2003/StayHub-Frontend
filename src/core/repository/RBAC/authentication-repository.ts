@@ -14,11 +14,16 @@ const logout = async ({ refreshToken }: { refreshToken: string }): Promise<BaseR
     const response = await api.post(`${baseUrl}/logout`, { refreshToken });
     return response.data;
 };
+const revokeAllToken = async ({ userId }: { userId: number }): Promise<BaseResponse<boolean>> => {
+    const response = await api.post(`${baseUrl}/revoke-all-token/${userId}`);
+    return response.data;
+};
 
 const register = async (payload: RegisterPayload): Promise<BaseResponse<AuthModel>> => {
     const response = await api.post(`${baseUrl}/register`, payload);
     return response.data;
 };
 export default {
-    login, logout, register
+    login, logout, register,
+    revokeAllToken
 };
