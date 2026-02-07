@@ -34,6 +34,8 @@ export default function AccountTab({ profile, onRoleChange }: { profile: Profile
             }
         } catch (error) {
             toast.update(toastId, { render: "Lỗi khi cập nhật vai trò", type: "error", isLoading: false });
+        } finally {
+            toast.dismiss(toastId);
         }
     }
 
