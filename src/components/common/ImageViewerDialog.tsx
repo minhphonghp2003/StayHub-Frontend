@@ -5,8 +5,6 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 interface ImageViewerDialogProps {
     isOpen: boolean
-    imageUrl: string
-    imageAlt: string
     onClose: () => void
     images?: Array<{ url: string; alt: string }>
     currentIndex?: number
@@ -14,8 +12,6 @@ interface ImageViewerDialogProps {
 
 export default function ImageViewerDialog({
     isOpen,
-    imageUrl,
-    imageAlt,
     onClose,
     images = [],
     currentIndex: initialIndex = 0
@@ -28,7 +24,7 @@ export default function ImageViewerDialog({
     const [offset, setOffset] = useState({ x: 0, y: 0 })
 
     // Use images array if provided, otherwise use single image
-    const imageList = images.length > 0 ? images : [{ url: imageUrl, alt: imageAlt }]
+    const imageList = images.length > 0 ? images : []
     const currentImage = imageList[currentIndex]
 
     useEffect(() => {
@@ -129,7 +125,7 @@ export default function ImageViewerDialog({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent showCloseButton={false} className={`border-0 bg-black/95 p-0 min-w-full h-screen`}>
                 <DialogTitle className="sr-only">
-                    {currentImage.alt} - Image Viewer
+                    {currentImage?.alt} - Image Viewer
                 </DialogTitle>
                 <div className="relative flex flex-col items-center justify-center h-full">
                     {/* Header Controls */}
@@ -166,24 +162,27 @@ export default function ImageViewerDialog({
                         )}
 
                         {/* Image */}
-                        <div className="relative flex items-center justify-center">
-                            <Image
-                                src={currentImage.url}
-                                alt={currentImage.alt}
-                                width={1920}
-                                height={1000}
-                                style={{
-                                    transform: `scale(${zoom}) translate(${offset.x}px, ${offset.y}px)`,
-                                    userSelect: 'none',
-                                    maxHeight: '100vh',
-                                    width: 'auto',
-                                    height: 'auto'
-                                }}
-                                className="transition-transform duration-200 ease-out max-h-screen max-w-full object-contain"
-                                draggable={false}
-                                priority
-                            />
-                        </div>
+                        {
+
+                            currentImage?.url && <div className="relative flex items-center justify-center">
+                                <Image
+                                    src={currentImage?.url}
+                                    alt={currentImage?.alt}
+                                    width={1920}
+                                    height={1000}
+                                    style={{
+                                        transform: `scale(${zoom}) translate(${offset.x}px, ${offset.y}px)`,
+                                        userSelect: 'none',
+                                        maxHeight: '100vh',
+                                        width: 'auto',
+                                        height: 'auto'
+                                    }}
+                                    className="transition-transform duration-200 ease-out max-h-screen max-w-full object-contain"
+                                    draggable={false}
+                                    priority
+                                />
+                            </div>
+                        }
 
                         {/* Next Button */}
                         {imageList.length > 1 && (

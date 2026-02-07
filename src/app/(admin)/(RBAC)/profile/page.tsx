@@ -1,5 +1,4 @@
 "use client"
-import ImageViewerDialog from "@/components/common/ImageViewerDialog"
 import FileInput from "@/components/form/FileInput"
 import InputField from "@/components/form/InputField"
 import TextArea from "@/components/form/TextArea"
@@ -8,8 +7,10 @@ import { Card, CardContent } from "@/components/ui/shadcn/card"
 import { Profile } from "@/core/model/RBAC/profile"
 import userService from "@/core/service/RBAC/user-service"
 import { toastPromise } from "@/lib/alert-helper"
+import { setImage } from "@/redux/features/images/ImageSlice"
 import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
 
 function MyProfile() {
     const [profile, setProfile] = useState<Profile | null>(null)
@@ -24,7 +25,7 @@ function MyProfile() {
         image: ""
     })
     const [imagePreview, setImagePreview] = useState<string>("")
-
+    const dispatch = useDispatch()
     useEffect(() => {
         fetchProfile()
     }, [])
@@ -115,7 +116,23 @@ function MyProfile() {
                         <CardContent className="flex flex-col items-center pt-6">
                             <button
                                 type="button"
-                                onClick={() => setIsImageViewerOpen(true)}
+                                onClick={() => {
+                                    dispatch(setImage([
+                                        {
+                                            url: imagePreview,
+                                            alt: profile?.fullname || "Profile"
+                                        },
+                                        {
+                                            url: "https://plus.unsplash.com/premium_photo-1708630833427-be145ebe474b?q=80&w=781&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                            alt: profile?.fullname || "Profile"
+                                        },
+                                        {
+                                            url: "https://images.unsplash.com/photo-1769006352025-1a429e69398f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                            alt: profile?.fullname || "Profile"
+                                        },
+                                    ])
+                                    )
+                                }}
                                 className="group relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-200 bg-gray-100 hover:border-brand-300 transition-colors cursor-pointer"
                             >
                                 {imagePreview ? (
@@ -218,7 +235,7 @@ function MyProfile() {
             </form>
 
             {/* Image Viewer Dialog */}
-            <ImageViewerDialog
+            {/* <ImageViewerDialog
                 isOpen={isImageViewerOpen}
                 imageUrl={imagePreview}
                 imageAlt={profile?.fullname || "Profile"}
@@ -238,7 +255,7 @@ function MyProfile() {
 
                 ]}
                 onClose={() => setIsImageViewerOpen(false)}
-            />
+            /> */}
         </div>
     )
 }

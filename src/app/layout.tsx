@@ -1,6 +1,7 @@
 import { Be_Vietnam_Pro } from 'next/font/google';
 import './globals.css';
 
+import ImageViewProvider from '@/context/ImageViewContext';
 import { SidebarProvider } from '@/context/SidebarContext';
 import StoreProvider from '@/context/StoreContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -20,7 +21,11 @@ export default function RootLayout({
       <body className={`${beVietnamPro.className} dark:bg-black`}>
         <StoreProvider>
           <ThemeProvider>
-            <SidebarProvider>{children}</SidebarProvider>
+            <SidebarProvider>
+              <ImageViewProvider>
+                {children}
+              </ImageViewProvider>
+            </SidebarProvider>
           </ThemeProvider>
         </StoreProvider>
         <ToastContainer />
