@@ -1,22 +1,40 @@
 "use client"
-import FileInput from "@/components/form/FileInput"
 import InputField from "@/components/form/InputField"
 import TextArea from "@/components/form/TextArea"
+import Badge from "@/components/ui/badge/Badge"
 import { Button } from "@/components/ui/shadcn/button"
-import { Card, CardContent } from "@/components/ui/shadcn/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/shadcn/tabs"
+import { DataTable } from "@/components/ui/table/data-table"
 import { Profile } from "@/core/model/RBAC/profile"
+import { Role } from "@/core/model/RBAC/Role"
 import userService from "@/core/service/RBAC/user-service"
 import { toastPromise } from "@/lib/alert-helper"
 import { setImage } from "@/redux/features/images/ImageSlice"
-import { Loader2 } from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table"
+import { Camera, CheckCircle2, History, Loader2, Shield, UserPen, XCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 
+// --- Mock Data Interface for Login History ---
+interface LoginHistory {
+    id: number;
+    time: string;
+    ipAddress: string;
+    device: string;
+    browser: string;
+    status: "Success" | "Failed";
+}
+
 function MyProfile() {
+    const dispatch = useDispatch()
+
+    // --- State: Profile & Main Logic ---
     const [profile, setProfile] = useState<Profile | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
-    const [isImageViewerOpen, setIsImageViewerOpen] = useState(false)
+
+    // --- State: Profile Form ---
     const [formData, setFormData] = useState({
         fullname: "",
         email: "",
@@ -25,11 +43,29 @@ function MyProfile() {
         image: ""
     })
     const [imagePreview, setImagePreview] = useState<string>("")
-    const dispatch = useDispatch()
+
+    // --- State: Password Change ---
+    const [passData, setPassData] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+    })
+
+    // --- State: Login History (Pagination) ---
+    const [loginHistoryData, setLoginHistoryData] = useState<LoginHistory[]>([])
+    const [loginLoading, setLoginLoading] = useState(false)
+    const [loginPage, setLoginPage] = useState(1)
+    const [totalLoginItems, setTotalLoginItems] = useState(0)
+    const pageSize = 10;
+
     useEffect(() => {
         fetchProfile()
+        fetchLoginHistory(1)
     }, [])
 
+    // ----------------------------------------------------------------------
+    // 1. Profile Logic
+    // ----------------------------------------------------------------------
     const fetchProfile = async () => {
         setIsLoading(true)
         try {
@@ -53,10 +89,7 @@ function MyProfile() {
     }
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }))
+        setFormData(prev => ({ ...prev, [field]: value }))
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,20 +98,16 @@ function MyProfile() {
             const reader = new FileReader()
             reader.onloadend = () => {
                 const base64String = reader.result as string
-                // setFormData(prev => ({
-                //     ...prev,
-                //     image: base64String
-                // }))
                 setImagePreview(base64String)
+                // handleInputChange("image", base64String)
             }
             reader.readAsDataURL(file)
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmitProfile = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSaving(true)
-
         const result = await toastPromise(
             userService.updateProfile(profile?.id || 0, formData),
             {
@@ -87,12 +116,99 @@ function MyProfile() {
                 error: "Cập nhật hồ sơ thất bại!"
             }
         )
-
         if (result?.data) {
             setProfile(result.data)
         }
         setIsSaving(false)
     }
+
+    // ----------------------------------------------------------------------
+    // 2. Change Password Logic
+    // ----------------------------------------------------------------------
+    const handlePassChange = (field: string, value: string) => {
+        setPassData(prev => ({ ...prev, [field]: value }))
+    }
+
+    const handleSubmitPassword = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (passData.newPassword !== passData.confirmPassword) {
+            // Simple alert, in real app use toast
+            alert("Mật khẩu xác nhận không khớp!")
+            return
+        }
+
+        const mockPromise = new Promise((resolve) => setTimeout(resolve, 1000));
+
+        await toastPromise(mockPromise, {
+            loading: "Đang đổi mật khẩu...",
+            success: "Đổi mật khẩu thành công!",
+            error: "Lỗi khi đổi mật khẩu"
+        })
+
+        setPassData({ currentPassword: "", newPassword: "", confirmPassword: "" })
+    }
+
+    // ----------------------------------------------------------------------
+    // 3. Login History Logic
+    // ----------------------------------------------------------------------
+    const fetchLoginHistory = async (page: number) => {
+        setLoginLoading(true)
+        setTimeout(() => {
+            const mockData: LoginHistory[] = Array.from({ length: 10 }).map((_, i) => ({
+                id: (page - 1) * pageSize + i + 1,
+                time: new Date(Date.now() - (i * 86400000)).toLocaleString('vi-VN'),
+                ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
+                device: i % 2 === 0 ? "Windows 11" : "Mac OS X",
+                browser: "Chrome 120.0.0",
+                status: "Success"
+            }));
+
+            setLoginHistoryData(mockData)
+            setTotalLoginItems(25)
+            setLoginPage(page)
+            setLoginLoading(false)
+        }, 500)
+    }
+
+    const loginColumns: ColumnDef<LoginHistory>[] = [
+        {
+            accessorKey: "index",
+            header: ({ column }) => {
+                return (
+                    <p className="text-center">#</p>
+                )
+            },
+            cell: ({ row }) => null,
+        },
+        {
+            accessorKey: "time",
+            header: "Thời gian",
+        },
+        {
+            accessorKey: "device",
+            header: "Thiết bị",
+            cell: ({ row }) => (
+                <div className="flex flex-col">
+                    <span className="font-medium">{row.original.device}</span>
+                    <span className="text-xs text-muted-foreground">{row.original.browser}</span>
+                </div>
+            )
+        },
+        {
+            accessorKey: "ipAddress",
+            header: "Địa chỉ IP",
+        },
+        {
+            accessorKey: "status",
+            header: "Trạng thái",
+            cell: ({ row }) => (
+                <Badge color={row.original.status === "Success" ? "success" : "error"}>
+                    {row.original.status === "Success" ? "Thành công" : "Thất bại"}
+                </Badge>
+            )
+        }
+    ]
+
 
     if (isLoading) {
         return (
@@ -103,152 +219,218 @@ function MyProfile() {
     }
 
     return (
-        <div className="mx-auto ">
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold">Hồ sơ của tôi</h1>
-                <p className="text-sm text-gray-500">Cập nhật thông tin cá nhân của bạn</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-6">
-                {/* Avatar Section */}
-                <div className="col-span-12 lg:col-span-4">
-                    <Card>
-                        <CardContent className="flex flex-col items-center pt-6">
+        <div className="mx-auto space-y-6  pb-10">
+            {/* -------------------------------------------------------------------------- */}
+            {/* TOP SECTION: User Info Card */}
+            {/* -------------------------------------------------------------------------- */}
+            <Card className="border-none shadow-sm bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+                <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                        {/* Avatar & Upload */}
+                        <div className="relative group">
                             <button
                                 type="button"
                                 onClick={() => {
-                                    dispatch(setImage([
-                                        {
-                                            url: imagePreview,
-                                            alt: profile?.fullname || "Profile"
-                                        },
-
-                                    ])
-                                    )
+                                    dispatch(setImage([{ url: imagePreview, alt: profile?.fullname || "Profile" }]))
                                 }}
-                                className="group relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-gray-200 bg-gray-100 hover:border-brand-300 transition-colors cursor-pointer"
+                                className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-white shadow-md cursor-pointer"
                             >
                                 {imagePreview ? (
-                                    <img
-                                        src={imagePreview}
-                                        alt="Profile"
-                                        className="h-full w-full object-cover group-hover:opacity-75 transition-opacity"
-                                    />
+                                    <img src={imagePreview} alt="Profile" className="h-full w-full object-cover" />
                                 ) : (
-                                    <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-gray-400">
+                                    <div className="flex h-full w-full items-center justify-center bg-slate-200 text-4xl font-bold text-gray-400">
                                         {profile?.fullname?.charAt(0).toUpperCase() || "U"}
                                     </div>
                                 )}
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
-                                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-xs font-semibold">
-                                        Xem
-                                    </span>
-                                </div>
                             </button>
 
-                            <FileInput
-                                onChange={handleImageChange}
-                            />
-
-                            <div className="mt-4 w-full border-t pt-4 text-center text-xs text-gray-500">
-                                <p>Username: {profile?.username || "N/A"}</p>
-                                <p>Email: {profile?.email}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Profile Form */}
-                <div className="col-span-12 lg:col-span-8">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <InputField
-                                    label="Họ và tên"
-                                    placeholder="Nhập họ và tên"
-                                    value={formData.fullname}
-                                    onChange={(e) => handleInputChange("fullname", e.target.value)}
-                                    required
+                            {/* Hidden File Input trigger */}
+                            <div className="absolute bottom-0 right-0">
+                                <label
+                                    htmlFor="avatar-upload"
+                                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+                                >
+                                    <Camera className="h-4 w-4" />
+                                </label>
+                                {/* FIX: Use standard input with matching ID */}
+                                <input
+                                    type="file"
+                                    id="avatar-upload"
+                                    className="hidden"
+                                    onChange={handleImageChange}
+                                    accept="image/*"
                                 />
+                            </div>
+                        </div>
 
+                        {/* Info Text */}
+                        <div className="flex-1 text-center md:text-left space-y-2">
+                            <div>
+                                <div className="flex items-center justify-center md:justify-start gap-2">
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                        {profile?.fullname || "Người dùng"}
+                                    </h2>
+                                    {/* Is Active Icon Indicator */}
+                                    {profile?.isActive !== undefined && (
+                                        profile.isActive ? (
+                                            <CheckCircle2 className="h-5 w-5 text-green-500" aria-label="Đang hoạt động" />
+                                        ) : (
+                                            <XCircle className="h-5 w-5 text-red-500" aria-label="Ngừng hoạt động" />
+                                        )
+                                    )}
+                                </div>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    {profile?.email}
+                                </p>
+                            </div>
+
+                            {/* Roles Badge List */}
+                            <div className="flex flex-wrap gap-2 justify-center md:justify-start pt-1">
+                                {profile?.roles && profile.roles.length > 0 ? (
+                                    profile.roles.map((role: Role, index: number) => (
+                                        <Badge key={index} color="info" >
+                                            {role.name || role.code || "User"}
+                                        </Badge>
+                                    ))
+                                ) : (
+                                    <Badge color="info">Member</Badge>
+                                )}
+                            </div>
+
+                            <div className="text-xs text-gray-400 pt-1">
+                                Username: @{profile?.username || "N/A"}
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* -------------------------------------------------------------------------- */}
+            {/* TABS SECTION */}
+            {/* -------------------------------------------------------------------------- */}
+            <Tabs defaultValue="info" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 lg:w-[500px] mb-4">
+                    <TabsTrigger value="info">
+                        <UserPen className="w-4 h-4 mr-2" />
+                        Cập nhật thông tin
+                    </TabsTrigger>
+                    <TabsTrigger value="password">
+                        <Shield className="w-4 h-4 mr-2" />
+                        Đổi mật khẩu
+                    </TabsTrigger>
+                    <TabsTrigger value="logins">
+                        <History className="w-4 h-4 mr-2" />
+                        Lịch sử đăng nhập
+                    </TabsTrigger>
+                </TabsList>
+
+                {/* 1. Edit Profile Form */}
+                <TabsContent value="info">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Thông tin cá nhân</CardTitle>
+                            <CardDescription>Cập nhật thông tin liên hệ và địa chỉ của bạn.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleSubmitProfile} className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <InputField
+                                        label="Họ và tên"
+                                        placeholder="Nhập họ và tên"
+                                        value={formData.fullname}
+                                        onChange={(e) => handleInputChange("fullname", e.target.value)}
+                                        required
+                                    />
+                                    <InputField
+                                        label="Số điện thoại"
+                                        placeholder="Nhập số điện thoại"
+                                        value={formData.phone}
+                                        onChange={(e) => handleInputChange("phone", e.target.value)}
+                                    />
+                                </div>
                                 <InputField
                                     label="Email"
                                     type="email"
-                                    placeholder="Nhập email"
                                     value={formData.email}
                                     onChange={(e) => handleInputChange("email", e.target.value)}
-                                    required
-                                    disabled
-                                />
 
-                                <InputField
-                                    label="Số điện thoại"
-                                    placeholder="Nhập số điện thoại"
-                                    value={formData.phone}
-                                    onChange={(e) => handleInputChange("phone", e.target.value)}
                                 />
-
                                 <TextArea
                                     label="Địa chỉ"
-                                    placeholder="Nhập địa chỉ"
+                                    placeholder="Nhập địa chỉ chi tiết"
                                     value={formData.address}
                                     onChange={(e) => handleInputChange("address", e.target.value)}
-                                    rows={4}
+                                    rows={3}
                                 />
 
-                                <div className="flex gap-3 border-t pt-4">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={fetchProfile}
-                                        disabled={isSaving}
-                                        className="flex-1"
-                                    >
-                                        Hủy
+                                <div className="flex gap-3 justify-end pt-2">
+                                    <Button type="button" variant="outline" onClick={fetchProfile} disabled={isSaving}>
+                                        Hoàn tác
                                     </Button>
-                                    <Button
-                                        type="submit"
-                                        disabled={isSaving}
-                                        className="flex-1"
-                                    >
-                                        {isSaving ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                Đang lưu...
-                                            </>
-                                        ) : (
-                                            "Lưu thay đổi"
-                                        )}
+                                    <Button type="submit" disabled={isSaving}>
+                                        {isSaving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Đang lưu...</> : "Lưu thay đổi"}
                                     </Button>
                                 </div>
-                            </div>
+                            </form>
                         </CardContent>
                     </Card>
-                </div>
-            </form>
+                </TabsContent>
 
-            {/* Image Viewer Dialog */}
-            {/* <ImageViewerDialog
-                isOpen={isImageViewerOpen}
-                imageUrl={imagePreview}
-                imageAlt={profile?.fullname || "Profile"}
-                images={[
-                    {
-                        url: imagePreview,
-                        alt: profile?.fullname || "Profile"
-                    },
-                    {
-                        url: "https://plus.unsplash.com/premium_photo-1770416629652-962a91120bf5?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                        alt: profile?.fullname || "Profile"
-                    },
-                    {
-                        url: "https://images.unsplash.com/photo-1761839257469-96c78a7c2dd3?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                        alt: profile?.fullname || "Profile"
-                    },
+                {/* 2. Change Password Form */}
+                <TabsContent value="password">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Đổi mật khẩu</CardTitle>
+                            <CardDescription>Cập nhật mật khẩu định kỳ để bảo vệ tài khoản.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleSubmitPassword} className="space-y-4 max-w-2xl">
+                                <InputField
+                                    label="Mật khẩu hiện tại"
+                                    type="password"
+                                    value={passData.currentPassword}
+                                    onChange={(e) => handlePassChange("currentPassword", e.target.value)}
+                                    required
+                                />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <InputField
+                                        label="Mật khẩu mới"
+                                        type="password"
+                                        value={passData.newPassword}
+                                        onChange={(e) => handlePassChange("newPassword", e.target.value)}
+                                        required
+                                    />
+                                    <InputField
+                                        label="Xác nhận mật khẩu mới"
+                                        type="password"
+                                        value={passData.confirmPassword}
+                                        onChange={(e) => handlePassChange("confirmPassword", e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="flex justify-end pt-4">
+                                    <Button type="submit" variant="default">Cập nhật mật khẩu</Button>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
 
-                ]}
-                onClose={() => setIsImageViewerOpen(false)}
-            /> */}
+                {/* 3. Login History Table */}
+                <TabsContent value="logins">
+                    <DataTable
+                        name="Nhật ký hoạt động"
+                        columns={loginColumns}
+                        data={loginHistoryData}
+                        currentPage={loginPage}
+                        totalPage={Math.ceil(totalLoginItems / pageSize)}
+                        totalItems={totalLoginItems}
+                        pageSize={pageSize}
+                        onPageChange={(page) => fetchLoginHistory(page)}
+                        loading={loginLoading}
+                    />
+                </TabsContent>
+            </Tabs>
         </div>
     )
 }
