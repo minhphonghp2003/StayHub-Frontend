@@ -67,7 +67,7 @@ export const getUserColumns = ({ onToggleActive }: ColumnProp): ColumnDef<User>[
                             </span>
                         )}
                     </span>
-                    <Link href={"/user-profile/" + user.id} className="text-blue-700">{user.fullname}</Link>
+                    <Link href={"/user-profile/" + user.id} className="text-blue-600">{user.fullname}</Link>
                 </div>
             );
         },

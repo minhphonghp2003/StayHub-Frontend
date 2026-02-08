@@ -307,7 +307,7 @@ function MyProfile() {
                             </div>
 
                             <div className="text-xs text-gray-400 pt-1">
-                                Username: @{profile?.username || "N/A"}
+                                Username: {profile?.username || "N/A"}
                             </div>
                         </div>
                     </div>
