@@ -12,7 +12,7 @@ import userService from "@/core/service/RBAC/user-service"
 import { toastPromise } from "@/lib/alert-helper"
 import { setImage } from "@/redux/features/images/ImageSlice"
 import { ColumnDef } from "@tanstack/react-table"
-import { Camera, CheckCircle2, History, Loader2, Shield, UserPen, XCircle } from "lucide-react"
+import { Camera, History, Loader2, Shield, UserPen } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 
@@ -270,14 +270,7 @@ function MyProfile() {
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                         {profile?.fullname || "Người dùng"}
                                     </h2>
-                                    {/* Is Active Icon Indicator */}
-                                    {profile?.isActive !== undefined && (
-                                        profile.isActive ? (
-                                            <CheckCircle2 className="h-5 w-5 text-green-500" aria-label="Đang hoạt động" />
-                                        ) : (
-                                            <XCircle className="h-5 w-5 text-red-500" aria-label="Ngừng hoạt động" />
-                                        )
-                                    )}
+
                                 </div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {profile?.email}

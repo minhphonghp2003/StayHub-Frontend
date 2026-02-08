@@ -40,8 +40,8 @@ export default function LeftProfileCard({ profile }: { profile: Profile | null }
                             <div className="self-end flex-1">
                                 <div className="flex items-top justify-between gap-4">
                                     <div>
-                                        <h2 className="text-xl font-bold">{profile?.fullname ?? 'Unknown User'}</h2>
-                                        <p className="text-xs italic text-gray-500">{profile?.username ?? 'Position not set'}</p>
+                                        <h2 className="text-xl text-left font-bold">{profile?.fullname ?? 'Unknown User'}</h2>
+                                        <p className="text-xs italic text-left text-gray-500">{profile?.username ?? 'Position not set'}</p>
                                     </div>
                                     <div className="flex-shrink-0">
                                         {profile?.isActive ? (
