@@ -37,7 +37,6 @@ const newPassword = async (payload: NewPasswordPayload): Promise<BaseResponse<bo
 };
 
 const changePassword = async (payload: ChangePasswordPayload): Promise<BaseResponse<boolean>> => {
-    // Returns bool based on: IRequest<BaseResponse<bool>>
     const response = await api.post(`${baseUrl}/change-password`, payload);
     return response.data;
 };

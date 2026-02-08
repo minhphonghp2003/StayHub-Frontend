@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/shadcn
 import { DataTable } from "@/components/ui/table/data-table"
 import { Profile } from "@/core/model/RBAC/profile"
 import { Role } from "@/core/model/RBAC/Role"
+import authenticationService from "@/core/service/RBAC/authentication-service"
 import userService from "@/core/service/RBAC/user-service"
 import { toastPromise } from "@/lib/alert-helper"
 import { setImage } from "@/redux/features/images/ImageSlice"
@@ -15,6 +16,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Camera, History, Loader2, Shield, UserPen } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
+import { toast } from "react-toastify"
 
 // --- Mock Data Interface for Login History ---
 interface LoginHistory {
@@ -46,7 +48,7 @@ function MyProfile() {
 
     // --- State: Password Change ---
     const [passData, setPassData] = useState({
-        currentPassword: "",
+        oldPassword: "",
         newPassword: "",
         confirmPassword: ""
     })
@@ -136,16 +138,30 @@ function MyProfile() {
             alert("Mật khẩu xác nhận không khớp!")
             return
         }
+        const toastId = toast.loading("Đang đổi mật khẩu...");
+        try {
+            const result = await authenticationService.changePassword({
+                oldPassword: passData.oldPassword,
+                newPassword: passData.newPassword
+            });
 
-        const mockPromise = new Promise((resolve) => setTimeout(resolve, 1000));
+            if (result.success) {
+                // 2. Update to Success with API message or default
+                toast.update(toastId, { render: "Cập nhật mật khẩu thành công", type: "success", isLoading: false, })
+                // Close modal or cleanup here if needed
+            } else {
+                // 3. Update to Error if API returns success: false
+                toast.update(toastId, { render: result.message ?? "Lỗi khi cập nhật mật khẩu", type: "error", isLoading: false, })
+            }
+        } catch (error: any) {
+            // 4. Catch network or unexpected errors
+            const errMsg = error?.response?.data?.message || error.message || "Lỗi hệ thống";
+            toast.update(toastId, { render: errMsg, type: "error", isLoading: false, });
+        } finally {
+            toast.dismiss(toastId);
+        }
 
-        await toastPromise(mockPromise, {
-            loading: "Đang đổi mật khẩu...",
-            success: "Đổi mật khẩu thành công!",
-            error: "Lỗi khi đổi mật khẩu"
-        })
-
-        setPassData({ currentPassword: "", newPassword: "", confirmPassword: "" })
+        setPassData({ oldPassword: "", newPassword: "", confirmPassword: "" })
     }
 
     // ----------------------------------------------------------------------
@@ -381,8 +397,8 @@ function MyProfile() {
                                 <InputField
                                     label="Mật khẩu hiện tại"
                                     type="password"
-                                    value={passData.currentPassword}
-                                    onChange={(e) => handlePassChange("currentPassword", e.target.value)}
+                                    value={passData.oldPassword}
+                                    onChange={(e) => handlePassChange("oldPassword", e.target.value)}
                                     required
                                 />
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
