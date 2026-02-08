@@ -1,4 +1,5 @@
 "use client"
+import ChangeTenantPasswordDialog from "@/app/(admin)/(RBAC)/user-profile/[id]/user-profile/ChangeTenantPassModal"
 import Checkbox from "@/components/form/Checkbox"
 import { Button } from "@/components/ui/shadcn/button"
 import { Card, CardContent } from "@/components/ui/shadcn/card"
@@ -12,7 +13,7 @@ import { toast } from "react-toastify"
 import LogoutAllDevicesDialog from "./LogoutConfirmModal"
 
 type ModalState = {
-    type: "LOGOUT_ALL_DEVICES" | null
+    type: "LOGOUT_ALL_DEVICES" | "CHANGE_PASSWORD" | null
 }
 
 export default function AccountTab({ profile, onRoleChange }: { profile: Profile | null; onRoleChange?: (roles: Role[]) => void }) {
@@ -176,7 +177,7 @@ export default function AccountTab({ profile, onRoleChange }: { profile: Profile
                             </div>
 
                             <div className="flex gap-2 border-t pt-2">
-                                <Button variant="outline" className="flex-1">
+                                <Button variant="outline" className="flex-1" onClick={() => setModalState({ type: "CHANGE_PASSWORD" })}>
                                     Đổi Mật Khẩu
                                 </Button>
                                 <Button variant="destructive" className="flex-1" onClick={() => setModalState({ type: "LOGOUT_ALL_DEVICES" })}>
@@ -189,6 +190,11 @@ export default function AccountTab({ profile, onRoleChange }: { profile: Profile
             </div>
 
             <LogoutAllDevicesDialog isOpen={modal.type === "LOGOUT_ALL_DEVICES"} closeModal={closeModal} userId={profile?.id} />
+            <ChangeTenantPasswordDialog
+                isOpen={modal.type === "CHANGE_PASSWORD"}
+                onClose={closeModal}
+                userId={profile?.id}
+            />
         </div>
     )
 }
