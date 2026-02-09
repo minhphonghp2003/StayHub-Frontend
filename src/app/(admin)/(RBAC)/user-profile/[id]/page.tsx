@@ -7,80 +7,79 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/shadcn/tabs";
 
+import { LoginActivity } from "@/core/model/RBAC/login-activity";
 import { Profile } from "@/core/model/RBAC/profile";
+import { loginActivityService } from "@/core/service/RBAC/login-activity-service"; // Import the service
 import userService from "@/core/service/RBAC/user-service";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface LoginActivity {
-    id: string;
-    dateTime: string;
-    ipAddress: string;
-    device: string;
-    status: "Success" | "Failed";
-}
-
 function UserProfile() {
     const params = useParams();
     const id = params.id as string;
-    const [profile, setProfile] = useState<Profile | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [loginActivities, setLoginActivities] = useState<LoginActivity[]>([]);
-    const [loginPage, setLoginPage] = useState(1);
-    const [loginPageSize] = useState(10);
 
+    // Profile State
+    const [profile, setProfile] = useState<Profile | null>(null);
+    const [loadingProfile, setLoadingProfile] = useState(true);
+
+    // Login Activity State
+    const [loginActivities, setLoginActivities] = useState<LoginActivity[]>([]);
+    const [loginLoading, setLoginLoading] = useState(false);
+    const [loginPage, setLoginPage] = useState(1);
+    const [totalLoginItems, setTotalLoginItems] = useState(0);
+    const pageSize = 10;
+
+    // 1. Fetch Profile
     useEffect(() => {
         const fetchProfile = async () => {
+            if (!id) return;
+            setLoadingProfile(true);
             try {
                 const data = await userService.getProfileById(parseInt(id));
                 setProfile(data);
-
-                // Mock login activity data
-                const mockActivities: LoginActivity[] = [
-                    {
-                        id: "1",
-                        dateTime: "May 15, 2024 09:30 AM",
-                        ipAddress: "192.168.1.1",
-                        device: "Chrome / Windows",
-                        status: "Success"
-                    },
-                    {
-                        id: "2",
-                        dateTime: "May 14, 2024 02:15 PM",
-                        ipAddress: "192.168.1.1",
-                        device: "Mobile Safari / iOS",
-                        status: "Success"
-                    },
-                    {
-                        id: "3",
-                        dateTime: "May 10, 2024 11:45 AM",
-                        ipAddress: "10.0.0.42",
-                        device: "Chrome / Windows",
-                        status: "Failed"
-                    }
-                ];
-                setLoginActivities(mockActivities);
             } catch (error) {
                 console.error("Failed to fetch profile:", error);
             } finally {
-                setLoading(false);
+                setLoadingProfile(false);
             }
         };
         fetchProfile();
     }, [id]);
 
+    // 2. Fetch Login History (Dependent on ID and Page)
+    useEffect(() => {
+        if (id) {
+            fetchUserLoginHistory(parseInt(id), loginPage);
+        }
+    }, [id, loginPage]);
 
-
-
+    const fetchUserLoginHistory = async (userId: number, page: number) => {
+        setLoginLoading(true);
+        try {
+            const res = await loginActivityService.getUserLoginHistory(userId, page, pageSize);
+            if (res.success && res.data) {
+                setLoginActivities(res.data);
+                // Assuming API returns totalCount or similar. 
+                // If not available, use length check or separate API.
+                // For now, using optional chaining or length fallback
+                setTotalLoginItems((res as any).totalCount || res.data.length);
+            }
+        } catch (error) {
+            console.error("Failed to fetch login history:", error);
+        } finally {
+            setLoginLoading(false);
+        }
+    };
 
     return (
         <div className="space-y-6 ">
             <PageBreadcrumb pagePath='/user' pageTitle="Người dùng" subTitle={["Chi tiết"]} />
 
             <div className="grid grid-cols-12 gap-6 relative">
-                {loading ? (
+                {loadingProfile ? (
                     <Loading />
                 ) : null}
+
                 {/* Left column: basic info */}
                 <LeftProfileCard profile={profile} />
 
@@ -89,18 +88,24 @@ function UserProfile() {
                     <Card>
                         <CardContent>
                             <Tabs defaultValue="account">
-                                <TabsList>
-                                    <TabsTrigger value="account">Account</TabsTrigger>
-                                    <TabsTrigger value="recent">Recent Login</TabsTrigger>
+                                <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+                                    <TabsTrigger value="account">Tài khoản</TabsTrigger>
+                                    <TabsTrigger value="recent">Lịch sử đăng nhập</TabsTrigger>
                                 </TabsList>
 
                                 <TabsContent value="account">
                                     <AccountTab profile={profile} />
                                 </TabsContent>
 
-
                                 <TabsContent value="recent">
-                                    <RecentLoginTab activities={loginActivities} page={loginPage} pageSize={loginPageSize} onPageChange={setLoginPage} />
+                                    <RecentLoginTab
+                                        activities={loginActivities}
+                                        page={loginPage}
+                                        pageSize={pageSize}
+                                        totalItems={totalLoginItems}
+                                        onPageChange={(page) => setLoginPage(page)}
+                                        loading={loginLoading}
+                                    />
                                 </TabsContent>
                             </Tabs>
                         </CardContent>

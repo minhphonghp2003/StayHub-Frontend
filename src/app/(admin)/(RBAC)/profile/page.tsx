@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/shadcn/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/shadcn/tabs"
 import { DataTable } from "@/components/ui/table/data-table"
+import { LoginActivity } from "@/core/model/RBAC/login-activity"; //
 import { Profile } from "@/core/model/RBAC/profile"
 import { Role } from "@/core/model/RBAC/Role"
 import authenticationService from "@/core/service/RBAC/authentication-service"
+import { loginActivityService } from "@/core/service/RBAC/login-activity-service"; //
 import userService from "@/core/service/RBAC/user-service"
 import { toastPromise } from "@/lib/alert-helper"
 import { setImage } from "@/redux/features/images/ImageSlice"
@@ -17,16 +19,6 @@ import { Camera, History, Loader2, Shield, UserPen } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { toast } from "react-toastify"
-
-// --- Mock Data Interface for Login History ---
-interface LoginHistory {
-    id: number;
-    time: string;
-    ipAddress: string;
-    device: string;
-    browser: string;
-    status: "Success" | "Failed";
-}
 
 function MyProfile() {
     const dispatch = useDispatch()
@@ -54,7 +46,8 @@ function MyProfile() {
     })
 
     // --- State: Login History (Pagination) ---
-    const [loginHistoryData, setLoginHistoryData] = useState<LoginHistory[]>([])
+    // Update type to LoginActivity from the model
+    const [loginHistoryData, setLoginHistoryData] = useState<LoginActivity[]>([])
     const [loginLoading, setLoginLoading] = useState(false)
     const [loginPage, setLoginPage] = useState(1)
     const [totalLoginItems, setTotalLoginItems] = useState(0)
@@ -134,8 +127,7 @@ function MyProfile() {
     const handleSubmitPassword = async (e: React.FormEvent) => {
         e.preventDefault()
         if (passData.newPassword !== passData.confirmPassword) {
-            // Simple alert, in real app use toast
-            alert("Mật khẩu xác nhận không khớp!")
+            toast.error("Mật khẩu xác nhận không khớp!")
             return
         }
         const toastId = toast.loading("Đang đổi mật khẩu...");
@@ -146,85 +138,87 @@ function MyProfile() {
             });
 
             if (result.success) {
-                // 2. Update to Success with API message or default
-                toast.update(toastId, { render: "Cập nhật mật khẩu thành công", type: "success", isLoading: false, })
-                // Close modal or cleanup here if needed
+                toast.update(toastId, { render: "Cập nhật mật khẩu thành công", type: "success", isLoading: false, autoClose: 3000 })
+                setPassData({ oldPassword: "", newPassword: "", confirmPassword: "" })
             } else {
-                // 3. Update to Error if API returns success: false
-                toast.update(toastId, { render: result.message ?? "Lỗi khi cập nhật mật khẩu", type: "error", isLoading: false, })
+                toast.update(toastId, { render: result.message ?? "Lỗi khi cập nhật mật khẩu", type: "error", isLoading: false, autoClose: 3000 })
             }
         } catch (error: any) {
-            // 4. Catch network or unexpected errors
             const errMsg = error?.response?.data?.message || error.message || "Lỗi hệ thống";
-            toast.update(toastId, { render: errMsg, type: "error", isLoading: false, });
+            toast.update(toastId, { render: errMsg, type: "error", isLoading: false, autoClose: 3000 });
         } finally {
-            toast.dismiss(toastId);
+            // toast.dismiss(toastId); // AutoClose handles this usually
         }
-
-        setPassData({ oldPassword: "", newPassword: "", confirmPassword: "" })
     }
 
     // ----------------------------------------------------------------------
-    // 3. Login History Logic
+    // 3. Login History Logic (REFACTORED)
     // ----------------------------------------------------------------------
     const fetchLoginHistory = async (page: number) => {
         setLoginLoading(true)
-        setTimeout(() => {
-            const mockData: LoginHistory[] = Array.from({ length: 10 }).map((_, i) => ({
-                id: (page - 1) * pageSize + i + 1,
-                time: new Date(Date.now() - (i * 86400000)).toLocaleString('vi-VN'),
-                ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
-                device: i % 2 === 0 ? "Windows 11" : "Mac OS X",
-                browser: "Chrome 120.0.0",
-                status: "Success"
-            }));
+        try {
+            // Call the real API
+            const res = await loginActivityService.getMyLoginHistory(page, pageSize);
 
-            setLoginHistoryData(mockData)
-            setTotalLoginItems(25)
-            setLoginPage(page)
+            if (res.success && res.data) {
+                setLoginHistoryData(res.data)
+                setLoginPage(page)
+
+                // Note: Ensure your API BaseResponse includes totalCount/totalItems 
+                // If not, you might need to adjust this logic (e.g., set to high number if data.length === pageSize)
+                setTotalLoginItems((res as any).totalCount || (res as any).totalItems || 0)
+            }
+        } catch (error) {
+            console.error("Failed to fetch login history", error)
+        } finally {
             setLoginLoading(false)
-        }, 500)
+        }
     }
 
-    const loginColumns: ColumnDef<LoginHistory>[] = [
+    // Define columns based on the API Model (LoginActivity)
+    const loginColumns: ColumnDef<LoginActivity>[] = [
         {
             accessorKey: "index",
-            header: ({ column }) => {
-                return (
-                    <p className="text-center">#</p>
-                )
-            },
-            cell: ({ row }) => null,
+            header: ({ column }) => <p className="text-center">#</p>,
+            cell: ({ row }) => <div className="text-center">{(loginPage - 1) * pageSize + row.index + 1}</div>,
         },
         {
             accessorKey: "time",
             header: "Thời gian",
+            cell: ({ row }) => {
+                const date = new Date(row.original.time);
+                return (
+                    <div className="flex flex-col">
+                        <span className="font-medium">{date.toLocaleDateString("vi-VN")}</span>
+                        <span className="text-xs text-muted-foreground">{date.toLocaleTimeString("vi-VN")}</span>
+                    </div>
+                )
+            }
         },
         {
-            accessorKey: "device",
+            accessorKey: "os",
             header: "Thiết bị",
             cell: ({ row }) => (
                 <div className="flex flex-col">
-                    <span className="font-medium">{row.original.device}</span>
-                    <span className="text-xs text-muted-foreground">{row.original.browser}</span>
+                    <span className="font-medium">{row.original.os || "Unknown OS"}</span>
+                    <span className="text-xs text-muted-foreground">{row.original.browser || "Unknown Browser"}</span>
                 </div>
             )
         },
         {
-            accessorKey: "ipAddress",
+            accessorKey: "ip", // Changed from ipAddress to ip based on API model
             header: "Địa chỉ IP",
         },
         {
             accessorKey: "status",
             header: "Trạng thái",
             cell: ({ row }) => (
-                <Badge color={row.original.status === "Success" ? "success" : "error"}>
-                    {row.original.status === "Success" ? "Thành công" : "Thất bại"}
+                <Badge color={row.original.status ? "success" : "error"}>
+                    {row.original.status ? "Thành công" : "Thất bại"}
                 </Badge>
             )
         }
     ]
-
 
     if (isLoading) {
         return (
@@ -235,19 +229,16 @@ function MyProfile() {
     }
 
     return (
-        <div className="mx-auto space-y-6  pb-10">
-            {/* -------------------------------------------------------------------------- */}
-            {/* TOP SECTION: User Info Card */}
-            {/* -------------------------------------------------------------------------- */}
+        <div className="mx-auto space-y-6 pb-10">
+            {/* Top Card (Avatar etc) - Unchanged */}
             <Card className="border-none shadow-sm bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                        {/* Avatar & Upload */}
                         <div className="relative group">
                             <button
                                 type="button"
                                 onClick={() => {
-                                    dispatch(setImage([{ url: imagePreview, alt: profile?.fullname || "Profile" }]))
+                                    if (imagePreview) dispatch(setImage([{ url: imagePreview, alt: profile?.fullname || "Profile" }]))
                                 }}
                                 className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-white shadow-md cursor-pointer"
                             >
@@ -259,8 +250,6 @@ function MyProfile() {
                                     </div>
                                 )}
                             </button>
-
-                            {/* Hidden File Input trigger */}
                             <div className="absolute bottom-0 right-0">
                                 <label
                                     htmlFor="avatar-upload"
@@ -268,7 +257,6 @@ function MyProfile() {
                                 >
                                     <Camera className="h-4 w-4" />
                                 </label>
-                                {/* FIX: Use standard input with matching ID */}
                                 <input
                                     type="file"
                                     id="avatar-upload"
@@ -279,21 +267,17 @@ function MyProfile() {
                             </div>
                         </div>
 
-                        {/* Info Text */}
                         <div className="flex-1 text-center md:text-left space-y-2">
                             <div>
                                 <div className="flex items-center justify-center md:justify-start gap-2">
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                         {profile?.fullname || "Người dùng"}
                                     </h2>
-
                                 </div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {profile?.email}
                                 </p>
                             </div>
-
-                            {/* Roles Badge List */}
                             <div className="flex flex-wrap gap-2 justify-center md:justify-start pt-1">
                                 {profile?.roles && profile.roles.length > 0 ? (
                                     profile.roles.map((role: Role, index: number) => (
@@ -305,7 +289,6 @@ function MyProfile() {
                                     <Badge color="info">Member</Badge>
                                 )}
                             </div>
-
                             <div className="text-xs text-gray-400 pt-1">
                                 Username: {profile?.username || "N/A"}
                             </div>
@@ -314,9 +297,6 @@ function MyProfile() {
                 </CardContent>
             </Card>
 
-            {/* -------------------------------------------------------------------------- */}
-            {/* TABS SECTION */}
-            {/* -------------------------------------------------------------------------- */}
             <Tabs defaultValue="info" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 lg:w-[500px] mb-4">
                     <TabsTrigger value="info">
@@ -333,7 +313,6 @@ function MyProfile() {
                     </TabsTrigger>
                 </TabsList>
 
-                {/* 1. Edit Profile Form */}
                 <TabsContent value="info">
                     <Card>
                         <CardHeader>
@@ -362,7 +341,6 @@ function MyProfile() {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => handleInputChange("email", e.target.value)}
-
                                 />
                                 <TextArea
                                     label="Địa chỉ"
@@ -371,7 +349,6 @@ function MyProfile() {
                                     onChange={(e) => handleInputChange("address", e.target.value)}
                                     rows={3}
                                 />
-
                                 <div className="flex gap-3 justify-end pt-2">
                                     <Button type="button" variant="outline" onClick={fetchProfile} disabled={isSaving}>
                                         Hoàn tác
@@ -385,7 +362,6 @@ function MyProfile() {
                     </Card>
                 </TabsContent>
 
-                {/* 2. Change Password Form */}
                 <TabsContent value="password">
                     <Card>
                         <CardHeader>
@@ -425,14 +401,13 @@ function MyProfile() {
                     </Card>
                 </TabsContent>
 
-                {/* 3. Login History Table */}
                 <TabsContent value="logins">
                     <DataTable
                         name="Nhật ký hoạt động"
                         columns={loginColumns}
                         data={loginHistoryData}
                         currentPage={loginPage}
-                        totalPage={Math.ceil(totalLoginItems / pageSize)}
+                        totalPage={Math.ceil(totalLoginItems / pageSize) || 1}
                         totalItems={totalLoginItems}
                         pageSize={pageSize}
                         onPageChange={(page) => fetchLoginHistory(page)}

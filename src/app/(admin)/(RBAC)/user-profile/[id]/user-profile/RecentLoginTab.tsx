@@ -1,53 +1,83 @@
 "use client"
 import Badge from "@/components/ui/badge/Badge";
 import { DataTable } from "@/components/ui/table/data-table";
+import { LoginActivity } from "@/core/model/RBAC/login-activity";
 import { ColumnDef } from "@tanstack/react-table";
 
-export interface LoginActivity {
-    id: string;
-    dateTime: string;
-    ipAddress: string;
-    device: string;
-    geo?: string;
-    status: "Success" | "Failed";
-    createdAt?: string;
+interface RecentLoginTabProps {
+    activities: LoginActivity[];
+    page: number;
+    pageSize: number;
+    totalItems: number;
+    onPageChange: (p: number) => void;
+    loading: boolean;
 }
 
 export default function RecentLoginTab({
     activities,
     page,
     pageSize,
+    totalItems,
     onPageChange,
-}: {
-    activities: LoginActivity[];
-    page: number;
-    pageSize: number;
-    onPageChange: (p: number) => void;
-}) {
+    loading
+}: RecentLoginTabProps) {
+
+    // Exact column definition from My Activity (AccountTab)
     const columns: ColumnDef<LoginActivity>[] = [
         {
-            accessorKey: "dateTime",
-            header: "NGÀY & GIỜ",
+            accessorKey: "index",
+            header: ({ column }) => <p className="text-center">#</p>,
+            cell: ({ row }) => (
+                <div className="text-center">
+                    {(page - 1) * pageSize + row.index + 1}
+                </div>
+            ),
         },
         {
-            accessorKey: "ipAddress",
-            header: "ĐỊA CHỈ IP",
+            accessorKey: "time",
+            header: "Thời gian",
+            cell: ({ row }) => {
+                const date = new Date(row.original.time);
+                return (
+                    <div className="flex flex-col">
+                        <span className="font-medium text-sm">
+                            {date.toLocaleDateString("vi-VN")}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                            {date.toLocaleTimeString("vi-VN")}
+                        </span>
+                    </div>
+                );
+            }
         },
         {
-            accessorKey: "device",
-            header: "THIẾT BỊ",
+            accessorKey: "os",
+            header: "Thiết bị",
+            cell: ({ row }) => (
+                <div className="flex flex-col">
+                    <span className="text-sm font-medium">
+                        {row.original.os || "Unknown OS"}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                        {row.original.browser || "Unknown Browser"}
+                    </span>
+                </div>
+            )
+        },
+        {
+            accessorKey: "ip",
+            header: "Địa chỉ IP",
+            cell: ({ row }) => (
+                <span className="font-mono text-sm">{row.original.ip}</span>
+            )
         },
         {
             accessorKey: "status",
-            header: "TRẠNG THÁI",
-            cell: (info) => (
-
-                <Badge color={info.getValue() === 'Success' ? 'success' : 'error'}>
-                    {info.getValue() === 'Success' ? 'Thành Công' : 'Thất Bại'}
+            header: "Trạng thái",
+            cell: ({ row }) => (
+                <Badge color={row.original.status ? 'success' : 'error'}>
+                    {row.original.status ? 'Thành Công' : 'Thất Bại'}
                 </Badge>
-                // <div className={`text-sm ${info.getValue() === 'Success' ? 'text-green-600' : 'text-red-600'}`}>
-                //     {info.getValue() === 'Success' ? 'Thành Công' : 'Thất Bại'}
-                // </div>
             ),
         },
     ];
@@ -57,13 +87,13 @@ export default function RecentLoginTab({
             <DataTable
                 columns={columns}
                 data={activities}
-                name="Login Activity"
+                name="Lịch sử hoạt động"
                 currentPage={page}
-                totalPage={Math.ceil(activities.length / pageSize)}
-                totalItems={activities.length}
+                totalPage={Math.ceil(totalItems / pageSize) || 1}
+                totalItems={totalItems}
                 pageSize={pageSize}
                 onPageChange={onPageChange}
-                loading={false}
+                loading={loading}
                 inCard={false}
             />
         </div>

@@ -51,7 +51,6 @@ const getRoleOfUser = async (userId: number): Promise<Role[] | null> => {
     const result = await userRepository.getRoleOfUser({ id: userId });
     return result.success ? result.data ?? null : null;
 };
-
 export default {
     getAllUsers,
     getUserById,
@@ -61,5 +60,5 @@ export default {
     setActivateUser,
     getUserOfRole,
     assignRoleToUser,
-    getRoleOfUser
+    getRoleOfUser,
 };
