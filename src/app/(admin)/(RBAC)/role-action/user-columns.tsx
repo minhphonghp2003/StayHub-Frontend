@@ -1,13 +1,11 @@
 "use client"
 
-import Switch from "@/components/form/Switch"
-import Badge from "@/components/ui/badge/Badge"
 import { Button } from "@/components/ui/shadcn/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu"
 import { User } from "@/core/model/RBAC/User"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, Edit2, Menu, MoreHorizontal, Trash2 } from "lucide-react"
+import { ArrowUpDown, } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: '2-digit',
@@ -48,15 +46,22 @@ export const getUserColumns = (): ColumnDef<User>[] => [
 
             return (
                 <div className="flex gap-2 items-center">
-                    <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-                        <Image
-                            width={44}
-                            height={44}
-                            src="/images/user/owner.jpg"
-                            alt="User"
-                        />
+                    <span className="mr-3 overflow-hidden rounded-full shadow-2xl border h-11 w-11">
+                        {user.image ? (
+                            <Image
+                                width={44}
+                                height={44}
+                                src={user.image}
+                                alt={user.fullname}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <span className="w-full h-full flex items-center justify-center text-gray-500  text-lg">
+                                {user.fullname?.charAt(0).toUpperCase() || 'U'}
+                            </span>
+                        )}
                     </span>
-                    <div>{user.fullname}</div>
+                    <Link href={"/user-profile/" + user.id} className="text-blue-600">{user.fullname}</Link>
                 </div>
             );
         },
