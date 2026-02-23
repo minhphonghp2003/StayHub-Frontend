@@ -5,8 +5,8 @@ import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
 import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
 import menuRepository from "@/core/repository/RBAC/menu-repository";
 
-const getMyMenus = async (): Promise<MenuGroup[]> => {
-    var result = await menuRepository.getMyMenus()
+const getMyMenus = async (propertyId?: number): Promise<MenuGroup[]> => {
+    var result = await menuRepository.getMyMenus(propertyId)
     if (result.success) {
         return result.data ?? [];
     }

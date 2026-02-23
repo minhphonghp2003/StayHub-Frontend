@@ -1,15 +1,18 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
-import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
+import { MenuGroup } from "@/core/model/RBAC/Menu";
+import { propertyService } from "@/core/service/pmm/property-service";
 import MenuService from "@/core/service/RBAC/menu-service";
 import { getAuthInfo } from "@/core/service/RBAC/token-service";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
+import { setPropertyList } from "@/redux/features/property/PropertySlice";
 import { setUser } from "@/redux/features/RBAC/UserSlice";
+import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AdminLayout({
   children,
@@ -18,16 +21,28 @@ export default function AdminLayout({
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   let [menus, setMenus] = useState<MenuGroup[]>([]);
+  let [loadingProperty, setLoadingProperty] = useState(true);
   const dispatch = useDispatch()
-
-  let fetchMenus = async () => {
-    let result = await MenuService.getMyMenus();
+  const currentProperty = useSelector((state: RootState) => state.property.selectedPropertyId)
+  let fetchMenus = async (propertyId?: number) => {
+    let result = await MenuService.getMyMenus(propertyId);
     setMenus(result);
+  }
+  let fetchProperty = async () => {
+    let result = await propertyService.getMyProperties();
+    dispatch(setPropertyList(result ?? []))
+    setLoadingProperty(false);
   }
   useEffect(() => {
     dispatch(setUser(getAuthInfo().user))
-    fetchMenus()
+    fetchProperty()
   }, [])
+  useEffect(() => {
+    if (!loadingProperty) {
+      fetchMenus(currentProperty ?? undefined)
+    }
+  }, [currentProperty])
+
 
 
   // Dynamic class for main content margin based on sidebar state

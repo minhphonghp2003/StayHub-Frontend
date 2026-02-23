@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import demoReducer from './features/demo/demo-slice';
 import imageReducer from './features/images/ImageSlice';
+import propertyReducer from './features/property/PropertySlice';
 import userReducer from './features/RBAC/UserSlice';
 export const store = () => {
     return configureStore({
         reducer: {
             demo: demoReducer,
             user: userReducer,
-            image: imageReducer
+            image: imageReducer,
+            property: propertyReducer
         },
     })
 }

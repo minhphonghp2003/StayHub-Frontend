@@ -7,8 +7,8 @@ import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
 
 const baseUrl: string = '/menu';
 const menuActionUrl: string = '/MenuAction';
-const getMyMenus = async (): Promise<BaseResponse<MenuGroup[]>> => {
-    const response = await api.get(`${baseUrl}/my`);
+const getMyMenus = async (propertyId?: number): Promise<BaseResponse<MenuGroup[]>> => {
+    const response = await api.get(`${baseUrl}/my`, { params: { propertyId } });
     return response.data;
 };
 const getAllMenu = async ({ search, pageNumber, pageSize, menuGroupId, signal }: any): Promise<BaseResponse<Menu[]>> => {
