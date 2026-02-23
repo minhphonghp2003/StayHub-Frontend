@@ -15,8 +15,12 @@ const propertySlice = createSlice({
     reducers: {
         setPropertyList: (state, action: PayloadAction<Property[]>) => {
             state.value = action.payload;
+            console.log(state.selectedPropertyId);
+
             if (action.payload.length > 0) {
-                state.selectedPropertyId = action.payload[0]?.id ?? null;
+                if (state.selectedPropertyId == null || !action.payload.some(p => p.id === state.selectedPropertyId)) {
+                    state.selectedPropertyId = action.payload[0]?.id ?? null;
+                }
             }
         },
         removePropertyList: (state) => {
