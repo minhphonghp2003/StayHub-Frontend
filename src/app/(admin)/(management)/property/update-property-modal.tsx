@@ -2,8 +2,10 @@
 import Input from "@/components/form/InputField";
 import { FormSelect } from "@/components/form/Select";
 import ActionModal from "@/components/ui/modal/ActionModal";
+import { Province, Ward } from "@/core/model/address/address";
 import { Property } from "@/core/model/pmm/property";
 import { UpdatePropertyPayload } from "@/core/payload/pmm/update-property-payload";
+import { addressService } from "@/core/service/address/address-service";
 import { propertyService } from "@/core/service/pmm/property-service";
 import { showToast, toastPromise } from "@/lib/alert-helper";
 import { useEffect, useState } from "react";
@@ -32,6 +34,9 @@ function UpdatePropertyModal({
     propertyTypes?: any[];
 }) {
     const [isLoading, setIsLoading] = useState(true);
+    const [provinces, setProvinces] = useState<Province[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+    const [loadingAddressData, setLoadingAddressData] = useState(false);
     const form = useForm<FormValues>();
 
     const handleSubmitForm: SubmitHandler<FormValues> = async (data) => {
@@ -67,18 +72,39 @@ function UpdatePropertyModal({
     useEffect(() => {
         if (!isOpen) return;
         setIsLoading(true);
+        setLoadingAddressData(true);
 
-        propertyService.getPropertyById(property?.id ?? 0).then((propertyDetail) => {
-            form.reset({
-                name: propertyDetail?.name ?? "",
-                address: propertyDetail?.address ?? "",
-                typeId: propertyDetail?.type?.id ?? (propertyTypes[0]?.id || 0),
-                image: propertyDetail?.image ?? "",
-                wardId: propertyDetail?.wardId,
-                provinceId: propertyDetail?.provinceId,
-            });
-            setIsLoading(false);
-        });
+        const loadData = async () => {
+            try {
+                const [propertyDetail, provinceData, wardData] = await Promise.all([
+                    propertyService.getPropertyById(property?.id ?? 0),
+                    addressService.getAllProvinces(),
+                    addressService.getAllWards(),
+                ]);
+
+                if (propertyDetail) {
+                    form.reset({
+                        name: propertyDetail.name ?? "",
+                        address: propertyDetail.address ?? "",
+                        typeId: propertyDetail.type?.id ?? (propertyTypes[0]?.id || 0),
+                        image: propertyDetail.image ?? "",
+                        wardId: propertyDetail.wardId,
+                        provinceId: propertyDetail.provinceId,
+                    });
+                }
+
+                if (provinceData) setProvinces(provinceData);
+                if (wardData) setWards(wardData);
+            } catch (error) {
+                console.error("Failed to load data:", error);
+                showToast({ type: "error", content: "Không thể tải dữ liệu" });
+            } finally {
+                setIsLoading(false);
+                setLoadingAddressData(false);
+            }
+        };
+
+        loadData();
 
         return () => {
             form.reset({
@@ -86,6 +112,8 @@ function UpdatePropertyModal({
                 address: "",
                 typeId: propertyTypes[0]?.id || 0,
                 image: "",
+                wardId: undefined,
+                provinceId: undefined,
             });
         };
     }, [isOpen]);
@@ -99,10 +127,7 @@ function UpdatePropertyModal({
             heading="Cập nhật property"
         >
             <div className="flex flex-col gap-4">
-                <div className="flex gap-2">
-                    <Input {...form.register("name")} label="Tên" />
-                    <Input {...form.register("address")} label="Địa chỉ" />
-                </div>
+                <Input {...form.register("name")} label="Tên" />
 
                 <FormSelect
                     name="typeId"
@@ -122,9 +147,29 @@ function UpdatePropertyModal({
                 />
 
                 <div className="flex gap-2">
-                    <Input {...form.register("wardId", { valueAsNumber: true })} label="Ward ID" type="number" />
-                    <Input {...form.register("provinceId", { valueAsNumber: true })} label="Province ID" type="number" />
+                    <FormSelect
+                        name="provinceId"
+                        control={form.control}
+                        label="Tỉnh/Thành phố"
+                        disabled={loadingAddressData}
+                        options={provinces.map((province) => ({
+                            value: province.id?.toString(),
+                            label: province.name || "",
+                        }))}
+                    />
+                    <FormSelect
+                        name="wardId"
+                        control={form.control}
+                        label="Phường/Xã"
+                        disabled={loadingAddressData}
+                        options={wards.map((ward) => ({
+                            value: ward.id?.toString(),
+                            label: ward.name || "",
+                        }))}
+                    />
                 </div>
+
+                <Input {...form.register("address")} label="Địa chỉ" />
             </div>
         </ActionModal>
     );

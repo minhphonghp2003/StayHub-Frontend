@@ -2,10 +2,12 @@
 import Input from "@/components/form/InputField";
 import { FormSelect } from "@/components/form/Select";
 import ActionModal from "@/components/ui/modal/ActionModal";
+import { Province, Ward } from "@/core/model/address/address";
 import { AddPropertyPayload } from "@/core/payload/pmm/add-property-payload";
+import { addressService } from "@/core/service/address/address-service";
 import { propertyService } from "@/core/service/pmm/property-service";
 import { showToast, toastPromise } from "@/lib/alert-helper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type FormValues = {
@@ -37,6 +39,10 @@ function AddPropertyModal({
     propertyTypes?: any[];
     subscriptionStatuses?: any[];
 }) {
+    const [provinces, setProvinces] = useState<Province[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+    const [loadingAddressData, setLoadingAddressData] = useState(false);
+
     const form = useForm<FormValues>({
         defaultValues: {
             name: "",
@@ -47,7 +53,8 @@ function AddPropertyModal({
             startSubscriptionDate: undefined,
             endSubscriptionDate: undefined,
             lastPaymentDate: undefined,
-
+            wardId: undefined,
+            provinceId: undefined,
             image: "",
         },
     });
@@ -92,6 +99,26 @@ function AddPropertyModal({
 
     useEffect(() => {
         if (!isOpen) return;
+
+        const loadAddressData = async () => {
+            setLoadingAddressData(true);
+            try {
+                const [provinceData, wardData] = await Promise.all([
+                    addressService.getAllProvinces(),
+                    addressService.getAllWards(),
+                ]);
+                if (provinceData) setProvinces(provinceData);
+                if (wardData) setWards(wardData);
+            } catch (error) {
+                console.error("Failed to load address data:", error);
+                showToast({ type: "error", content: "Không thể tải dữ liệu địa chỉ" });
+            } finally {
+                setLoadingAddressData(false);
+            }
+        };
+
+        loadAddressData();
+
         return () => {
             form.reset({
                 name: "",
@@ -102,6 +129,8 @@ function AddPropertyModal({
                 startSubscriptionDate: undefined,
                 endSubscriptionDate: undefined,
                 lastPaymentDate: undefined,
+                wardId: undefined,
+                provinceId: undefined,
                 image: "",
             });
         };
@@ -116,10 +145,7 @@ function AddPropertyModal({
             heading="Thêm mới property"
         >
             <div className="flex flex-col gap-4  overflow-y-auto">
-                <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Tên" />
-                    <Input {...form.register("address")} label="Địa chỉ" />
-                </div>
+                <Input {...form.register("name")} required label="Tên" />
 
                 <div className="flex gap-2">
                     <FormSelect
@@ -169,6 +195,30 @@ function AddPropertyModal({
                     />
                 </div>
 
+                <div className="flex gap-2">
+                    <FormSelect
+                        name="provinceId"
+                        control={form.control}
+                        label="Tỉnh/Thành phố"
+                        disabled={loadingAddressData}
+                        options={provinces.map((province) => ({
+                            value: province.id?.toString(),
+                            label: province.name || "",
+                        }))}
+                    />
+                    <FormSelect
+                        name="wardId"
+                        control={form.control}
+                        label="Phường/Xã"
+                        disabled={loadingAddressData}
+                        options={wards.map((ward) => ({
+                            value: ward.id?.toString(),
+                            label: ward.name || "",
+                        }))}
+                    />
+                </div>
+
+                <Input {...form.register("address")} label="Địa chỉ" />
                 <Input
                     {...form.register("image")}
                     label="Hình ảnh (URL)"
