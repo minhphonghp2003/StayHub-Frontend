@@ -43,6 +43,14 @@ const getAllWards = async (): Promise<Ward[] | null> => {
     return null;
 };
 
+const getAllWardsByProvince = async (provinceId: number): Promise<Ward[] | null> => {
+    const result = await addressRepository.getAllWardsByProvince(provinceId);
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return null;
+};
+
 const getWardById = async (id: number): Promise<Ward | null> => {
     const result = await addressRepository.getWardById(id);
     return result.success ? (result.data ?? null) : null;
@@ -72,6 +80,7 @@ export const addressService = {
     deleteProvince,
     // Ward
     getAllWards,
+    getAllWardsByProvince,
     getWardById,
     createWard,
     updateWard,

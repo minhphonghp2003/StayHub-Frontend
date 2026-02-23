@@ -1,18 +1,14 @@
 import Label from "@/components/form/Label";
-import { Button } from "@/components/ui/shadcn/button";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
-  SelectSeparator,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/shadcn/select";
 import { cn } from "@/lib/utils";
-import { ChevronDownIcon, X } from "lucide-react";
-import { forwardRef, useState } from "react";
+import { X } from "lucide-react";
+import { Control, Controller } from "react-hook-form";
 
 interface Option {
   value: any;
@@ -22,15 +18,12 @@ interface Option {
 interface CustomSelectProps {
   options: Option[];
   placeholder?: string;
-  onChange?: (value: any) => void;
   className?: string;
   value?: any;
   name?: string;
   label?: string;
   required?: boolean;
 }
-import * as React from "react";
-import { Controller, Control } from "react-hook-form";
 
 
 
@@ -41,6 +34,7 @@ interface FormSelectProps {
   placeholder?: string;
   required?: boolean;
   options: Option[];
+  onChange?: (value?: any | undefined) => void;
   disabled?: boolean;
   allowClear?: boolean;
 }
@@ -53,6 +47,7 @@ export function FormSelect({
   placeholder = "Select an option",
   required,
   options,
+  onChange,
   disabled,
   allowClear = true,
 }: FormSelectProps) {
@@ -71,7 +66,10 @@ export function FormSelect({
           <div className="relative">
             <Select
               value={field.value ?? ""}
-              onValueChange={field.onChange}
+              onValueChange={(value) => {
+                field.onChange(value);
+                onChange?.(value);
+              }}
               disabled={disabled}
             >
               <SelectTrigger
@@ -97,6 +95,7 @@ export function FormSelect({
                 onClick={(e) => {
                   e.stopPropagation();
                   field.onChange(undefined);
+                  onChange?.(undefined);
                 }}
                 className="absolute right-2 top-1/2 -translate-y-1/2
                            rounded-sm p-1 text-muted-foreground

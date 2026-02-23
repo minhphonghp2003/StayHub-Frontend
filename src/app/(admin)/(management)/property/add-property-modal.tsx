@@ -99,12 +99,8 @@ function AddPropertyModal({
         const loadAddressData = async () => {
             setLoadingAddressData(true);
             try {
-                const [provinceData, wardData] = await Promise.all([
-                    addressService.getAllProvinces(),
-                    addressService.getAllWards(),
-                ]);
+                const provinceData = await addressService.getAllProvinces();
                 if (provinceData) setProvinces(provinceData);
-                if (wardData) setWards(wardData);
             } catch (error) {
                 console.error("Failed to load address data:", error);
                 showToast({ type: "error", content: "Không thể tải dữ liệu địa chỉ" });
@@ -130,6 +126,27 @@ function AddPropertyModal({
             });
         };
     }, [isOpen]);
+
+    const handleProvinceChange = async (value: string) => {
+        const numValue = Number(value);
+        form.setValue("wardId", undefined);
+        
+        if (!value) {
+            setWards([]);
+            return;
+        }
+
+        setLoadingAddressData(true);
+        try {
+            const wardData = await addressService.getAllWardsByProvince(numValue);
+            if (wardData) setWards(wardData);
+        } catch (error) {
+            console.error("Failed to load wards:", error);
+            showToast({ type: "error", content: "Không thể tải dữ liệu phường/xã" });
+        } finally {
+            setLoadingAddressData(false);
+        }
+    };
 
     return (
         <ActionModal
@@ -206,6 +223,7 @@ function AddPropertyModal({
                         control={form.control}
                         label="Tỉnh/Thành phố"
                         disabled={loadingAddressData}
+                        onChange={(value) => handleProvinceChange(value as string)}
                         options={provinces.map((province) => ({
                             value: province.id?.toString(),
                             label: province.name || "",

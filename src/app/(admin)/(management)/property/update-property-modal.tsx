@@ -76,25 +76,36 @@ function UpdatePropertyModal({
 
         const loadData = async () => {
             try {
-                const [propertyDetail, provinceData, wardData] = await Promise.all([
+                const [propertyDetail, provinceData] = await Promise.all([
                     propertyService.getPropertyById(property?.id ?? 0),
                     addressService.getAllProvinces(),
-                    addressService.getAllWards(),
                 ]);
 
+                if (provinceData) setProvinces(provinceData);
+
                 if (propertyDetail) {
-                    form.reset({
-                        name: propertyDetail.name ?? "",
-                        address: propertyDetail.address ?? "",
-                        typeId: propertyDetail.type?.id ?? (propertyTypes[0]?.id || 0),
-                        image: propertyDetail.image ?? "",
-                        wardId: propertyDetail.wardId,
-                        provinceId: propertyDetail.provinceId,
-                    });
+                    // Load wards for the property's province if it exists
+                    let wardData = null;
+                    if (propertyDetail.provinceId) {
+                        wardData = await addressService.getAllWardsByProvince(propertyDetail.provinceId);
+                    }
+
+                    // Set both provinces and wards before resetting form
+                    if (wardData) setWards(wardData);
+
+                    // Reset form with proper values
+                    setTimeout(() => {
+                        form.reset({
+                            name: propertyDetail.name ?? "",
+                            address: propertyDetail.address ?? "",
+                            typeId: propertyDetail.type?.id ?? (propertyTypes[0]?.id || 0),
+                            image: propertyDetail.image ?? "",
+                            wardId: propertyDetail.wardId,
+                            provinceId: propertyDetail.provinceId,
+                        });
+                    }, 0);
                 }
 
-                if (provinceData) setProvinces(provinceData);
-                if (wardData) setWards(wardData);
             } catch (error) {
                 console.error("Failed to load data:", error);
                 showToast({ type: "error", content: "Không thể tải dữ liệu" });
@@ -118,6 +129,27 @@ function UpdatePropertyModal({
         };
     }, [isOpen]);
 
+    const handleProvinceChange = async (value: string) => {
+        const numValue = Number(value);
+        form.setValue("wardId", undefined);
+
+        if (!value) {
+            setWards([]);
+            return;
+        }
+
+        setLoadingAddressData(true);
+        try {
+            const wardData = await addressService.getAllWardsByProvince(numValue);
+            if (wardData) setWards(wardData);
+        } catch (error) {
+            console.error("Failed to load wards:", error);
+            showToast({ type: "error", content: "Không thể tải dữ liệu phường/xã" });
+        } finally {
+            setLoadingAddressData(false);
+        }
+    };
+
     return (
         <ActionModal
             size="lg"
@@ -140,11 +172,6 @@ function UpdatePropertyModal({
                     }))}
                 />
 
-                <Input
-                    {...form.register("image")}
-                    label="Hình ảnh (URL)"
-                    placeholder="https://..."
-                />
 
                 <div className="flex gap-2">
                     <FormSelect
@@ -152,6 +179,7 @@ function UpdatePropertyModal({
                         control={form.control}
                         label="Tỉnh/Thành phố"
                         disabled={loadingAddressData}
+                        onChange={(value) => handleProvinceChange(value as string)}
                         options={provinces.map((province) => ({
                             value: province.id?.toString(),
                             label: province.name || "",
@@ -170,6 +198,11 @@ function UpdatePropertyModal({
                 </div>
 
                 <Input {...form.register("address")} label="Địa chỉ" />
+                <Input
+                    {...form.register("image")}
+                    label="Hình ảnh (URL)"
+                    placeholder="https://..."
+                />
             </div>
         </ActionModal>
     );

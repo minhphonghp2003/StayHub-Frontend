@@ -39,6 +39,13 @@ const getAllWards = async (): Promise<BaseResponse<Ward[]>> => {
     return response.data;
 };
 
+const getAllWardsByProvince = async (provinceId: number): Promise<BaseResponse<Ward[]>> => {
+    const response = await api.get(`${baseUrl}/ward`, {
+        params: { provinceId }
+    });
+    return response.data;
+};
+
 const getWardById = async (id: number): Promise<BaseResponse<Ward | null>> => {
     const response = await api.get(`${baseUrl}/ward/${id}`);
     return response.data;
@@ -68,6 +75,7 @@ export const addressRepository = {
     deleteProvince,
     // Ward
     getAllWards,
+    getAllWardsByProvince,
     getWardById,
     createWard,
     updateWard,
