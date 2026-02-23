@@ -138,6 +138,20 @@
   --color-warning-900: #7a2e0e;
   --color-warning-950: #4e1d09;
 
+  /* === GRAY GROUP (harmonize with theme; use like --color-gray-group-*) === */
+  --color-gray-25:  #fbfcfd;
+  --color-gray-50:  #f6f7f9;
+  --color-gray-100: #eef0f3;
+  --color-gray-200: #e3e6ea;
+  --color-gray-300: #cfd6df;
+  --color-gray-400: #aeb6c0;
+  --color-gray-500: #8d97a3;
+  --color-gray-600: #6b7480;
+  --color-gray-700: #4b5561;
+  --color-gray-800: #2f3742;
+  --color-gray-900: #151920;
+  --color-gray-950: #0b0e11;
+
   /* === THEME ACCENTS === */
   --color-theme-pink-500: #ee46bc;
   --color-theme-purple-500: #7a5af8;
@@ -398,6 +412,27 @@
 .flatpickr-monthDropdown-months:focus {
   outline: none !important;
   border: 0 !important;
+}
+
+/* Gray group utility to harmonize components with theme
+   Usage: add `bg-gray-group` to an element to get light/dark-aware gray background
+*/
+.bg-gray-group {
+  background-color: var(--color-gray-50);
+  color: var(--color-black);
+}
+.bg-gray-group:hover {
+  background-color: var(--color-gray-100);
+}
+
+.dark .bg-gray-group,
+.bg-gray-group.dark {
+  background-color: var(--color-gray-900);
+  color: var(--color-white);
+}
+.dark .bg-gray-group:hover,
+.bg-gray-group.dark:hover {
+  background-color: var(--color-gray-800);
 }
 .flatpickr-months .flatpickr-prev-month,
 .flatpickr-months .flatpickr-next-month {
