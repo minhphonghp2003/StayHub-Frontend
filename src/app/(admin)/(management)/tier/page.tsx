@@ -27,11 +27,8 @@ function TierPage() {
   const fetchData = async () => {
     setLoading(true);
     setTiers([]);
-    const result = await tierService.getAllTiers({
-      pageNumber: 1,
-      pageSize: 100,
-    });
-    setTiers(result?.data ?? []);
+    const result = await tierService.getAllTiers();
+    setTiers(result ?? []);
     setLoading(false);
   };
 

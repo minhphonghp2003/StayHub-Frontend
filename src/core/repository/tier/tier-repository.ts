@@ -5,9 +5,8 @@ import { UpdateTierPayload } from "@/core/payload/tier/update-tier-payload";
 
 const baseUrl: string = "/tier";
 
-const getAllTiers = async (queryParam: { pageNumber?: number; pageSize?: number; search?: string }): Promise<BaseResponse<Tier[]>> => {
-    queryParam.search = queryParam.search?.trim() || undefined;
-    const response = await api.get(`${baseUrl}`, { params: queryParam });
+const getAllTiers = async (): Promise<BaseResponse<Tier[]>> => {
+    const response = await api.get(`${baseUrl}`);
     return response.data;
 };
 

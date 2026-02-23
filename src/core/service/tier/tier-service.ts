@@ -3,13 +3,10 @@ import { AddTierPayload } from "@/core/payload/tier/add-tier-payload";
 import { UpdateTierPayload } from "@/core/payload/tier/update-tier-payload";
 import { tierRepository } from "@/core/repository/tier/tier-repository";
 
-const getAllTiers = async ({ pageNumber, pageSize, search }: any): Promise<{ data: Tier[]; pageInfo: PageInfo } | null> => {
-    const result = await tierRepository.getAllTiers({ pageNumber, pageSize, search });
+const getAllTiers = async (): Promise<Tier[] | null> => {
+    const result = await tierRepository.getAllTiers();
     if (result.success) {
-        return {
-            data: result.data ?? [],
-            pageInfo: result ?? null,
-        };
+        return result.data ?? [];
     }
     return null;
 };
