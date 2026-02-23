@@ -7,7 +7,6 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
 import { Property } from "@/core/model/pmm/property";
 import { categoryItemService } from "@/core/service/catalog/category-item-service";
-import { categoryService } from "@/core/service/catalog/category-service";
 import { propertyService } from "@/core/service/pmm/property-service";
 import { tierService } from "@/core/service/tier/tier-service";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -93,7 +92,7 @@ function PropertyPage() {
 
   return (
     <div>
-      <PageBreadcrumb pagePath="/property" pageTitle="Property" />
+      <PageBreadcrumb pagePath="/property" pageTitle="Nhà" />
       <DataTable
         search={search}
         columns={columns}

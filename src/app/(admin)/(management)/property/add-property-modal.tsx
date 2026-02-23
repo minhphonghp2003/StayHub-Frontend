@@ -82,9 +82,9 @@ function AddPropertyModal({
 
         try {
             const result = await toastPromise(propertyService.createProperty(payload), {
-                loading: "Đang tạo property...",
-                success: "Tạo property thành công!",
-                error: "Tạo property thất bại!",
+                loading: "Đang tạo nhà...",
+                success: "Tạo nhà thành công!",
+                error: "Tạo nhà thất bại!",
             });
 
             if (result) {
@@ -142,7 +142,7 @@ function AddPropertyModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleAddProperty)}
-            heading="Thêm mới property"
+            heading="Thêm mới nhà"
         >
             <div className="flex flex-col gap-4  overflow-y-auto">
                 <Input {...form.register("name")} required label="Tên" />

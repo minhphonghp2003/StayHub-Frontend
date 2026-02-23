@@ -83,7 +83,7 @@ function AddTierModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleAddTier)}
-            heading="Thêm mới tier"
+            heading="Thêm mới gói dịch vụ"
         >
             <div className="flex flex-col gap-4">
                 <div className="flex gap-2">

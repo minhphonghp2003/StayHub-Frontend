@@ -29,9 +29,9 @@ function DeletePropertyModal({
     const deleteProperty = async () => {
         const result = property?.id
             ? await toastPromise(propertyService.deleteProperty(property?.id), {
-                loading: "Đang xoá property...",
-                success: "Xóa property thành công!",
-                error: "Xóa property thất bại!",
+                loading: "Đang xoá nhà...",
+                success: "Xóa nhà thành công!",
+                error: "Xóa nhà thất bại!",
             })
             : null;
         if (result) {

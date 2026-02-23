@@ -53,9 +53,9 @@ function UpdatePropertyModal({
             const result = await toastPromise(
                 propertyService.updateProperty(property?.id ?? 0, payload),
                 {
-                    loading: "Cập nhật property...",
-                    success: "Cập nhật property thành công!",
-                    error: "Cập nhật property thất bại!",
+                    loading: "Cập nhật nhà...",
+                    success: "Cập nhật nhà thành công!",
+                    error: "Cập nhật nhà thất bại!",
                 }
             );
 
@@ -124,7 +124,7 @@ function UpdatePropertyModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleSubmitForm)}
-            heading="Cập nhật property"
+            heading="Cập nhật nhà"
         >
             <div className="flex flex-col gap-4">
                 <Input {...form.register("name")} label="Tên" />

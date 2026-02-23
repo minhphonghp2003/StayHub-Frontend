@@ -93,7 +93,7 @@ function UpdateTierModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleSubmitForm)}
-            heading="Cập nhật tier"
+            heading={`Cập nhật gói dịch vụ ${tier?.name || ""}`}
         >
             {isLoading && <Loading />}
             <div className="flex flex-col gap-4">

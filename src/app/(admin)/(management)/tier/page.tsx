@@ -2,9 +2,9 @@
 import AddTierModal from "@/app/(admin)/(management)/tier/add-tier-modal";
 import DeleteTierModal from "@/app/(admin)/(management)/tier/delete-tier-modal";
 import UpdateTierModal from "@/app/(admin)/(management)/tier/update-tier-modal";
+import Loading from "@/components/common/Loading";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Button } from "@/components/ui/shadcn/button";
-import { Spinner } from "@/components/ui/shadcn/spinner";
 import { Tier } from "@/core/model/tier/tier";
 import { tierService } from "@/core/service/tier/tier-service";
 import { Edit2, Plus, Trash2 } from "lucide-react";
@@ -49,18 +49,12 @@ function TierPage() {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Spinner />
-      </div>
-    );
-  }
+
 
   return (
-    <div className="min-h-screen ">
-      <PageBreadcrumb pagePath="/tier" pageTitle="Tier" />
-
+    <div className="min-h-screen relative ">
+      <PageBreadcrumb pagePath="/tier" pageTitle="Gói dịch vụ" />
+      {loading && <Loading />}
       <div className=" mx-auto ">
         {/* Header Section */}
         <div className="flex  justify-end mb-2">
