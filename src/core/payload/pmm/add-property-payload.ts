@@ -5,7 +5,6 @@ export interface AddPropertyPayload {
     image?: string;
     startSubscriptionDate?: Date;
     endSubscriptionDate?: Date;
-    subscriptionStatusId?: number;
     lastPaymentDate?: Date;
     tierId: number;
     wardId?: number;

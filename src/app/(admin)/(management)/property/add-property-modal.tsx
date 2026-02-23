@@ -1,4 +1,5 @@
 "use client";
+import DatePicker from "@/components/form/date-picker";
 import Input from "@/components/form/InputField";
 import { FormSelect } from "@/components/form/Select";
 import ActionModal from "@/components/ui/modal/ActionModal";
@@ -8,7 +9,7 @@ import { addressService } from "@/core/service/address/address-service";
 import { propertyService } from "@/core/service/pmm/property-service";
 import { showToast, toastPromise } from "@/lib/alert-helper";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 type FormValues = {
     name: string;
@@ -16,9 +17,8 @@ type FormValues = {
     typeId: number;
     image?: string;
     tierId: number;
-    subscriptionStatusId?: number;
-    startSubscriptionDate?: string;
-    endSubscriptionDate?: string;
+    startSubscriptionDate: string;
+    endSubscriptionDate: string;
     lastPaymentDate?: string;
     wardId?: number;
     provinceId?: number;
@@ -30,14 +30,12 @@ function AddPropertyModal({
     reload,
     tiers = [],
     propertyTypes = [],
-    subscriptionStatuses = [],
 }: {
     isOpen: boolean;
     closeModal: any;
     reload?: any;
     tiers?: any[];
     propertyTypes?: any[];
-    subscriptionStatuses?: any[];
 }) {
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [wards, setWards] = useState<Ward[]>([]);
@@ -49,7 +47,6 @@ function AddPropertyModal({
             address: "",
             typeId: undefined,
             tierId: undefined,
-            subscriptionStatusId: undefined,
             startSubscriptionDate: undefined,
             endSubscriptionDate: undefined,
             lastPaymentDate: undefined,
@@ -66,7 +63,6 @@ function AddPropertyModal({
             typeId: data.typeId,
             image: data.image,
             tierId: data.tierId,
-            subscriptionStatusId: data.subscriptionStatusId,
             startSubscriptionDate: data.startSubscriptionDate
                 ? new Date(data.startSubscriptionDate)
                 : undefined,
@@ -125,7 +121,6 @@ function AddPropertyModal({
                 address: "",
                 typeId: undefined,
                 tierId: undefined,
-                subscriptionStatusId: undefined,
                 startSubscriptionDate: undefined,
                 endSubscriptionDate: undefined,
                 lastPaymentDate: undefined,
@@ -151,7 +146,7 @@ function AddPropertyModal({
                     <FormSelect
                         name="typeId"
                         control={form.control}
-                        label="Loại"
+                        label="Loại hình cho thuê"
                         required
                         options={propertyTypes.map((type) => ({
                             value: type.id?.toString(),
@@ -170,28 +165,38 @@ function AddPropertyModal({
                     />
                 </div>
 
-                <div className="flex gap-2">
-                    <FormSelect
-                        name="subscriptionStatusId"
-                        control={form.control}
-                        label="Trạng thái đăng ký"
-                        options={subscriptionStatuses.map((status) => ({
-                            value: status.id?.toString(),
-                            label: status.name,
-                        }))}
-                    />
-                </div>
 
-                <div className="flex gap-2">
-                    <Input
-                        {...form.register("startSubscriptionDate")}
-                        label="Ngày bắt đầu"
-                        type="date"
+
+                <div className="flex justify-between gap-2">
+                    <Controller
+                        control={form.control}
+                        name="startSubscriptionDate"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <DatePicker
+                                id="startSubscriptionDate"
+                                label="Ngày bắt đầu"
+                                defaultDate={field.value ? new Date(field.value) : undefined}
+                                onChange={(selectedDates: Date[], _dateStr: string) =>
+                                    field.onChange(selectedDates && selectedDates[0] ? selectedDates[0].toISOString() : undefined)
+                                }
+                            />
+                        )}
                     />
-                    <Input
-                        {...form.register("endSubscriptionDate")}
-                        label="Ngày kết thúc"
-                        type="date"
+                    <Controller
+                        control={form.control}
+                        name="endSubscriptionDate"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <DatePicker
+                                id="endSubscriptionDate"
+                                label="Ngày kết thúc"
+                                defaultDate={field.value ? new Date(field.value) : undefined}
+                                onChange={(selectedDates: Date[], _dateStr: string) =>
+                                    field.onChange(selectedDates && selectedDates[0] ? selectedDates[0].toISOString() : undefined)
+                                }
+                            />
+                        )}
                     />
                 </div>
 

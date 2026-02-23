@@ -61,6 +61,17 @@ const getMenuOfTier = async (id: number, signal: any): Promise<BaseResponse<numb
     return response?.data ?? null;
 };
 
+const renewSubscription = async (propertyId: number, tierId: number, startTime: string, endTime: string): Promise<BaseResponse<boolean>> => {
+    const payload = {
+        propertyId,
+        tierId,
+        startTime,
+        endTime,
+    };
+    const response = await api.post(`${baseUrl}/renew-subscription`, payload);
+    return response.data;
+};
+
 export const tierRepository = {
     getAllTiers,
     getTierById,
@@ -71,4 +82,5 @@ export const tierRepository = {
     getActionOfTier,
     assignMenusToTier,
     getMenuOfTier,
+    renewSubscription,
 };

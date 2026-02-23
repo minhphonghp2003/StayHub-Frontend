@@ -2,6 +2,7 @@
 import AddPropertyModal from "@/app/(admin)/(management)/property/add-property-modal";
 import DeletePropertyModal from "@/app/(admin)/(management)/property/delete-property-modal";
 import { getPropertyColumns } from "@/app/(admin)/(management)/property/property-columns";
+import RenewSubscriptionModal from "@/app/(admin)/(management)/property/renew-subscription-modal";
 import UpdatePropertyModal from "@/app/(admin)/(management)/property/update-property-modal";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
@@ -12,9 +13,8 @@ import { tierService } from "@/core/service/tier/tier-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-
 type ModalState = {
-  type: "ADD" | "UPDATE" | "DELETE" | null;
+  type: "ADD" | "UPDATE" | "DELETE" | "RENEW" | null;
   data: Property | null;
 };
 
@@ -30,7 +30,6 @@ function PropertyPage() {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
   const [tiers, setTiers] = useState<any[]>([]);
   const [propertyTypes, setPropertyTypes] = useState<any[]>([]);
-  const [subscriptionStatuses, setSubscriptionStatuses] = useState<any[]>([]);
 
   useEffect(() => {
     fetchInitialData();
@@ -48,10 +47,6 @@ function PropertyPage() {
       );
       setPropertyTypes(categoriesResult ?? []);
 
-      const subscriptionStatusesResult = await categoryItemService.getCategoryItemsByCategoryCode(
-        "SUBSCRIPTION_STATUS"
-      );
-      setSubscriptionStatuses(subscriptionStatusesResult ?? []);
     } catch (error) {
       console.error("Error fetching initial data:", error);
     }
@@ -88,6 +83,7 @@ function PropertyPage() {
   const columns = getPropertyColumns({
     onDelete: (property) => setModalState({ type: "DELETE", data: property }),
     onUpdate: (property) => setModalState({ type: "UPDATE", data: property }),
+    onRenew: (property) => setModalState({ type: "RENEW", data: property }),
   });
 
   return (
@@ -113,7 +109,6 @@ function PropertyPage() {
         reload={fetchData}
         tiers={tiers}
         propertyTypes={propertyTypes}
-        subscriptionStatuses={subscriptionStatuses}
       />
       <UpdatePropertyModal
         isOpen={modal.type === "UPDATE" && modal.data !== null}
@@ -127,6 +122,13 @@ function PropertyPage() {
         closeModal={closeModal}
         property={modal.data}
         reload={fetchData}
+      />
+      <RenewSubscriptionModal
+        isOpen={modal.type === "RENEW" && modal.data !== null}
+        closeModal={closeModal}
+        property={modal.data}
+        reload={fetchData}
+        tiers={tiers}
       />
     </div>
   );

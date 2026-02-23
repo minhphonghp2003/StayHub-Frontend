@@ -64,6 +64,11 @@ const assignMenusToTier = async (menuIds: number[], tierId: number): Promise<num
     return [];
 };
 
+const renewSubscription = async (propertyId: number, tierId: number, startTime: string, endTime: string): Promise<boolean> => {
+    const result = await tierRepository.renewSubscription(propertyId, tierId, startTime, endTime);
+    return result.success ? (result.data ?? false) : false;
+};
+
 export const tierService = {
     getAllTiers,
     getTierById,
@@ -74,4 +79,5 @@ export const tierService = {
     assignActionsToTier,
     getMenusOfTier,
     assignMenusToTier,
+    renewSubscription,
 };

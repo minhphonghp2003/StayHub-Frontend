@@ -132,7 +132,7 @@ function UpdatePropertyModal({
                 <FormSelect
                     name="typeId"
                     control={form.control}
-                    label="Loại"
+                    label="Loại hình cho thuê"
                     required
                     options={propertyTypes.map((type) => ({
                         value: type.id?.toString(),

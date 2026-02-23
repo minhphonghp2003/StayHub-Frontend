@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.css';
+import { Vietnamese } from 'flatpickr/dist/l10n/vn.js';
 import { useEffect } from 'react';
 import { CalenderIcon } from '../../icons';
 import Label from './Label';
@@ -24,12 +25,28 @@ export default function DatePicker({
   placeholder,
 }: PropsType) {
   useEffect(() => {
-    const flatPickr = flatpickr(`#${id}`, {
+    const input = document.getElementById(id) as HTMLInputElement | null;
+    if (!input) return;
+
+    const flatPickr = flatpickr(input, {
       mode: mode || "single",
-      static: true,
       monthSelectorType: "static",
-      dateFormat: "Y-m-d",
+      locale: {
+        ...Vietnamese,
+        firstDayOfWeek: 1,
+      },
+      dateFormat: "d-m-Y",
       defaultDate,
+      appendTo: typeof document !== 'undefined' ? document.body : undefined,
+      onOpen: function (selectedDates, dateStr, instance) {
+        try {
+          if (instance && instance.calendarContainer) {
+            instance.calendarContainer.style.zIndex = '200000';
+          }
+        } catch (e) {
+          // ignore
+        }
+      },
       onChange,
     });
 
@@ -41,10 +58,10 @@ export default function DatePicker({
   }, [mode, onChange, id, defaultDate]);
 
   return (
-    <div>
+    <div className='w-full'>
       {label && <Label htmlFor={id}>{label}</Label>}
 
-      <div className="relative">
+      <div className="relative ">
         <input
           id={id}
           placeholder={placeholder}

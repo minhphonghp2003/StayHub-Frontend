@@ -18,7 +18,6 @@ export interface Property extends BaseModel {
     startSubscriptionDate?: Date;
     endSubscriptionDate?: Date;
     subscriptionStatus?: CategoryItem;
-    subscriptionStatusId?: number;
     lastPaymentDate?: Date;
     tier?: CategoryItem;
     tierId?: number;
