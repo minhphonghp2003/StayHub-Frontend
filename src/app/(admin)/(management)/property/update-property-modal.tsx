@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/components/common/Loading";
 import Input from "@/components/form/InputField";
 import { FormSelect } from "@/components/form/Select";
 import ActionModal from "@/components/ui/modal/ActionModal";
@@ -158,6 +159,7 @@ function UpdatePropertyModal({
             onConfirm={form.handleSubmit(handleSubmitForm)}
             heading="Cập nhật nhà"
         >
+            {isLoading && <Loading />}
             <div className="flex flex-col gap-4">
                 <Input {...form.register("name")} label="Tên" />
 

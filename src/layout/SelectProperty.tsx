@@ -20,14 +20,14 @@ function SelectProperty() {
         setOpen(false)
     }
     return (
-        <div className="hidden lg:block">
+        <div className="w-[25vw] min-w-0">
             <div ref={containerRef} tabIndex={0} onBlur={() => setOpen(false)}>
                 <div className="relative">
                     <button
                         type="button"
                         onClick={() => setOpen(v => !v)}
                         aria-expanded={open}
-                        className="dark:bg-dark-900  w-full rounded-lg border border-gray-200 bg-transparent py-1 pl-3 pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px] text-left"
+                        className="dark:bg-dark-900  w-full rounded-lg border border-gray-200 bg-transparent py-1.5 pl-3 pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800  text-left"
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-gray-100">

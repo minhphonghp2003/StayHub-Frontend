@@ -25,10 +25,13 @@ export default function AdminLayout({
   const dispatch = useDispatch()
   const currentProperty = useSelector((state: RootState) => state.property.selectedPropertyId)
   let fetchMenus = async (propertyId?: number) => {
+
+    setMenus([])
     let result = await MenuService.getMyMenus(propertyId);
     setMenus(result);
   }
   let fetchProperty = async () => {
+    setLoadingProperty(true);
     let result = await propertyService.getMyProperties();
     dispatch(setPropertyList(result ?? []))
     setLoadingProperty(false);

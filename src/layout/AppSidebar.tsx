@@ -1,23 +1,16 @@
 "use client";
+import DynamicIcon from "@/components/common/DynamicIcon";
+import Loading from "@/components/common/Loading";
+import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
-  UserCircleIcon
+  HorizontaLDots
 } from "../icons/index";
-import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
-import DynamicIcon from "@/components/common/DynamicIcon";
 
 type NavItem = {
   name: string;
@@ -37,7 +30,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
     navItems: Menu[],
     menuType: any
   ) => (
-    <ul className="flex flex-col gap-2">
+    <ul className=" flex flex-col gap-2">
+
       {navItems.map((nav, index) => (
         <li key={nav.path}>
           {nav.children?.length ?? 0 > 0 ? (
@@ -191,7 +185,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
       return { type: menuType, index };
     });
   };
-
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-black dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
@@ -206,6 +199,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+
+      {menuGroups.length === 0 && <Loading />}
       <div
         className={`py-8 flex  ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
           }`}
@@ -257,6 +252,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                       <HorizontaLDots />
                     )}
                   </h2>
+
                   {renderMenuItems(menuGroup.items as Menu[], menuGroup.name)}
                 </div>
               ))
