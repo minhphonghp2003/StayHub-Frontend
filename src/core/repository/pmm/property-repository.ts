@@ -31,10 +31,16 @@ const deleteProperty = async (id: number): Promise<BaseResponse<boolean>> => {
     return response.data;
 };
 
+const getMyProperties = async (): Promise<BaseResponse<Property[]>> => {
+    const response = await api.get(`${baseUrl}/my`);
+    return response.data;
+};
+
 export const propertyRepository = {
     getAllProperties,
     getPropertyById,
     createProperty,
     updateProperty,
     deleteProperty,
+    getMyProperties,
 };

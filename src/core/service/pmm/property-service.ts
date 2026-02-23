@@ -34,10 +34,16 @@ const deleteProperty = async (id: number): Promise<boolean> => {
     return result.data ?? false;
 };
 
+const getMyProperties = async (): Promise<Property[] | null> => {
+    const result = await propertyRepository.getMyProperties();
+    return result.success ? (result.data ?? []) : null;
+};
+
 export const propertyService = {
     getAllProperties,
     getPropertyById,
     createProperty,
     updateProperty,
     deleteProperty,
+    getMyProperties,
 };
