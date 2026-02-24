@@ -5,7 +5,7 @@ import { Spinner } from '@/components/ui/shadcn/spinner';
 import { Role } from '@/core/model/RBAC/Role';
 import { RolePayload } from '@/core/payload/RBAC/role-payload';
 import roleService from '@/core/service/RBAC/role-service';
-import { showToast, toastPromise } from '@/lib/alert-helper';
+import { toastPromise } from '@/lib/alert-helper';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -40,7 +40,7 @@ function UpdateRoleModal({ isOpen, closeModal, role, reload }: { isOpen: boolean
                 form.reset()
             }
         } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" })
+            // error already displayed by toastPromise
         }
 
     };

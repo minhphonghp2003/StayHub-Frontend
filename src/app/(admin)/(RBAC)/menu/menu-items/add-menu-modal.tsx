@@ -8,7 +8,7 @@ import { CategoryItem } from '@/core/model/catalog/category-item';
 import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
 import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import menuService from '@/core/service/RBAC/menu-service';
-import { showToast, toastPromise } from '@/lib/alert-helper';
+import { toastPromise } from '@/lib/alert-helper';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -78,7 +78,7 @@ function AddMenuModal({
                 setIcon("");
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
     let fetchData = async () => {

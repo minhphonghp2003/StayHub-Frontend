@@ -6,7 +6,7 @@ import ActionModal from "@/components/ui/modal/ActionModal";
 import { Tier } from "@/core/model/tier/tier";
 import { UpdateTierPayload } from "@/core/payload/tier/update-tier-payload";
 import { tierService } from "@/core/service/tier/tier-service";
-import { showToast, toastPromise } from "@/lib/alert-helper";
+import { toastPromise } from "@/lib/alert-helper";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -57,7 +57,7 @@ function UpdateTierModal({
                 form.reset();
             }
         } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
 

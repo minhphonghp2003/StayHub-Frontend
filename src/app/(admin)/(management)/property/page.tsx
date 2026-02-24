@@ -10,6 +10,7 @@ import { Property } from "@/core/model/pmm/property";
 import { categoryItemService } from "@/core/service/catalog/category-item-service";
 import { propertyService } from "@/core/service/pmm/property-service";
 import { tierService } from "@/core/service/tier/tier-service";
+import { showToast } from "@/lib/alert-helper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -55,13 +56,20 @@ function PropertyPage() {
   const fetchData = async () => {
     setLoading(true);
     setPropertyData([]);
-    const result = await propertyService.getAllProperties({
-      pageNumber: page,
-      search,
-    });
-    setPropertyData(result?.data ?? []);
-    setPageInfo(result?.pageInfo ?? null);
-    setLoading(false);
+    try {
+      const result = await propertyService.getAllProperties({
+        pageNumber: page,
+        search,
+      });
+      setPropertyData(result?.data ?? []);
+      setPageInfo(result?.pageInfo ?? null);
+    } catch (error: any) {
+      console.error("Error fetching properties:", error);
+      // optionally show toast
+      showToast({ type: "error", content: error?.message || "Failed to load properties" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const closeModal = () => {

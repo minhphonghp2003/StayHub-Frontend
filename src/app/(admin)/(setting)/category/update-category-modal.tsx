@@ -1,18 +1,13 @@
-import DynamicIcon from '@/components/common/DynamicIcon'
 import Input from '@/components/form/InputField'
-import { FormSelect } from '@/components/form/Select'
 import TextArea from '@/components/form/TextArea'
 import ActionModal from '@/components/ui/modal/ActionModal'
 import { Spinner } from '@/components/ui/shadcn/spinner'
 import { Category } from '@/core/model/catalog/category'
-import { CategoryItem } from '@/core/model/catalog/category-item'
 import { UpdateCategoryPayload } from '@/core/payload/catalog/update-category-payload'
-import { categoryItemService } from '@/core/service/catalog/category-item-service'
 import { categoryService } from '@/core/service/catalog/category-service'
-import menuService from '@/core/service/RBAC/menu-service'
-import { toastPromise, showToast } from '@/lib/alert-helper'
-import React, { useEffect, useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { toastPromise } from '@/lib/alert-helper'
+import { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 type FormValues = {
     name: string;
     code: string;
@@ -44,7 +39,7 @@ function UpdateCategoryModal({ isOpen, closeModal, category, reload }: { isOpen:
                 form.reset()
             }
         } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" })
+            // error already displayed by toastPromise
         }
 
     };

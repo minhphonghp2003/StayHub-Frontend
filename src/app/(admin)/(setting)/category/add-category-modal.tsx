@@ -1,17 +1,11 @@
-import DynamicIcon from '@/components/common/DynamicIcon';
 import Input from '@/components/form/InputField';
-import { FormSelect } from '@/components/form/Select';
 import TextArea from '@/components/form/TextArea';
 import ActionModal from '@/components/ui/modal/ActionModal';
-import { Spinner } from '@/components/ui/shadcn/spinner';
 import { AddCategoryPayload } from '@/core/payload/catalog/add-category-payload';
-import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
-import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import { categoryService } from '@/core/service/catalog/category-service';
-import menuService from '@/core/service/RBAC/menu-service';
-import { toastPromise, showToast } from '@/lib/alert-helper';
-import React, { useEffect, useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { toastPromise } from '@/lib/alert-helper';
+import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type FormValues = {
     name: string;
@@ -59,7 +53,7 @@ function AddCategoryModal({
                 form.reset();
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
     let fetchData = async () => {

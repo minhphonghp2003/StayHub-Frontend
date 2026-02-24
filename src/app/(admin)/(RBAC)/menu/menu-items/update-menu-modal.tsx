@@ -9,7 +9,7 @@ import { Menu } from '@/core/model/RBAC/Menu';
 import { UpdateMenuPayload } from '@/core/payload/RBAC/udpate-menu-payload';
 import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import menuService from '@/core/service/RBAC/menu-service';
-import { showToast, toastPromise } from '@/lib/alert-helper';
+import { toastPromise } from '@/lib/alert-helper';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -54,7 +54,7 @@ function UpdateMenuModal({ isOpen, closeModal, menu, reload }: { isOpen: boolean
                 form.reset()
             }
         } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" })
+            // error already displayed by toastPromise
         }
 
     };

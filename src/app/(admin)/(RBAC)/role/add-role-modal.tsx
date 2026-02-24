@@ -1,17 +1,10 @@
-import DynamicIcon from '@/components/common/DynamicIcon';
 import Input from '@/components/form/InputField';
-import { FormSelect } from '@/components/form/Select';
 import TextArea from '@/components/form/TextArea';
 import ActionModal from '@/components/ui/modal/ActionModal';
-import { Spinner } from '@/components/ui/shadcn/spinner';
-import { CategoryItem } from '@/core/model/catalog/category-item';
-import { AddMenuPayload } from '@/core/payload/RBAC/add-menu-payload';
 import { RolePayload } from '@/core/payload/RBAC/role-payload';
-import { categoryItemService } from '@/core/service/catalog/category-item-service';
-import menuService from '@/core/service/RBAC/menu-service';
 import roleService from '@/core/service/RBAC/role-service';
-import { showToast, toastPromise } from '@/lib/alert-helper';
-import { useEffect, useState } from 'react';
+import { toastPromise } from '@/lib/alert-helper';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type FormValues = {
@@ -61,7 +54,7 @@ function AddRoleModal({
                 form.reset();
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
 

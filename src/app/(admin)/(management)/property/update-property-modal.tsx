@@ -66,7 +66,7 @@ function UpdatePropertyModal({
                 form.reset();
             }
         } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
 

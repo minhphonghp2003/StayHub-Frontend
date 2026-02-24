@@ -6,11 +6,10 @@ import ActionModal from '@/components/ui/modal/ActionModal';
 import { Spinner } from '@/components/ui/shadcn/spinner';
 import { Category } from '@/core/model/catalog/category';
 import { AddCategoryItemPayload } from '@/core/payload/catalog/add-category-item-payload';
-import { AddCategoryPayload } from '@/core/payload/catalog/add-category-payload';
 import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import { categoryService } from '@/core/service/catalog/category-service';
-import { showToast, toastPromise } from '@/lib/alert-helper';
-import React, { useEffect, useState } from 'react'
+import { toastPromise } from '@/lib/alert-helper';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 
@@ -64,7 +63,7 @@ function AddItemModal({
                 setIcon("");
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
     let fetchData = async () => {

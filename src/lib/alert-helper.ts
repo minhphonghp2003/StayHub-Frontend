@@ -52,7 +52,7 @@ export const toastPromise = async (
 
   try {
     const result = await promise;
-
+    
     toast.update(toastId, {
       render: messages.success,
       type: "success",
@@ -62,8 +62,23 @@ export const toastPromise = async (
 
     return result;
   } catch (err: any) {
+    // attempt to extract meaningful error information (axios, fetch, etc.)
+    const apiMessage =
+      err?.response?.data?.message || err?.message || "";
+
+    // combine api message with provided fallback text if both exist
+    let finalMessage = apiMessage;
+    if (messages.error) {
+      finalMessage = apiMessage
+        ? `${apiMessage} - ${messages.error}`
+        : messages.error;
+    }
+    if (!finalMessage) {
+      finalMessage = "Something went wrong";
+    }
+
     toast.update(toastId, {
-      render: messages.error || err.message || "Something went wrong",
+      render: finalMessage,
       type: "error",
       isLoading: false,
       autoClose: 3000,

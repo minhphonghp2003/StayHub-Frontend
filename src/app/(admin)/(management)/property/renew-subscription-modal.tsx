@@ -77,7 +77,7 @@ function RenewSubscriptionModal({
                 form.reset();
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         } finally {
             setIsLoading(false);
         }

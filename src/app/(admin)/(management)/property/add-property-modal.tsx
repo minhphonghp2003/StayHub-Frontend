@@ -89,7 +89,7 @@ function AddPropertyModal({
                 form.reset();
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
 
@@ -130,7 +130,7 @@ function AddPropertyModal({
     const handleProvinceChange = async (value: string) => {
         const numValue = Number(value);
         form.setValue("wardId", undefined);
-        
+
         if (!value) {
             setWards([]);
             return;

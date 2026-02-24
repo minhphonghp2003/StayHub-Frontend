@@ -12,7 +12,7 @@ const createAxiosInstance = (): AxiosInstance => {
             'Content-Type': 'application/json',
         },
         withCredentials: true,
-        
+
     });
 
     instance.interceptors.request.use(
@@ -20,7 +20,15 @@ const createAxiosInstance = (): AxiosInstance => {
     );
 
     instance.interceptors.response.use(
-        (response) => response,
+        (response) => {
+            // treat API-level failure flag as an error so callers (and toastPromise) can handle it
+            const data = response?.data as any;
+            if (data && typeof data.success !== 'undefined' && data.success === false) {
+                const msg = data.message || data.error || 'Request failed';
+                return Promise.reject(new Error(msg));
+            }
+            return response;
+        },
         errorInterceptor
     );
 

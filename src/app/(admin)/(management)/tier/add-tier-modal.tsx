@@ -4,7 +4,7 @@ import TextArea from "@/components/form/TextArea";
 import ActionModal from "@/components/ui/modal/ActionModal";
 import { AddTierPayload } from "@/core/payload/tier/add-tier-payload";
 import { tierService } from "@/core/service/tier/tier-service";
-import { showToast, toastPromise } from "@/lib/alert-helper";
+import { toastPromise } from "@/lib/alert-helper";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -60,7 +60,7 @@ function AddTierModal({
                 form.reset();
             }
         } catch {
-            showToast({ type: "error", content: "Có lỗi xảy ra" });
+            // error already displayed by toastPromise
         }
     };
 

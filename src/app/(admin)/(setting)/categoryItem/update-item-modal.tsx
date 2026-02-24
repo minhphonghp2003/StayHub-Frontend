@@ -6,12 +6,11 @@ import ActionModal from '@/components/ui/modal/ActionModal'
 import { Spinner } from '@/components/ui/shadcn/spinner'
 import { Category } from '@/core/model/catalog/category'
 import { CategoryItem } from '@/core/model/catalog/category-item'
-import { UpdateCategoryItemPayload } from '@/core/payload/catalog/update-category-item-payload'
 import { categoryItemService } from '@/core/service/catalog/category-item-service'
 import { categoryService } from '@/core/service/catalog/category-service'
-import { showToast, toastPromise } from '@/lib/alert-helper'
-import React, { useEffect, useState } from 'react'
-import { set, SubmitHandler, useForm } from 'react-hook-form'
+import { toastPromise } from '@/lib/alert-helper'
+import { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean, closeModal: any, item?: CategoryItem | null, reload: any }) {
     let [category, setCategory] = useState<Category[]>([])
@@ -44,7 +43,7 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                 form.reset()
             }
         } catch (err) {
-            showToast({ type: "error", content: "Có lỗi xảy ra" })
+            // error already displayed by toastPromise
         }
 
     };
