@@ -1,10 +1,8 @@
 import { getCompactActionColumns } from '@/app/(admin)/(RBAC)/menu-action/action-columns'
-import ComponentCard from '@/components/common/ComponentCard'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
+import Input from '@/components/form/InputField'
 import { Button } from '@/components/ui/shadcn/button'
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
-import { Spinner } from '@/components/ui/shadcn/spinner'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
 import { DataTable } from '@/components/ui/table/data-table'
 import { Action } from '@/core/model/RBAC/Action'
 import { Menu } from '@/core/model/RBAC/Menu'
@@ -12,13 +10,15 @@ import actionService from '@/core/service/RBAC/action-service'
 import menuService from '@/core/service/RBAC/menu-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { Waypoints } from 'lucide-react'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   let [initAssignedActions, setInitAssignedActions] = useState<Set<number>>(new Set())
   let [assignedActions, setAssignedActions] = useState<Set<number>>(new Set())
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({})
   let [actionData, setActionData] = useState<Action[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
+  const [search, setSearch] = useState<string>("")
   let [loading, setLoading] = useState<boolean>(false)
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
   const actionListControllerRef = useRef<AbortController | null>(null)
@@ -96,7 +96,7 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
     setLoading(true)
     if (selectedMenu) {
       await Promise.all([
-        fetchActions(1, actionListController.signal),
+        fetchActions(1, null, actionListController.signal),
         fetchAssignedActions(assignedActionController.signal)]);
     }
     if (!actionListController.signal.aborted && !assignedActionController.signal.aborted) {
@@ -118,8 +118,8 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
       setAssignedActions(new Set(result))
     }
   }
-  let fetchActions = async (page: number, signal: any) => {
-    let result = await actionService.getAllActions({ pageNumber: page, }, signal)
+  let fetchActions = async (page: number, search: string | null, signal: any,) => {
+    let result = await actionService.getAllActions({ pageNumber: page, search }, signal)
     if (result) {
       setActionData(result.data)
       setPageInfo(result.pageInfo ?? null)
@@ -139,9 +139,18 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
     const controller = new AbortController()
     actionListControllerRef.current = controller
     setLoading(true)
-    await fetchActions(page, controller.signal)
+    await fetchActions(page, search, controller.signal)
     setLoading(false)
   };
+  let onSearch = useDebouncedCallback(async (value) => {
+    setSearch(value)
+    actionListControllerRef.current?.abort()
+    const controller = new AbortController()
+    actionListControllerRef.current = controller
+    setLoading(true)
+    await fetchActions(1, value, controller.signal)
+    setLoading(false)
+  }, 1000);
   const columns = getCompactActionColumns();
 
   return (
@@ -149,9 +158,19 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
       <Card className='relative'>
         <CardHeader>
           <CardTitle>
+
             {
-              selectedMenu ? <div>
-                Phân quyền cho Menu <span className='text-brand-400'>{selectedMenu?.name}</span>
+              selectedMenu ? <div className='grid grid-cols-3'>
+                <p className='col-span-2'>
+
+                  Phân quyền cho Menu <span className='text-brand-400'>{selectedMenu?.name}</span>
+                </p>
+                <Input
+                  className=''
+                  placeholder="Tìm kiếm..."
+                  onChange={(e) => { onSearch(e.target.value) }}
+                />
+
               </div>
                 : "Chưa chọn menu"
             }

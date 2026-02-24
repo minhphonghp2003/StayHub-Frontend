@@ -1,5 +1,6 @@
 import { getMenuColumns } from '@/app/(admin)/(RBAC)/role-action/menu-columns'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
+import Input from '@/components/form/InputField'
 import { Button } from '@/components/ui/shadcn/button'
 import { DataTable } from '@/components/ui/table/data-table'
 import { Menu } from '@/core/model/RBAC/Menu'
@@ -8,7 +9,8 @@ import menuService from '@/core/service/RBAC/menu-service'
 import roleService from '@/core/service/RBAC/role-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { Waypoints } from 'lucide-react'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
   let [initAssignedMenus, setInitAssignedMenus] = useState<Set<number>>(new Set())
@@ -18,6 +20,7 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
   let [loading, setLoading] = useState<boolean>(false)
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
+  const [search, setSearch] = useState<string>("")
   const menuListControllerRef = useRef<AbortController | null>(null)
   const assignedMenuControllerRef = useRef<AbortController | null>(null)
   useEffect(() => {
@@ -91,7 +94,7 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
     setLoading(true)
     if (selectedRole) {
       await Promise.all([
-        fetchMenus(1, menuListController.signal),
+        fetchMenus(1, search, menuListController.signal),
         fetchAssignedMenus(assignedMenuController.signal)]);
     }
     if (!menuListController.signal.aborted && !assignedMenuController.signal.aborted) {
@@ -113,8 +116,8 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
       setAssignedMenus(new Set(result))
     }
   }
-  let fetchMenus = async (page: number, signal: any) => {
-    let result = await menuService.getAllMenus({ pageNumber: page, }, signal)
+  let fetchMenus = async (page: number, searchParam: string | null, signal: any) => {
+    let result = await menuService.getAllMenus({ pageNumber: page, search: searchParam }, signal)
     if (result) {
       setMenuData(result.data)
       setPageInfo(result.pageInfo ?? null)
@@ -134,13 +137,26 @@ function MenuList({ selectedRole }: { selectedRole?: Role | null }) {
     const controller = new AbortController()
     menuListControllerRef.current = controller
     setLoading(true)
-    await fetchMenus(page, controller.signal)
+    await fetchMenus(page, search, controller.signal)
     setLoading(false)
   };
   const columns = getMenuColumns();
 
+  const onSearch = useDebouncedCallback(async (value) => {
+    setSearch(value)
+    menuListControllerRef.current?.abort()
+    const controller = new AbortController()
+    menuListControllerRef.current = controller
+    setLoading(true)
+    await fetchMenus(1, value, controller.signal)
+    setLoading(false)
+  }, 1000);
+
   return (
     <div className=''>
+      <div className='grid grid-cols-3 mb-2'>
+        <Input className='col-start-3 col-end-4' placeholder="Tìm kiếm..." onChange={(e) => { onSearch(e.target.value) }} />
+      </div>
       <div>
         <DataTable inCard={false} columns={columns} data={menuData} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Menu" loading={loading} pageSize={pageInfo?.pageSize ?? 0} rowSelection={rowSelection} onRowSelectionChange={setRowSelection} />
         {

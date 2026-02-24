@@ -1,5 +1,6 @@
 import { getCompactActionColumns } from '@/app/(admin)/(RBAC)/role-action/action-columns'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
+import Input from '@/components/form/InputField'
 import { Button } from '@/components/ui/shadcn/button'
 import { DataTable } from '@/components/ui/table/data-table'
 import { Action } from '@/core/model/RBAC/Action'
@@ -9,6 +10,7 @@ import { tierService } from '@/core/service/tier/tier-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { Waypoints } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 function ActionList({ selectedTier }: { selectedTier?: Tier | null }) {
     let [initAssignedActions, setInitAssignedActions] = useState<Set<number>>(new Set())
@@ -18,6 +20,7 @@ function ActionList({ selectedTier }: { selectedTier?: Tier | null }) {
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
     let [loading, setLoading] = useState<boolean>(false)
     let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
+    const [search, setSearch] = useState<string>("")
     const actionListControllerRef = useRef<AbortController | null>(null)
     const assignedActionControllerRef = useRef<AbortController | null>(null)
 
@@ -91,7 +94,7 @@ function ActionList({ selectedTier }: { selectedTier?: Tier | null }) {
         setLoading(true)
         if (selectedTier) {
             await Promise.all([
-                fetchActions(1, actionListController.signal),
+                fetchActions(1, search, actionListController.signal),
                 fetchAssignedActions(assignedActionController.signal)]);
         }
         if (!actionListController.signal.aborted && !assignedActionController.signal.aborted) {
@@ -114,8 +117,8 @@ function ActionList({ selectedTier }: { selectedTier?: Tier | null }) {
         }
     }
 
-    let fetchActions = async (page: number, signal: any) => {
-        let result = await actionService.getAllActions({ pageNumber: page, }, signal)
+    let fetchActions = async (page: number, searchParam: string | null, signal: any) => {
+        let result = await actionService.getAllActions({ pageNumber: page, search: searchParam }, signal)
         if (result) {
             setActionData(result.data)
             setPageInfo(result.pageInfo ?? null)
@@ -137,14 +140,27 @@ function ActionList({ selectedTier }: { selectedTier?: Tier | null }) {
         const controller = new AbortController()
         actionListControllerRef.current = controller
         setLoading(true)
-        await fetchActions(page, controller.signal)
+        await fetchActions(page, search, controller.signal)
         setLoading(false)
     };
 
     const columns = getCompactActionColumns();
 
+    const onSearch = useDebouncedCallback(async (value) => {
+        setSearch(value)
+        actionListControllerRef.current?.abort()
+        const controller = new AbortController()
+        actionListControllerRef.current = controller
+        setLoading(true)
+        await fetchActions(1, value, controller.signal)
+        setLoading(false)
+    }, 1000);
+
     return (
         <div className=''>
+            <div className='grid grid-cols-3 mb-2'>
+                <Input className='col-start-3 col-end-4' placeholder="Tìm kiếm..." onChange={(e) => { onSearch(e.target.value) }} />
+            </div>
             <div>
                 <DataTable inCard={false} columns={columns} data={actionData} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Action" loading={loading} pageSize={pageInfo?.pageSize ?? 0} rowSelection={rowSelection} onRowSelectionChange={setRowSelection} />
                 {
