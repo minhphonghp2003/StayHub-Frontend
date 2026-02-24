@@ -44,7 +44,7 @@ export default function AdminLayout({
     if (!loadingProperty) {
       fetchMenus(currentProperty ?? undefined)
     }
-  }, [currentProperty])
+  }, [currentProperty, loadingProperty])
 
 
 
