@@ -44,6 +44,10 @@ const propertySlice = createSlice({
                     state.selectedPropertyId = action.payload[0]?.id ?? null;
                     writeSelectedPropertyIdToCookie(state.selectedPropertyId);
                 }
+            } else {
+                // if the list is empty, clear selection
+                state.selectedPropertyId = null;
+                writeSelectedPropertyIdToCookie(null);
             }
         },
         removePropertyList: (state) => {

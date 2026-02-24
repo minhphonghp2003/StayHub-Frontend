@@ -18,7 +18,7 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({})
   let [actionData, setActionData] = useState<Action[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null)
-  const [search, setSearch] = useState<string>("")
+  const [search, setSearch] = useState<string | null>(null)
   let [loading, setLoading] = useState<boolean>(false)
   let [isOpenConfirm, setOpenConfirm] = useState<boolean>(false)
   const actionListControllerRef = useRef<AbortController | null>(null)
@@ -96,7 +96,7 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
     setLoading(true)
     if (selectedMenu) {
       await Promise.all([
-        fetchActions(1, null, actionListController.signal),
+        fetchActions(1, search, actionListController.signal),
         fetchAssignedActions(assignedActionController.signal)]);
     }
     if (!actionListController.signal.aborted && !assignedActionController.signal.aborted) {
@@ -165,11 +165,7 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
 
                   Phân quyền cho Menu <span className='text-brand-400'>{selectedMenu?.name}</span>
                 </p>
-                <Input
-                  className=''
-                  placeholder="Tìm kiếm..."
-                  onChange={(e) => { onSearch(e.target.value) }}
-                />
+
 
               </div>
                 : "Chưa chọn menu"
@@ -179,12 +175,16 @@ function ActionList({ selectedMenu }: { selectedMenu?: Menu | null }) {
         </CardHeader>
         <CardContent >
 
+
           {
             !selectedMenu ? <div>
               <p>Chọn menu để phân quyền</p>
             </div>
               :
               <div>
+                <div className='grid grid-cols-3 mb-4 '>
+                  <Input className='col-start-3 col-end-4' placeholder="Tìm kiếm..." onChange={(e) => { onSearch(e.target.value) }} />
+                </div>
                 <DataTable inCard={false} columns={columns} data={actionData} currentPage={pageInfo?.currentPage ?? 1} totalPage={pageInfo?.totalPages ?? 1} totalItems={pageInfo?.totalCount ?? 0} onPageChange={onChangePage} name="Danh sách Action" loading={loading} pageSize={pageInfo?.pageSize ?? 0} rowSelection={rowSelection} onRowSelectionChange={setRowSelection} />
                 {
                   canSave && <div className='flex justify-end gap-2'>
