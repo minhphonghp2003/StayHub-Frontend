@@ -1,0 +1,167 @@
+"use client"
+
+import { Button } from "@/components/ui/shadcn/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu";
+import { User } from "@/core/model/RBAC/User"; // Ensure this frontend interface matches your UserDTO
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import Image from "next/image";
+
+export interface EmployeeColumnProp {
+    onDelete: (employee: User) => void;
+    onUpdate: (employee: User) => void;
+}
+const formatter = new Intl.DateTimeFormat('en-GB', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+});
+export const getEmployeeColumns = ({ onDelete, onUpdate }: EmployeeColumnProp): ColumnDef<User>[] => [
+    {
+        id: "index",
+        header: ({ column }) => {
+            return (
+                <p className="text-center">#</p>
+            )
+        },
+        cell: () => null,
+        enableSorting: false,
+        enableHiding: false,
+        size: 50,
+    },
+    {
+        accessorKey: "fullname",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Họ và tên
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }: any) => {
+            const user = row.original;
+
+            return (
+                <div className="flex gap-2 items-center">
+                    <span className="mr-3 overflow-hidden rounded-full shadow-2xl border h-11 w-11">
+                        {user.image ? (
+                            <Image
+                                width={44}
+                                height={44}
+                                src={user.image}
+                                alt={user.fullname}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <span className="w-full h-full flex items-center justify-center text-gray-500  text-lg">
+                                {user.fullname?.charAt(0).toUpperCase() || 'U'}
+                            </span>
+                        )}
+                    </span>
+                    {/* <Link href={"/user-profile/" + user.id} className="text-blue-600">{user.fullname}</Link> */}
+                    {user.fullname}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "username",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Tên đăng nhập
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+
+    {
+        accessorKey: "email",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Email
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "phone",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    SDT
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "updatedAt",
+        header: ({ column }) => {
+            return (
+                <Button
+                    className="flex justify-between w-full"
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Cập nhật lần cuối
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const updatedAt = row.getValue<string>("updatedAt");
+            const date = new Date(updatedAt);
+            const formatted = formatter.format(date);
+            return <div className="font-medium">{formatted}</div>
+        },
+    },
+    {
+        id: "actions",
+        cell: ({ row }: any) => {
+            const employee = row.original;
+            return (
+                <div className='flex justify-center'>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <MoreHorizontal className="h-4 w-4 cursor-pointer text-gray-500 hover:text-black" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => onUpdate(employee)}>
+                                <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
+                                <span className='text-blue-500'>Cập nhật</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onDelete(employee)}>
+                                <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
+                                <span className='text-red-500'>Xóa</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )
+        },
+    },
+]

@@ -14,6 +14,13 @@ const getAllUsers = async (params: any): Promise<{ data: User[], pageInfo?: Page
     }
     return null;
 }
+const getAllUsersNoPaging = async (search: string): Promise<User[]> => {
+    var result = await userRepository.getAllUserNoPaging(search)
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+}
 const getUserById = async (id: number): Promise<User | null> => {
     const result = await userRepository.getUserById(id);
     return result.success ? result.data ?? null : null;
@@ -61,4 +68,5 @@ export default {
     getUserOfRole,
     assignRoleToUser,
     getRoleOfUser,
+    getAllUsersNoPaging
 };

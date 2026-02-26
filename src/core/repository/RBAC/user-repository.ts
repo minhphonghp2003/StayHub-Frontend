@@ -1,5 +1,4 @@
 import { api } from "@/core/http-client/AxiosClient";
-import { LoginActivity } from "@/core/model/RBAC/login-activity";
 import { Profile } from "@/core/model/RBAC/profile";
 import { Role } from "@/core/model/RBAC/Role";
 import { User } from "@/core/model/RBAC/User";
@@ -16,6 +15,11 @@ const getAllUser = async ({ search, pageNumber, pageSize, menuGroupId }: any): P
         menuGroupId
     };
     const response = await api.get(`${baseUrl}`, { params });
+    return response.data;
+};
+const getAllUserNoPaging = async (search: string): Promise<BaseResponse<User[]>> => {
+
+    const response = await api.get(`${baseUrl}/no-paging/${search}`);
     return response.data;
 };
 
@@ -73,5 +77,7 @@ export default {
     getRoleOfUser,
     getUserOfRole,
     updateProfile,
+    getAllUserNoPaging
+
 
 };
