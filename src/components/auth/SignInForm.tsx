@@ -3,7 +3,7 @@ import Input from "@/components/form/InputField";
 import Label from "@/components/form/Label";
 import authenticationService from "@/core/service/RBAC/authentication-service";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
-import { showToast } from "@/lib/alert-helper";
+import { toastPromise } from "@/lib/alert-helper";
 import Link from "next/link";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -16,25 +16,29 @@ export default function SignInForm() {
   const dispatch = useDispatch();
   let onLogin = async (e: any) => {
     e.preventDefault();
-    const formData = new FormData(e.target); // Create FormData object from the form element
-    const formValues = Object.fromEntries(formData.entries()); // Convert FormData to a plain object
-    let result = await authenticationService.login({
-      username: formValues.username as string,
-      password: formValues.password as string,
-    });
-    if (!result.success) {
-      showToast({
-        type: "error", content: result.message, options: {
-          position: "top-right"
-        }
-      })
-    } else {
-      showToast({
-        type: "success",
-        content: result.message,
-        options: { position: "top-right" },
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const loginRequest = authenticationService.login({ username, password })
+        .then((res) => {
+          if (!res.success) throw new Error(res.message);
+          return res;
+        });
+
+      // 2. Pass the modified promise into toastPromise
+      await toastPromise(loginRequest, {
+        loading: "Đang đăng nhập...",
+        success: "Đăng nhập thành công!",
+        error: "Đăng nhập thất bại!",
       });
+
       window.location.href = "/";
+
+    } catch (error) {
+
     }
 
   };
@@ -102,17 +106,7 @@ export default function SignInForm() {
               </div>
             </form>
 
-            <div className="mt-5">
-              <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Chưa có tài khoản? {""}
-                <Link
-                  href="/signup"
-                  className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                >
-                  Đăng ký
-                </Link>
-              </p>
-            </div>
+
           </div>
         </div>
       </div>
