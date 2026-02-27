@@ -16,7 +16,7 @@ function DeleteEmployeeDialog({ isOpen, closeModal, reload, employee, propertyId
                 error: "Xóa nhân viên thất bại!",
             }
         ) : null;
-        
+
         if (result) {
             closeModal();
             reload();
@@ -34,7 +34,7 @@ function DeleteEmployeeDialog({ isOpen, closeModal, reload, employee, propertyId
                         Xóa {employee?.username}?
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                        Bạn có chắc chắn muốn xóa nhân viên <span className="font-bold">{employee?.fullName}</span> khỏi hệ thống? Hành động này không thể hoàn tác.
+                        Bạn có chắc chắn muốn xóa nhân viên <span className="font-bold">{employee?.fullname}</span> khỏi hệ thống? Hành động này không thể hoàn tác.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 

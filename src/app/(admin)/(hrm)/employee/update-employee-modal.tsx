@@ -34,7 +34,7 @@ function UpdateEmployeeModal({ isOpen, closeModal, employee, reload, propertyId 
             setRoles(allRoles);
 
             form.reset({
-                fullname: employee.fullName ?? "",
+                fullname: employee.fullname ?? "",
                 username: employee.username ?? "",
                 password: "", // Leave blank, only send if user types a new one
                 roleIds: userRoles?.map(r => r.id) ?? []

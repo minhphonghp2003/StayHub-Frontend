@@ -1,7 +1,7 @@
 export interface User extends BaseModel {
     username?: string;
     isActive?: boolean;
-    fullName?: string;
+    fullname?: string;
     email?: string;
     phone?: string;
     image?: string;

@@ -6,6 +6,7 @@ import { User } from "@/core/model/RBAC/User"; // Ensure this frontend interface
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export interface EmployeeColumnProp {
     onDelete: (employee: User) => void;
@@ -66,8 +67,7 @@ export const getEmployeeColumns = ({ onDelete, onUpdate }: EmployeeColumnProp): 
                             </span>
                         )}
                     </span>
-                    {/* <Link href={"/user-profile/" + user.id} className="text-blue-600">{user.fullname}</Link> */}
-                    {user.fullname}
+                    <Link href={"/user-profile/" + user.id} className="text-blue-600">{user.fullname}</Link>
                 </div>
             );
         },
