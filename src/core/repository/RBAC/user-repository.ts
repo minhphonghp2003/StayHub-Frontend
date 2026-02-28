@@ -22,7 +22,10 @@ const getAllUserNoPaging = async (search: string): Promise<BaseResponse<User[]>>
     const response = await api.get(`${baseUrl}/no-paging/${search}`);
     return response.data;
 };
-
+const addUser = async (payload: any): Promise<BaseResponse<boolean>> => {
+    const response = await api.post(`${baseUrl}/add`, payload);
+    return response.data;
+};
 const getUserById = async (id: number): Promise<BaseResponse<User | null>> => {
     const response = await api.get(`${baseUrl}/${id}`);
     return response.data;
@@ -77,7 +80,8 @@ export default {
     getRoleOfUser,
     getUserOfRole,
     updateProfile,
-    getAllUserNoPaging
+    getAllUserNoPaging,
+    addUser
 
 
 };

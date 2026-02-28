@@ -4,6 +4,10 @@ import { User } from "@/core/model/RBAC/User"
 import { UpdateProfilePayload } from "@/core/payload/RBAC/update-profile-payload"
 import userRepository from "@/core/repository/RBAC/user-repository"
 
+const addUser = async (payload: any): Promise<boolean | null> => {
+    const result = await userRepository.addUser(payload);
+    return result.success ? result.data ?? null : null;
+};
 const getAllUsers = async (params: any): Promise<{ data: User[], pageInfo?: PageInfo } | null> => {
     var result = await userRepository.getAllUser(params)
     if (result.success) {
@@ -68,5 +72,7 @@ export default {
     getUserOfRole,
     assignRoleToUser,
     getRoleOfUser,
-    getAllUsersNoPaging
+    getAllUsersNoPaging,
+    addUser
+
 };

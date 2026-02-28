@@ -73,7 +73,7 @@ function UserProfile() {
 
     return (
         <div className="space-y-6 ">
-            <PageBreadcrumb pagePath='/user' pageTitle="Người dùng" subTitle={["Chi tiết"]} />
+            <PageBreadcrumb pageTitle="Người dùng" />
 
             <div className="grid grid-cols-12 gap-6 relative">
                 {loadingProfile ? (
