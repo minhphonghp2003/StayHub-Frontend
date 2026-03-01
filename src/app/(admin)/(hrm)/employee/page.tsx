@@ -3,7 +3,6 @@
 import AddEmployeeModal from "@/app/(admin)/(hrm)/employee/add-employee-modal";
 import DeleteEmployeeDialog from "@/app/(admin)/(hrm)/employee/delete-employee-dialog";
 import { getEmployeeColumns } from "@/app/(admin)/(hrm)/employee/employee-columns";
-import UpdateEmployeeModal from "@/app/(admin)/(hrm)/employee/update-employee-modal";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
 import { User } from "@/core/model/RBAC/User";
@@ -13,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 type ModalState = {
-    type: 'ADD' | 'UPDATE' | 'DELETE' | null;
+    type: 'ADD' | 'DELETE' | null;
     data: User | null;
 }
 
@@ -52,8 +51,7 @@ function EmployeePage() {
     }
 
     const columns = getEmployeeColumns({
-        onDelete: (emp) => setModalState({ type: 'DELETE', data: emp }),
-        onUpdate: (emp) => setModalState({ type: 'UPDATE', data: emp }),
+        onDelete: (emp) => setModalState({ type: 'DELETE', data: emp })
     });
 
     return (
@@ -76,13 +74,6 @@ function EmployeePage() {
                 propertyId={currentPropertyId??0}
                 isOpen={modal.type === 'ADD'}
                 closeModal={closeModal}
-                reload={() => fetchData(pageNumber)}
-            />
-            <UpdateEmployeeModal
-                propertyId={currentPropertyId??0}
-                isOpen={modal.type === 'UPDATE' && modal.data !== null}
-                closeModal={closeModal}
-                employee={modal.data}
                 reload={() => fetchData(pageNumber)}
             />
             <DeleteEmployeeDialog

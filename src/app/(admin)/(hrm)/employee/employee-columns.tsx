@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/shadcn/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu";
 import { User } from "@/core/model/RBAC/User"; // Ensure this frontend interface matches your UserDTO
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export interface EmployeeColumnProp {
     onDelete: (employee: User) => void;
-    onUpdate: (employee: User) => void;
 }
 const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
@@ -20,7 +19,7 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
     minute: '2-digit',
     hour12: false
 });
-export const getEmployeeColumns = ({ onDelete, onUpdate }: EmployeeColumnProp): ColumnDef<User>[] => [
+export const getEmployeeColumns = ({ onDelete, }: EmployeeColumnProp): ColumnDef<User>[] => [
     {
         id: "index",
         header: ({ column }) => {
@@ -150,10 +149,7 @@ export const getEmployeeColumns = ({ onDelete, onUpdate }: EmployeeColumnProp): 
                             <MoreHorizontal className="h-4 w-4 cursor-pointer text-gray-500 hover:text-black" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => onUpdate(employee)}>
-                                <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                <span className='text-blue-500'>Cập nhật</span>
-                            </DropdownMenuItem>
+
                             <DropdownMenuItem onClick={() => onDelete(employee)}>
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
                                 <span className='text-red-500'>Xóa</span>
