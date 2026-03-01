@@ -62,6 +62,10 @@ const getRoleOfUser = async (userId: number): Promise<Role[] | null> => {
     const result = await userRepository.getRoleOfUser({ id: userId });
     return result.success ? result.data ?? null : null;
 };
+const deleteUser = async (id: number): Promise<boolean | null> => {
+    const result = await userRepository.deleteUser(id);
+    return result.success ? result.data ?? null : null;
+};
 export default {
     getAllUsers,
     getUserById,
@@ -73,6 +77,7 @@ export default {
     assignRoleToUser,
     getRoleOfUser,
     getAllUsersNoPaging,
-    addUser
+    addUser,
+    deleteUser
 
 };

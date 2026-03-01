@@ -3,9 +3,10 @@
 import Switch from "@/components/form/Switch"
 import Badge from "@/components/ui/badge/Badge"
 import { Button } from "@/components/ui/shadcn/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu"
 import { User } from "@/core/model/RBAC/User"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 const formatter = new Intl.DateTimeFormat('en-GB', {
@@ -18,9 +19,10 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
 });
 export interface ColumnProp {
     onToggleActive: (user: User, value: boolean) => void;
+    onDelete: (user: User) => void; // <-- Thêm dòng này
 }
 
-export const getUserColumns = ({ onToggleActive }: ColumnProp): ColumnDef<User>[] => [
+export const getUserColumns = ({ onToggleActive, onDelete }: ColumnProp): ColumnDef<User>[] => [
     {
         id: "index",
         header: ({ column }) => {
@@ -168,6 +170,31 @@ export const getUserColumns = ({ onToggleActive }: ColumnProp): ColumnDef<User>[
             const date = new Date(updatedAt);
             const formatted = formatter.format(date);
             return <div className="font-medium">{formatted}</div>
+        },
+    },
+    {
+        id: "actions",
+        cell: ({ row }: any) => {
+            const user = row.original
+            return (
+                <div className='flex justify-center'>
+                    <DropdownMenu >
+                        <DropdownMenuTrigger asChild>
+                            <MoreHorizontal className="h-4 w-4  " />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+
+                            <DropdownMenuItem onClick={() => {
+                                onDelete(user)
+                            }}>
+                                <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
+                                <span className='text-red-500'>Xóa</span>
+                            </DropdownMenuItem>
+
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )
         },
     },
 

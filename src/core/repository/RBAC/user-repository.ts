@@ -69,7 +69,10 @@ const updateProfile = async (userId: number, payload: UpdateProfilePayload): Pro
     const response = await api.put(`${baseUrl}/${userId}`, payload);
     return response.data;
 };
-
+const deleteUser = async (id: number): Promise<BaseResponse<boolean>> => {
+    const response = await api.delete(`${baseUrl}/${id}`);
+    return response.data;
+};
 export default {
     getAllUser,
     getUserById,
@@ -81,7 +84,8 @@ export default {
     getUserOfRole,
     updateProfile,
     getAllUserNoPaging,
-    addUser
+    addUser,
+    deleteUser
 
 
 };

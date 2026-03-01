@@ -1,5 +1,6 @@
 "use client"
 import AddUserModal from "@/app/(admin)/(RBAC)/user/add-user-modal";
+import DeleteUserDialog from "@/app/(admin)/(RBAC)/user/delete-user-dialog"; // <-- Import Dialog
 import { getUserColumns } from "@/app/(admin)/(RBAC)/user/user-columns";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
@@ -19,6 +20,8 @@ function UserPage() {
 
     // -------------- component state-----
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<User | null>(null); // <-- Thêm state quản lý xóa
+
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState<User[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
@@ -67,7 +70,11 @@ function UserPage() {
         router.push(`?${currentParams.toString()}`);
     }, 1000);
 
-    const columns = getUserColumns({ onToggleActive });
+    // Truyền hàm onDelete vào columns
+    const columns = getUserColumns({
+        onToggleActive,
+        onDelete: (user) => setUserToDelete(user) // <-- Mở popup xóa
+    });
 
     return (
         <div>
@@ -85,12 +92,21 @@ function UserPage() {
                 name="Danh sách người dùng"
                 loading={loading}
                 pageSize={pageInfo?.pageSize ?? 0}
-                onAddClicked={() => setIsAddModalOpen(true)} // Mở modal khi bấm nút Thêm
+                onAddClicked={() => setIsAddModalOpen(true)}
             />
 
+            {/* Modal Thêm */}
             <AddUserModal
                 isOpen={isAddModalOpen}
                 closeModal={() => setIsAddModalOpen(false)}
+                reload={fetchData}
+            />
+
+            {/* Modal Xóa */}
+            <DeleteUserDialog
+                isOpen={userToDelete !== null}
+                closeModal={() => setUserToDelete(null)}
+                user={userToDelete}
                 reload={fetchData}
             />
         </div>
