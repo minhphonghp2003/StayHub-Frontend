@@ -1,6 +1,7 @@
 import { CategoryItem } from "@/core/model/catalog/category-item";
 import { Action } from "@/core/model/RBAC/Action";
 import { Menu, MenuGroup } from "@/core/model/RBAC/Menu";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { AddMenuPayload } from "@/core/payload/RBAC/add-menu-payload";
 import { UpdateMenuPayload } from "@/core/payload/RBAC/udpate-menu-payload";
 import menuRepository from "@/core/repository/RBAC/menu-repository";

@@ -1,4 +1,5 @@
 import { UnitGroup } from "@/core/model/infra/unitGroup";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { AddUnitGroupPayload } from "@/core/payload/infra/add-unitGroup-payload";
 import { UpdateUnitGroupPayload } from "@/core/payload/infra/update-unitGroup-payload";
 import { unitGroupRepository } from "@/core/repository/infra/unitGroup-repository";

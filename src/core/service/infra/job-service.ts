@@ -1,4 +1,5 @@
 import { Job } from "@/core/model/infra/job";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { AddJobPayload } from "@/core/payload/infra/add-job-payload";
 import { UpdateJobPayload } from "@/core/payload/infra/update-job-payload";
 import { jobRepository } from "@/core/repository/infra/job-repository";

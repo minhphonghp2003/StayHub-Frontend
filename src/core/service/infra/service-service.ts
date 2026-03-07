@@ -1,4 +1,5 @@
 import { Service } from "@/core/model/infra/service";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { AddServicePayload } from "@/core/payload/infra/add-service-payload";
 import { UpdateServicePayload } from "@/core/payload/infra/update-service-payload";
 import { serviceRepository } from "@/core/repository/infra/service-repository";

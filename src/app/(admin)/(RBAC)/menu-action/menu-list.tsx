@@ -7,6 +7,7 @@ import menuService from '@/core/service/RBAC/menu-service'
 import { Search } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from 'use-debounce'
 
 function MenuList({ selectedMenu, onSelectMenu }: { selectedMenu: Menu | null, onSelectMenu: (menu: Menu | null) => void }) {

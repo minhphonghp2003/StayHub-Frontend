@@ -11,6 +11,7 @@ import { default as menuService, default as MenuService } from '@/core/service/R
 import { toastPromise } from '@/lib/alert-helper';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from 'use-debounce';
 type ModalState = {
     type: 'ADD' | 'UPDATE' | 'DELETE' | null;

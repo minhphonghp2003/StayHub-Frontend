@@ -10,6 +10,7 @@ import { tierService } from '@/core/service/tier/tier-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { Waypoints } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from 'use-debounce'
 
 function MenuList({ selectedTier }: { selectedTier?: Tier | null }) {

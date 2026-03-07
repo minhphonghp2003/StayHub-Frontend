@@ -12,6 +12,7 @@ import { Menu } from '@/core/model/RBAC/Menu';
 import { categoryItemService } from '@/core/service/catalog/category-item-service';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from 'use-debounce';
 type ModalState = {
     type: 'ADD' | 'UPDATE' | 'DELETE' | null;

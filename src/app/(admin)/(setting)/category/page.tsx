@@ -9,6 +9,7 @@ import { Category } from "@/core/model/catalog/category";
 import { categoryService } from "@/core/service/catalog/category-service";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from "use-debounce";
 type ModalState = {
     type: 'ADD' | 'UPDATE' | 'DELETE' | null;

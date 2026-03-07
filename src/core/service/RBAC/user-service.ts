@@ -1,6 +1,7 @@
 import { Profile } from "@/core/model/RBAC/profile"
 import { Role } from "@/core/model/RBAC/Role"
 import { User } from "@/core/model/RBAC/User"
+import { PageInfo } from "@/core/model/BaseResponse";
 import { UpdateProfilePayload } from "@/core/payload/RBAC/update-profile-payload"
 import userRepository from "@/core/repository/RBAC/user-repository"
 

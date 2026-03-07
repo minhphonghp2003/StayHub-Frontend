@@ -1,4 +1,4 @@
-interface BaseResponse<T> extends PageInfo {
+export interface BaseResponse<T> extends PageInfo {
     data?: T,
     success?: boolean,
     message?: string,
@@ -7,7 +7,7 @@ interface BaseResponse<T> extends PageInfo {
 
 
 }
-interface PageInfo {
+export interface PageInfo {
     currentPage?: number,
     pageSize?: number,
     totalCount?: number,

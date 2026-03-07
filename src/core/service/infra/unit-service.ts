@@ -1,4 +1,5 @@
 import { Unit } from "@/core/model/infra/unit";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { AddUnitPayload } from "@/core/payload/infra/add-unit-payload";
 import { UpdateUnitPayload } from "@/core/payload/infra/update-unit-payload";
 import { unitRepository } from "@/core/repository/infra/unit-repository";

@@ -1,6 +1,7 @@
 // pages/list.tsx
 import { PaginationComponent } from '@/components/ui/pagination/pagination-component';
 import { CategoryItem } from '@/core/model/catalog/category-item';
+import { PageInfo } from '@/core/model/BaseResponse';
 
 interface Item {
     id?: number;

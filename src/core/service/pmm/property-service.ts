@@ -2,6 +2,7 @@ import { Property } from "@/core/model/pmm/property";
 import { AddPropertyPayload } from "@/core/payload/pmm/add-property-payload";
 import { UpdatePropertyPayload } from "@/core/payload/pmm/update-property-payload";
 import { propertyRepository } from "@/core/repository/pmm/property-repository";
+import { PageInfo } from "@/core/model/BaseResponse";
 
 const getAllProperties = async ({ pageNumber, pageSize, search }: any): Promise<{ data: Property[]; pageInfo: PageInfo } | null> => {
     const result = await propertyRepository.getAllProperties({ pageNumber, pageSize, search });

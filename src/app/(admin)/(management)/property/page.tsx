@@ -13,6 +13,7 @@ import { tierService } from "@/core/service/tier/tier-service";
 import { showToast } from "@/lib/alert-helper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from "use-debounce";
 type ModalState = {
   type: "ADD" | "UPDATE" | "DELETE" | "RENEW" | null;

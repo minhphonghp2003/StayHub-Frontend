@@ -1,4 +1,5 @@
 import { Asset } from "@/core/model/infra/asset";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { AddAssetPayload } from "@/core/payload/infra/add-asset-payload";
 import { UpdateAssetPayload } from "@/core/payload/infra/update-asset-payload";
 import { assetRepository } from "@/core/repository/infra/asset-repository";

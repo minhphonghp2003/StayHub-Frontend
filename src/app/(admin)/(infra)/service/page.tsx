@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
 import { RootState } from "@/redux/store";
+import { PageInfo } from "@/core/model/BaseResponse";
 import { Service } from "@/core/model/infra/service";
 import { serviceService } from "@/core/service/infra/service-service";
 import { toastPromise } from "@/lib/alert-helper";

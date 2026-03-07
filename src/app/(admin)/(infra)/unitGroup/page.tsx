@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { DataTable } from "@/components/ui/table/data-table";
 import { RootState } from "@/redux/store";
+import { PageInfo } from "@/core/model/BaseResponse";
 import {
     UnitGroup
 } from "@/core/model/infra/unitGroup";

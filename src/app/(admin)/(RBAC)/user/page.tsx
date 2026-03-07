@@ -9,6 +9,7 @@ import userService from "@/core/service/RBAC/user-service";
 import { toastPromise } from "@/lib/alert-helper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PageInfo } from '@/core/model/BaseResponse';
 import { useDebouncedCallback } from "use-debounce";
 
 function UserPage() {

@@ -1,5 +1,6 @@
 import { CategoryItem } from "@/core/model/catalog/category-item";
 import { Action, } from "@/core/model/RBAC/Action";
+import { PageInfo } from "@/core/model/BaseResponse";
 import actionRepository from "@/core/repository/RBAC/action-repository";
 
 

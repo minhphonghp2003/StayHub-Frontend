@@ -7,6 +7,7 @@ import { User } from '@/core/model/RBAC/User'
 import userService from '@/core/service/RBAC/user-service'
 import { Waypoints } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
+import { PageInfo } from '@/core/model/BaseResponse';
 
 function UserList({ selectedRole }: { selectedRole?: Role | null }) {
   let [userData, setUserData] = useState<User[]>([])
