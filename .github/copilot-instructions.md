@@ -17,6 +17,7 @@ Key architecture notes
 
 Common change pattern (recommended)
 - To add a new backend call or CRUD flow, update these in order: payload → repository → service → model → UI. Example: RBAC user features live under `src/core/*/RBAC/...` and pages under `src/app/(admin)/(RBAC)/user`.
+  - To add a new backend call or CRUD flow, update these in order: payload → repository → service → model → UI. Example: RBAC user features live under `src/core/*/RBAC/...` and pages under `src/app/(admin)/(RBAC)/user`.  The infra domain follows the same pattern; newly created folders such as `src/core/service/infra` and matching `app/(admin)/(infra)/…` pages are acceptable.
 
 Auth & tokens
 - Environment keys: `NEXT_PUBLIC_API_URL` is the base API URL (see root `.env`). Tokens keys are `NEXT_PUBLIC_ACCESS_TOKEN` and `NEXT_PUBLIC_REFRESH_TOKEN` in this repo's .env example.
@@ -28,6 +29,7 @@ UI & components
 
 State
 - Redux Toolkit store is defined at [src/redux/store.ts](src/redux/store.ts). Feature slices are at `src/redux/features/*`. Prefer RTK patterns (createSlice, createAsyncThunk) for new state.
+  - Redux Toolkit store is defined at [src/redux/store.ts](src/redux/store.ts). Feature slices are at `src/redux/features/*`. Prefer RTK patterns (createSlice, createAsyncThunk) for new state.  A common existing slice (`property/PropertySlice.ts`) holds the currently selected property ID which many "infra" pages (unit‑group, asset, etc.) read from via `useSelector`.
 
 Client vs Server components
 - The project uses Next.js App Router. If a component interacts with browser-only APIs (cookies, localStorage, event handlers), ensure it has `"use client"` at the top. Default `app/` files are server components unless marked otherwise.
@@ -38,6 +40,7 @@ Third-party / integrations
 
 Conventions & patterns to follow
 - Keep domain logic in `src/core/*` not inside components.
+  - Keep domain logic in `src/core/*` not inside components. UI code under `app/(admin)` should be limited to wiring and presentation; business rules live in services.
 - Follow existing folder parity: if you add a `service` for a domain, create matching `payload`, `repository`, and `model` folders.
 - Use TS types from `src/core/model` and `zod` where present for validation.
 - Prefer `AxiosClient.request(...)` wrappers instead of raw `axios` imports.
