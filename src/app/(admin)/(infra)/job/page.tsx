@@ -79,9 +79,9 @@ function JobPage() {
       )
     );
     const result = await toastPromise(jobService.setActivation(job.id ?? 0, isActive), {
-      loading: "Updating...",
-      success: "Job activation updated!",
-      error: "Failed to update job activation",
+      loading: "Đang cập nhật trạng thái công việc...",
+      success: "Trạng thái công việc đã được cập nhật!",
+      error: "Cập nhật trạng thái công việc thất bại",
     });
     if (!result) {
       setData(prev =>

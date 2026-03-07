@@ -31,9 +31,9 @@ function DeleteJobModal({
             const result = await toastPromise(
                 jobService.deleteJob(job.id),
                 {
-                    loading: "Deleting...",
-                    success: "Deleted successfully!",
-                    error: "Failed to delete",
+                    loading: "Đang xóa công việc...",
+                    success: "Công việc đã được xóa thành công!",
+                    error: "Xóa công việc thất bại",
                 }
             );
             if (result) {

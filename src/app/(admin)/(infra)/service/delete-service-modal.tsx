@@ -29,9 +29,9 @@ function DeleteServiceModal({ isOpen, closeModal, service, reload }: DeleteServi
         const result = await toastPromise(
             serviceService.deleteService(service.id),
             {
-                loading: "Deleting service...",
-                success: "Service deleted successfully!",
-                error: "Failed to delete service",
+                loading: "Đang xóa dịch vụ...",
+                success: "Dịch vụ đã được xóa thành công!",
+                error: "Xóa dịch vụ thất bại",
             }
         );
         if (result) {

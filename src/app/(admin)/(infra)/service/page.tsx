@@ -82,9 +82,9 @@ function ServicePage() {
             )
         );
         const result = await toastPromise(serviceService.setActivateService(id, isActive), {
-            loading: "Updating...",
-            success: "Service activation updated!",
-            error: "Failed to update service activation",
+            loading: "Đang cập nhật trạng thái dịch vụ...",
+            success: "Trạng thái dịch vụ đã được cập nhật!",
+            error: "Cập nhật trạng thái dịch vụ thất bại",
         });
         if (!result) {
             setData((prev) =>

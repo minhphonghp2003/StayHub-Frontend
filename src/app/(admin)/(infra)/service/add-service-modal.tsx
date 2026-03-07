@@ -77,9 +77,9 @@ function AddServiceModal({ isOpen, closeModal, reload }: AddServiceModalProps) {
         const result = await toastPromise(
             serviceService.createService(payload),
             {
-                loading: "Creating service...",
-                success: "Service created successfully!",
-                error: "Failed to create service",
+                loading: "Đang tạo dịch vụ...",
+                success: "Dịch vụ đã được tạo thành công!",
+                error: "Tạo dịch vụ thất bại",
             }
         );
         setLoading(false);

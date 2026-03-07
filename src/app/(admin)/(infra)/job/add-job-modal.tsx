@@ -56,9 +56,9 @@ function AddJobModal({
             const result = await toastPromise(
                 jobService.createJob(payload),
                 {
-                    loading: "Creating job...",
-                    success: "Job created!",
-                    error: "Failed to create job",
+                    loading: "Đang tạo công việc...",
+                    success: "Công việc đã được tạo thành công!",
+                    error: "Tạo công việc thất bại",
                 }
             );
             if (result) {

@@ -31,9 +31,9 @@ function DeleteAssetModal({
             const result = await toastPromise(
                 assetService.deleteAsset(asset.id),
                 {
-                    loading: "Deleting...",
-                    success: "Deleted successfully!",
-                    error: "Failed to delete",
+                    loading: "Đang xóa tài sản...",
+                    success: "Tài sản đã được xóa thành công!",
+                    error: "Xóa tài sản thất bại",
                 }
             );
             if (result) {

@@ -99,9 +99,9 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
         const result = await toastPromise(
             serviceService.updateService(serviceId!, payload),
             {
-                loading: "Updating service...",
-                success: "Service updated successfully!",
-                error: "Failed to update service",
+                loading: "Đang cập nhật dịch vụ...",
+                success: "Dịch vụ đã được cập nhật thành công!",
+                error: "Cập nhật dịch vụ thất bại",
             }
         );
         setLoading(false);

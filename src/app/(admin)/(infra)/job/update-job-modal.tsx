@@ -58,9 +58,9 @@ function UpdateJobModal({
             const result = await toastPromise(
                 jobService.updateJob(jobId ?? 0, payload),
                 {
-                    loading: "Updating job...",
-                    success: "Job updated!",
-                    error: "Failed to update job",
+                    loading: "Đang cập nhật công việc...",
+                    success: "Công việc đã được cập nhật thành công!",
+                    error: "Cập nhật công việc thất bại",
                 }
             );
             if (result) {
