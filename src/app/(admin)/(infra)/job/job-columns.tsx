@@ -30,7 +30,7 @@ export const getJobColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Name
+                Tên
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -53,7 +53,7 @@ export const getJobColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp
         header: "Phòng",
         cell: ({ row }) => {
             const unit = row.original.unit;
-            return <div>{unit?.name ?? "-"}</div>;
+            return <div>{unit?.name ?? ""}</div>;
         },
     },
     {
