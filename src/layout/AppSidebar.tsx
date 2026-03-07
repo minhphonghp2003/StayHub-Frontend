@@ -43,7 +43,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                 } cursor-pointer ${!isExpanded && !isHovered
                   ? "lg:justify-center"
                   : "lg:justify-start"
-                }`}
+                } py-2`}
             >
               <span
                 className={` ${openSubmenu?.type === menuType && openSubmenu?.index === index
@@ -51,10 +51,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                   : "menu-item-icon-inactive"
                   }`}
               >
-                <DynamicIcon iconString={nav.icon?.toString() ?? "<GridIcon />"} />
+                <DynamicIcon className="p-1" iconString={nav.icon?.toString() ?? "<GridIcon />"} />
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className={`menu-item-text`}>{nav.name}</span>
+                <span className={`menu-item-text text-sm font-bold`}>{nav.name}</span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
@@ -71,7 +71,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
               <Link
                 href={nav.path}
                 className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-                  }`}
+                  } py-2`}
               >
                 <span
                   className={`${isActive(nav.path)
@@ -79,10 +79,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                     : "menu-item-icon-inactive"
                     }`}
                 >
-                  <DynamicIcon iconString={nav.icon?.toString() ?? "<GridIcon />"} />
+                  <DynamicIcon className="p-1" iconString={nav.icon?.toString() ?? "<GridIcon />"} />
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className={`menu-item-text`}>{nav.name}</span>
+                  <span className={`menu-item-text text-sm font-bold`}>{nav.name}</span>
                 )}
               </Link>
             )

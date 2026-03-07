@@ -235,7 +235,7 @@
 }
 
 @utility menu-item-icon-active {
- @apply bg-brand-100 text-brand-700 dark:bg-brand-500/[0.12] dark:text-brand-400;
+ @apply bg-brand-100 text-brand-700 dark:bg-brand-500/[0] dark:text-brand-400;
 }
 
 @utility menu-item-icon-inactive {
