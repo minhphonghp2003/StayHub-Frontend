@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 import ActionModal from "@/components/ui/modal/ActionModal";
 import Input from "@/components/form/InputField";
 import { FormSelect } from "@/components/form/Select";
+import DatePicker from "@/components/form/date-picker";
 import { categoryItemService } from "@/core/service/catalog/category-item-service";
 import { addressService } from "@/core/service/address/address-service";
 import { toastPromise } from "@/lib/alert-helper";
@@ -189,7 +190,25 @@ function UpdateCustomerModal({
                                 placeholder="Chọn giới tính"
                             />
                             }
-                            <Input {...form.register("dateOfBirth")} type="date" label="Ngày sinh" />
+                            <Controller
+                                control={form.control}
+                                name="dateOfBirth"
+                                render={({ field }) => (
+                                    <DatePicker
+                                        id="update-dateOfBirth"
+                                        label="Ngày sinh"
+                                        placeholder="Chọn ngày sinh"
+                                        defaultDate={field.value}
+                                        onChange={(selectedDates) => {
+                                            if (selectedDates[0]) {
+                                                const date = new Date(selectedDates[0]);
+                                                const formatted = date.toISOString();
+                                                field.onChange(formatted);
+                                            }
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
                         <div className="flex gap-2">
                             <Input {...form.register("job")} label="Công việc" />
