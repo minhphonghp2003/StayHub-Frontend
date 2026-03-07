@@ -18,6 +18,11 @@ const getAllUnitGroups = async (queryParam: {
     return response.data;
 };
 
+const getAllUnitGroupsNoPaging = async (propertyId: number): Promise<BaseResponse<UnitGroup[]>> => {
+    const response = await api.get(`${baseUrl}/no-paging/${propertyId}`);
+    return response.data;
+};
+
 const getUnitGroupById = async (id: number): Promise<BaseResponse<UnitGroup | null>> => {
     const response = await api.get(`${baseUrl}/${id}`);
     return response.data;
@@ -45,6 +50,7 @@ const deleteUnitGroup = async (id: number): Promise<BaseResponse<boolean>> => {
 
 export const unitGroupRepository = {
     getAllUnitGroups,
+    getAllUnitGroupsNoPaging,
     getUnitGroupById,
     createUnitGroup,
     updateUnitGroup,

@@ -29,6 +29,14 @@ const getAllUnitGroups = async ({
     return null;
 };
 
+const getAllUnitGroupsNoPaging = async (propertyId: number): Promise<UnitGroup[]> => {
+    const result = await unitGroupRepository.getAllUnitGroupsNoPaging(propertyId);
+    if (result.success) {
+        return result.data ?? [];
+    }
+    return [];
+};
+
 const getUnitGroupById = async (id: number): Promise<UnitGroup | null> => {
     const result = await unitGroupRepository.getUnitGroupById(id);
     return result.success ? result.data ?? null : null;
@@ -56,6 +64,7 @@ const deleteUnitGroup = async (id: number): Promise<boolean> => {
 
 export const unitGroupService = {
     getAllUnitGroups,
+    getAllUnitGroupsNoPaging,
     getUnitGroupById,
     createUnitGroup,
     updateUnitGroup,
