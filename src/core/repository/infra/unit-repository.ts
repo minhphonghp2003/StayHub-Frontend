@@ -53,9 +53,15 @@ const setActivation = async (unitId: number, isActivate: boolean): Promise<BaseR
     return response.data;
 };
 
+const getAllUnitsNoPaging = async (propertyId: number): Promise<BaseResponse<Unit[]>> => {
+    const response = await api.get(`${baseUrl}/no-paging/${propertyId}`);
+    return response.data;
+};
+
 export const unitRepository = {
     getAllUnits,
     getUnitById,
+    getAllUnitsNoPaging,
     createUnit,
     updateUnit,
     deleteUnit,

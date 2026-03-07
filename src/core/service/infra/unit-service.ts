@@ -59,9 +59,15 @@ const setActivation = async (unitId: number, isActivate: boolean): Promise<boole
     return result.data ?? false;
 };
 
+const getAllUnitsNoPaging = async (propertyId: number): Promise<Unit[]> => {
+    const result = await unitRepository.getAllUnitsNoPaging(propertyId);
+    return result.success ? result.data ?? [] : [];
+};
+
 export const unitService = {
     getAllUnits,
     getUnitById,
+    getAllUnitsNoPaging,
     createUnit,
     updateUnit,
     deleteUnit,
