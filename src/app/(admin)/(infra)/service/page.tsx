@@ -74,13 +74,26 @@ function ServicePage() {
     }, 1000);
 
     const onToggleActivate = async (id: number, isActive: boolean) => {
+        setData((prev) =>
+            prev.map((item) =>
+                item.id === id
+                    ? { ...item, isActive }
+                    : item
+            )
+        );
         const result = await toastPromise(serviceService.setActivateService(id, isActive), {
             loading: "Updating...",
             success: "Service activation updated!",
             error: "Failed to update service activation",
         });
-        if (result) {
-            fetchData(); // refresh the list
+        if (!result) {
+            setData((prev) =>
+                prev.map((item) =>
+                    item.id === id
+                        ? { ...item, isActive: !isActive }
+                        : item
+                )
+            );
         }
     };
 

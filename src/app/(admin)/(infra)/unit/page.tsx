@@ -74,19 +74,30 @@ function UnitPage() {
     }, 1000);
 
     const handleToggleActive = async (unit: Unit, isActivate: boolean) => {
-        try {
-            const result = await toastPromise(
-                unitService.setActivation(unit.id ?? 0, isActivate),
-                {
-                    loading: "Updating...",
-                    success: "Unit activation updated!",
-                    error: "Failed to update unit activation",
-                }
-            );
-            if (result) {
-                fetchData();
+        setData((prev) =>
+            prev.map((item) =>
+                item.id === unit.id
+                    ? { ...item, isActive: isActivate }
+                    : item
+            )
+        );
+        const result = await toastPromise(
+            unitService.setActivation(unit.id ?? 0, isActivate),
+            {
+                loading: "Updating...",
+                success: "Unit activation updated!",
+                error: "Failed to update unit activation",
             }
-        } catch { }
+        );
+        if (!result) {
+            setData((prev) =>
+                prev.map((item) =>
+                    item.id === unit.id
+                        ? { ...item, isActive: !isActivate }
+                        : item
+                )
+            );
+        }
     };
 
     const columns = getUnitColumns({
