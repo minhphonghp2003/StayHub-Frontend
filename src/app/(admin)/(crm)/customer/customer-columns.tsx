@@ -32,44 +32,44 @@ export const getCustomerColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
-    },
-    {
-        accessorKey: "phone",
-        header: ({ column }) => (
-            <Button
-                className="flex justify-between w-full"
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Số điện thoại
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-    },
-    {
-        id: "unit.name",
-        header: "Phòng",
-
-    },
-    {
-        id: "gender.name",
-        header: "Giới tính",
-
-    },
-    {
-        id: "dateOfBirth",
-        header: " Ngày sinh",
-        cell: ({ row }) => {
-            const dateOfBirth = row.original.dateOfBirth;
-            return <div>{dateOfBirth ? new Date(dateOfBirth).toLocaleDateString() : ""}</div>;
+        cell: ({ row }: any) => {
+            const customer: Customer = row.original;
+            return (
+                <div className="flex items-center gap-2">
+                    <span className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-lg text-gray-500">
+                        {customer.name?.charAt(0).toUpperCase() || "?"}
+                    </span>
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-800 dark:text-gray-100">
+                            {customer.name}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                            {customer.phone}
+                        </span>
+                    </div>
+                </div>
+            );
         },
     },
     {
-        id: "CCCD",
+        accessorKey: "unit.name",
+        header: "Phòng",
+    },
+    {
+        accessorKey: "gender.name",
+        header: "Giới tính",
+    },
+    {
+        accessorKey: "dateOfBirth",
+        header: " Ngày sinh",
+
+    },
+    {
+        accessorKey: "cccd",
         header: "Số CCCD",
     },
     {
-        id: "address",
+        accessorKey: "address",
         header: "Địa chỉ",
     },
 

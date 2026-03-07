@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 import ActionModal from "@/components/ui/modal/ActionModal";
@@ -9,12 +9,10 @@ import Input from "@/components/form/InputField";
 import { FormSelect } from "@/components/form/Select";
 import { categoryItemService } from "@/core/service/catalog/category-item-service";
 import { addressService } from "@/core/service/address/address-service";
-import { unitService } from "@/core/service/infra/unit-service";
 import { toastPromise } from "@/lib/alert-helper";
 import { RootState } from "@/redux/store";
 import { CategoryItem } from "@/core/model/catalog/category-item";
 import { Province, Ward } from "@/core/model/address/address";
-import { Unit } from "@/core/model/infra/unit";
 import { Customer } from "@/core/model/crm/customer";
 import { UpdateCustomerPayload } from "@/core/payload/crm/update-customer-payload";
 import { customerService } from "@/core/service/crm/customer-service";
@@ -35,7 +33,6 @@ type FormValues = {
     genderId?: string;
     provinceId?: string;
     wardId?: string;
-    unitId?: string;
     dateOfBirth?: string;
     address?: string;
     image?: string;
@@ -51,7 +48,7 @@ function UpdateCustomerModal({
     const [genders, setGenders] = useState<CategoryItem[]>([]);
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [wards, setWards] = useState<Ward[]>([]);
-    const [units, setUnits] = useState<Unit[]>([]);
+    // unit selection removed
     const [isLoading, setIsLoading] = useState(true);
 
     const selectedPropertyId = useSelector(
@@ -67,7 +64,6 @@ function UpdateCustomerModal({
             genderId: undefined,
             provinceId: undefined,
             wardId: undefined,
-            unitId: undefined,
             dateOfBirth: "",
             address: "",
             image: "",
@@ -82,10 +78,7 @@ function UpdateCustomerModal({
         ]);
         setGenders(g ?? []);
         setProvinces(p ?? []);
-        if (selectedPropertyId) {
-            const u = await unitService.getAllUnitsNoPaging(selectedPropertyId);
-            setUnits(u ?? []);
-        }
+        // no longer fetching units
     };
 
     useEffect(() => {
@@ -116,7 +109,6 @@ function UpdateCustomerModal({
                         genderId: c.genderId?.toString() ?? "",
                         provinceId: c.provinceId?.toString() ?? "",
                         wardId: c.wardId?.toString() ?? "",
-                        unitId: c.unitId?.toString() ?? "",
                         dateOfBirth: c.dateOfBirth ? c.dateOfBirth.split("T")[0] : "",
                         address: c.address || "",
                         image: c.image || "",
@@ -140,7 +132,7 @@ function UpdateCustomerModal({
             genderId: data.genderId ? parseInt(data.genderId) : undefined,
             provinceId: data.provinceId ? parseInt(data.provinceId) : undefined,
             wardId: data.wardId ? parseInt(data.wardId) : undefined,
-            unitId: data.unitId ? parseInt(data.unitId) : undefined,
+            // unitId removed
             dateOfBirth: data.dateOfBirth || undefined,
             address: data.address || undefined,
             image: data.image || undefined,
@@ -177,6 +169,7 @@ function UpdateCustomerModal({
                     </div>
                 )}
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
+                    <h3 className="font-semibold text-lg">Thông tin cơ bản</h3>
                     <div className="flex gap-2">
                         <Input {...form.register("name")} required label="Tên" />
                         <Input {...form.register("phone")} required label="Số điện thoại" />
@@ -185,44 +178,55 @@ function UpdateCustomerModal({
                         <Input {...form.register("email")} label="Email" />
                         <Input {...form.register("cccd")} label="CCCD" />
                     </div>
-                    <div className="flex gap-2">
-                        <FormSelect
-                            name="genderId"
-                            control={form.control}
-                            label="Giới tính"
-                            options={genders.map(g => ({ value: g.id?.toString(), label: g.name ?? "" }))}
-                            placeholder="Chọn giới tính"
-                        />
-                        <FormSelect
-                            name="unitId"
-                            control={form.control}
-                            label="Phòng (tùy chọn)"
-                            options={units.map(u => ({ value: u.id?.toString(), label: u.name ?? "" }))}
-                            placeholder="Chọn phòng"
-                        />
+
+                    <div>
+                        <div className="flex gap-2 mt-2">
+                            {genders.length > 0 && <FormSelect
+                                name="genderId"
+                                control={form.control}
+                                label="Giới tính"
+                                options={genders.map(g => ({ value: g.id?.toString(), label: g.name ?? "" }))}
+                                placeholder="Chọn giới tính"
+                            />
+                            }
+                            <Input {...form.register("dateOfBirth")} type="date" label="Ngày sinh" />
+                        </div>
+                        <div className="flex gap-2">
+                            <Input {...form.register("job")} label="Công việc" />
+                        </div>
                     </div>
-                    <div className="flex gap-2">
-                        <FormSelect
-                            name="provinceId"
-                            control={form.control}
-                            label="Tỉnh/Thành"
-                            options={provinces.map(p => ({ value: p.id?.toString(), label: p.name ?? "" }))}
-                            placeholder="Chọn tỉnh"
-                        />
-                        <FormSelect
-                            name="wardId"
-                            control={form.control}
-                            label="Phường/Xã"
-                            options={wards.map(w => ({ value: w.id?.toString(), label: w.name ?? "" }))}
-                            placeholder="Chọn phường"
-                        />
+
+                    <div>
+                        <h3 className="font-semibold text-lg">Thông tin địa chỉ</h3>
+                        <div className="flex gap-2 mt-2">
+                            {provinces.length > 0 && <FormSelect
+                                name="provinceId"
+                                control={form.control}
+                                label="Tỉnh/Thành"
+                                options={provinces.map(p => ({ value: p.id?.toString(), label: p.name ?? "" }))}
+                                placeholder="Chọn tỉnh"
+                            />
+                            }
+                            {wards.length > 0 && <FormSelect
+                                name="wardId"
+                                control={form.control}
+                                label="Phường/Xã"
+                                options={wards.map(w => ({ value: w.id?.toString(), label: w.name ?? "" }))}
+                                placeholder="Chọn phường"
+                            />
+                            }
+                        </div>
+                        <div className="mt-2">
+                            <Input {...form.register("address")} label="Địa chỉ" />
+                        </div>
                     </div>
-                    <div className="flex gap-2">
-                        <Input {...form.register("dateOfBirth")} type="date" label="Ngày sinh" />
-                        <Input {...form.register("job")} label="Công việc" />
+
+                    <div>
+                        <h3 className="font-semibold text-lg">Khác</h3>
+                        <div className="mt-2">
+                            <Input {...form.register("image")} label="Hình ảnh (URL)" />
+                        </div>
                     </div>
-                    <Input {...form.register("address")} label="Địa chỉ" />
-                    <Input {...form.register("image")} label="Hình ảnh (URL)" />
                 </div>
             </div>
         </ActionModal>
