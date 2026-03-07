@@ -25,7 +25,6 @@ const statusOptions = [
 
 type FormValues = {
     name: string;
-    status: string;
     basePrice: number;
     maximumCustomer: number;
     unitGroupId: string;
@@ -52,7 +51,6 @@ function UpdateUnitModal({
     const form = useForm<FormValues>({
         defaultValues: {
             name: "",
-            status: "",
             basePrice: 0,
             maximumCustomer: 1,
             unitGroupId: undefined,
@@ -63,7 +61,6 @@ function UpdateUnitModal({
         if (!unit) return;
         const payload: UpdateUnitPayload = {
             name: data.name,
-            status: data.status,
             basePrice: data.basePrice,
             maximumCustomer: data.maximumCustomer,
             unitGroupId: parseInt(data.unitGroupId, 10),
@@ -104,7 +101,6 @@ function UpdateUnitModal({
 
             form.reset({
                 name: unitDetailResponse?.name ?? "",
-                status: unitDetailResponse?.status ?? "",
                 basePrice: unitDetailResponse?.basePrice ?? 0,
                 maximumCustomer: unitDetailResponse?.maximumCustomer ?? 1,
                 unitGroupId: unitDetailResponse?.unitGroup?.id?.toString() ?? unitDetailResponse?.unitGroupId?.toString() ?? "",
@@ -115,7 +111,6 @@ function UpdateUnitModal({
         return () => {
             form.reset({
                 name: "",
-                status: "",
                 basePrice: 0,
                 maximumCustomer: 1,
                 unitGroupId: "",
@@ -146,26 +141,19 @@ function UpdateUnitModal({
                     <div className="flex gap-2">
                         <Input {...form.register("name")} required label="Name" />
                         <FormSelect
-                            name="status"
+                            name="unitGroupId"
                             control={form.control}
-                            label="Status"
+                            label="Unit Group"
                             required
-                            options={statusOptions}
-                            placeholder="Select status"
+                            options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
+                            placeholder="Select unit group"
                         />
                     </div>
                     <div className="flex gap-2">
                         <Input {...form.register("basePrice", { valueAsNumber: true })} type="number" required label="Base Price" />
                         <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Max Customers" />
                     </div>
-                    <FormSelect
-                        name="unitGroupId"
-                        control={form.control}
-                        label="Unit Group"
-                        required
-                        options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
-                        placeholder="Select unit group"
-                    />
+
 
                 </div>
             </div>

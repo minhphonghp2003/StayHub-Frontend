@@ -115,20 +115,20 @@ function AddUnitModal({
             <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
                     <Input {...form.register("name")} required label="Name" />
-
+                    <FormSelect
+                        name="unitGroupId"
+                        control={form.control}
+                        label="Unit Group"
+                        required
+                        options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
+                        placeholder="Select unit group"
+                    />
                 </div>
                 <div className="flex gap-2">
                     <Input {...form.register("basePrice", { valueAsNumber: true })} type="number" required label="Base Price" />
                     <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Max Customers" />
                 </div>
-                <FormSelect
-                    name="unitGroupId"
-                    control={form.control}
-                    label="Unit Group"
-                    required
-                    options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
-                    placeholder="Select unit group"
-                />
+
                 <Controller
                     name="isActive"
                     control={form.control}
