@@ -42,9 +42,8 @@ function UpdateAssetModal({
     );
 
     const [assetTypes, setAssetTypes] = useState<CategoryItem[]>([]);
-    const [units, setUnits] = useState<Unit[]>([]);
+    const [units, setUnits] = useState<Unit[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [asset, setAsset] = useState<Asset | null>(null);
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -59,7 +58,7 @@ function UpdateAssetModal({
     });
 
     const handleUpdate: SubmitHandler<FormValues> = async (data) => {
-        if (!selectedPropertyId || !asset) return;
+        if (!selectedPropertyId || !assetId) return;
         const payload: UpdateAssetPayload = {
             name: data.name,
             quantity: data.quantity,
@@ -73,7 +72,7 @@ function UpdateAssetModal({
 
         try {
             const result = await toastPromise(
-                assetService.updateAsset(asset.id ?? 0, payload),
+                assetService.updateAsset(assetId ?? 0, payload),
                 {
                     loading: "Đang cập nhật tài sản...",
                     success: "Tài sản đã được cập nhật!",
@@ -107,7 +106,6 @@ function UpdateAssetModal({
             assetService.getAssetById(assetId),
             fetchDropdowns(),
         ]).then(([assetDetail]) => {
-            setAsset(assetDetail);
             if (assetDetail) {
                 form.reset({
                     name: assetDetail.name ?? "",
@@ -156,13 +154,14 @@ function UpdateAssetModal({
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
                     <div className="flex gap-2">
                         <Input {...form.register("name")} required label="Tên" />
-                        <FormSelect
+                        {assetTypes.length > 0 && <FormSelect
                             name="typeId"
                             control={form.control}
                             label="Loại"
                             required
                             options={assetTypes.map(t => ({ value: t.id?.toString(), label: t.name || "" }))}
                         />
+                        }
                     </div>
                     <div className="flex gap-2">
                         <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Số lượng" />
@@ -178,13 +177,14 @@ function UpdateAssetModal({
                             )}
                         />
                     </div>
-                    <FormSelect
+                    {units?.length && <FormSelect
                         name="unitId"
                         control={form.control}
                         label="Phòng (Tùy chọn)"
                         options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
                         placeholder="Chọn phòng"
                     />
+                    }
                     <Input {...form.register("note")} label="Ghi chú" />
                     <Input {...form.register("image")} required label="Ảnh" />
                 </div>

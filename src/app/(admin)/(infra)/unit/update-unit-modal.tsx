@@ -98,6 +98,8 @@ function UpdateUnitModal({
             fetchUnitGroups(),
         ]).then(([unitDetailResponse]) => {
 
+            console.log(unitDetailResponse, unitGroups);
+
             form.reset({
                 name: unitDetailResponse?.name ?? "",
                 basePrice: unitDetailResponse?.basePrice ?? 0,

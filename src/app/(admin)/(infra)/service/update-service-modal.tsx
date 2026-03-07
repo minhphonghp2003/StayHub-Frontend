@@ -35,7 +35,6 @@ interface UpdateServiceModalProps {
 }
 
 function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateServiceModalProps) {
-    const [service, setService] = useState<Service | null>(null);
     const [unitTypes, setUnitTypes] = useState<CategoryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -59,19 +58,27 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
             Promise.all([
                 serviceService.getServiceById(serviceId!),
                 fetchDropdowns(),
-            ]).then(([serviceDetail]) => {
-                setService(serviceDetail);
-                if (serviceDetail) {
-                    form.reset({
-                        name: serviceDetail.name ?? "",
-                        unitTypeId: (serviceDetail.unitTypeId ?? 0).toString(),
-                        price: serviceDetail.price ?? 0,
-                        description: serviceDetail.description ?? "",
-                    });
-                }
+            ]).then(([serviceDetail,]) => {
+                console.log(serviceDetail, unitTypes);
+
+                form.reset({
+                    name: serviceDetail?.name ?? "",
+                    unitTypeId: serviceDetail?.unitType?.id?.toString() ?? serviceDetail?.unitTypeId?.toString() ?? "",
+                    price: serviceDetail?.price ?? 0,
+                    description: serviceDetail?.description ?? "",
+                });
                 setIsLoading(false);
             });
         }
+        return () => {
+            form.reset({
+                name: "",
+                unitTypeId: "",
+                price: 0,
+                description: "",
+
+            });
+        };
     }, [isOpen, serviceId]);
 
     const fetchDropdowns = async () => {
@@ -80,7 +87,7 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
     };
 
     const onSubmit = async (data: FormData) => {
-        if (!service?.id || !selectedPropertyId) return;
+        if (!serviceId || !selectedPropertyId) return;
         setLoading(true);
         const payload: UpdateServicePayload = {
             name: data.name,
@@ -90,7 +97,7 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
             description: data.description,
         };
         const result = await toastPromise(
-            serviceService.updateService(service.id, payload),
+            serviceService.updateService(serviceId!, payload),
             {
                 loading: "Updating service...",
                 success: "Service updated successfully!",
@@ -104,13 +111,13 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
         }
     };
 
+
     return (
         <ActionModal
             isOpen={isOpen}
             closeModal={closeModal}
             heading="Cập nhật dịch vụ"
             onConfirm={form.handleSubmit(onSubmit)}
-            loading={loading}
         >
             <div className="relative">
                 {isLoading && (
@@ -123,19 +130,21 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
                 )}
 
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
-                    <div className="flex gap-2">
+                    <div className={`flex gap-2 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
 
                         <Input {...form.register("name")} required label="Tên" />
-                        <FormSelect
-                            name="unitTypeId"
-                            control={form.control}
-                            label="Loại đơn vị"
-                            options={unitTypes.map((u) => ({
-                                value: (u.id ?? 0).toString(),
-                                label: u.name ?? "",
-                            }))}
-                            placeholder="Chọn loại đơn vị"
-                        />
+                        {
+                            unitTypes.length > 0 && <FormSelect
+                                name="unitTypeId"
+                                control={form.control}
+                                label="Loại đơn vị"
+                                options={unitTypes.map((u) => ({
+                                    value: u.id?.toString(),
+                                    label: u.name ?? "",
+                                }))}
+                                placeholder="Chọn loại đơn vị"
+                            />
+                        }
                     </div>
                     <Controller
                         name="price"

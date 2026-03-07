@@ -37,7 +37,6 @@ function UpdateJobModal({
 
     const [units, setUnits] = useState<Unit[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [job, setJob] = useState<Job | null>(null);
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -48,7 +47,7 @@ function UpdateJobModal({
     });
 
     const handleUpdate: SubmitHandler<FormValues> = async (data) => {
-        if (!selectedPropertyId || !job) return;
+        if (!selectedPropertyId || !jobId) return;
         const payload: UpdateJobPayload = {
             name: data.name,
             propertyId: selectedPropertyId,
@@ -57,7 +56,7 @@ function UpdateJobModal({
         };
         try {
             const result = await toastPromise(
-                jobService.updateJob(job.id ?? 0, payload),
+                jobService.updateJob(jobId ?? 0, payload),
                 {
                     loading: "Updating job...",
                     success: "Job updated!",
@@ -84,7 +83,6 @@ function UpdateJobModal({
             jobService.getJobById(jobId),
             fetchDropdowns(),
         ]).then(([jobDetail]) => {
-            setJob(jobDetail);
             if (jobDetail) {
                 form.reset({
                     name: jobDetail.name ?? "",
@@ -122,13 +120,15 @@ function UpdateJobModal({
                 )}
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
                     <Input {...form.register("name")} required label="Tên" />
-                    <FormSelect
-                        name="unitId"
-                        control={form.control}
-                        label="Phòng (tùy chọn)"
-                        options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
-                        placeholder="Chọn phòng"
-                    />
+                    {units.length > 0 &&
+                        <FormSelect
+                            name="unitId"
+                            control={form.control}
+                            label="Phòng (tùy chọn)"
+                            options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
+                            placeholder="Chọn phòng"
+                        />
+                    }
                     <Input {...form.register("description")} label="Mô tả" />
 
                 </div>
