@@ -45,9 +45,9 @@ function AddUnitGroupModal({
             const result = await toastPromise(
                 unitGroupService.createUnitGroup(payload),
                 {
-                    loading: "Creating...",
-                    success: "Unit group created!",
-                    error: "Failed to create unit group",
+                    loading: "Đang tạo khu/tầng/dãy  ...",
+                    success: " Khu/tầng/dãy đã được tạo!",
+                    error: " Tạo khu/tầng/dãy thất bại",
                 }
             );
             if (result) {
@@ -73,10 +73,10 @@ function AddUnitGroupModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleAdd)}
-            heading="Add unit group"
+            heading="Thêm khu/tầng/dãy mới"
         >
             <div className="flex flex-col gap-4">
-                <Input {...form.register('name')} required label="Name" />
+                <Input {...form.register('name')} required label="Tên khu/tầng/dãy" />
             </div>
         </ActionModal>
     );

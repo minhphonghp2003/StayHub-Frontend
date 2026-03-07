@@ -21,9 +21,9 @@ function DeleteUnitGroupModal({
             const result = await toastPromise(
                 unitGroupService.deleteUnitGroup(unitGroup.id),
                 {
-                    loading: "Deleting...",
-                    success: "Deleted successfully!",
-                    error: "Failed to delete",
+                    loading: "Đang xóa khu/tầng/dãy...",
+                    success: "Xóa khu/tầng/dãy thành công!",
+                    error: "Xóa khu/tầng/dãy thất bại",
                 }
             );
             if (result) {
@@ -43,9 +43,9 @@ function DeleteUnitGroupModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={handleDelete}
-            heading="Confirm deletion"
+            heading="Xác nhận xóa khu/tầng/dãy"
         >
-            <p>Are you sure you want to delete this unit group?</p>
+            <p>Bạn có chắc chắn muốn xóa khu/tầng/dãy này không?</p>
         </ActionModal>
     );
 }

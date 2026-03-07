@@ -8,10 +8,7 @@ import Switch from '@/components/form/Switch';
 import { Unit } from "@/core/model/infra/unit";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
-
-const getStatusVariant = (status: string): "light" | "solid" => {
-    return "solid";
-};
+import { formatVND } from "@/lib/utils";
 
 const getStatusColor = (status: string): "primary" | "success" | "error" | "warning" | "info" | "light" | "dark" => {
     switch (status) {
@@ -55,7 +52,7 @@ export const getUnitColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Name
+                Tên
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -83,13 +80,13 @@ export const getUnitColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Base Price
+                Giá cơ bản
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
         cell: ({ row }) => {
             const price = row.getValue<number>("basePrice");
-            return <div>${price?.toFixed(2)}</div>;
+            return <div>{formatVND(price)}</div>;
         },
     },
     {
@@ -100,14 +97,14 @@ export const getUnitColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Max Customers
+                Số khách tối đa
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
     },
     {
         id: "unitGroup",
-        header: "Unit Group",
+        header: "Khu/tầng/dãy",
         cell: ({ row }) => {
             const unitGroup = row.original.unitGroup;
             return <div>{unitGroup?.name}</div>;
@@ -121,7 +118,7 @@ export const getUnitColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Status
+                Trạng thái
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -147,7 +144,7 @@ export const getUnitColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
                                 }}
                             >
                                 <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                <span className="text-blue-500">Update</span>
+                                <span className="text-blue-500">Cập nhật</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
@@ -155,7 +152,7 @@ export const getUnitColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnPro
                                 }}
                             >
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                <span className="text-red-500">Delete</span>
+                                <span className="text-red-500">Xóa</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

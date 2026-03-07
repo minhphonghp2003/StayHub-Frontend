@@ -1,4 +1,5 @@
 import Input from '@/components/form/InputField';
+import PriceInput from '@/components/form/PriceInput';
 import { FormSelect } from '@/components/form/Select';
 import Switch from '@/components/form/Switch';
 import ActionModal from '@/components/ui/modal/ActionModal';
@@ -70,9 +71,9 @@ function UpdateUnitModal({
             const result = await toastPromise(
                 unitService.updateUnit(unit.id ?? 0, payload),
                 {
-                    loading: "Updating unit...",
-                    success: "Unit updated!",
-                    error: "Failed to update unit",
+                    loading: "Đang cập nhật...",
+                    success: "Cập nhật phòng thành công",
+                    error: "Cập nhật phòng thất bại",
                 }
             );
             if (result) {
@@ -123,7 +124,7 @@ function UpdateUnitModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleUpdate)}
-            heading="Update unit"
+            heading="Cập nhật phòng "
         >
             <div className="relative">
                 {isLoading && (
@@ -137,19 +138,29 @@ function UpdateUnitModal({
 
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
                     <div className="flex gap-2">
-                        <Input {...form.register("name")} required label="Name" />
+                        <Input {...form.register("name")} required label="Tên phòng" />
                         <FormSelect
                             name="unitGroupId"
                             control={form.control}
-                            label="Unit Group"
+                            label="Khu/tầng/dãy"
                             required
                             options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
-                            placeholder="Select unit group"
                         />
                     </div>
                     <div className="flex gap-2">
-                        <Input {...form.register("basePrice", { valueAsNumber: true })} type="number" required label="Base Price" />
-                        <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Max Customers" />
+                        <Controller
+                            name="basePrice"
+                            control={form.control}
+                            render={({ field }) => (
+                                <PriceInput
+                                    label="Giá cơ bản"
+                                    required
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+                        <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Số khách tối đa" />
                     </div>
 
 

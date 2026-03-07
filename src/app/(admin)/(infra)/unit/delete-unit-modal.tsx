@@ -21,9 +21,9 @@ function DeleteUnitModal({
             const result = await toastPromise(
                 unitService.deleteUnit(unit.id),
                 {
-                    loading: "Deleting...",
-                    success: "Deleted successfully!",
-                    error: "Failed to delete",
+                    loading: "Đang xóa...",
+                    success: "Xóa phòng thành công!",
+                    error: "Xóa phòng thất bại",
                 }
             );
             if (result) {
@@ -43,9 +43,9 @@ function DeleteUnitModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={handleDelete}
-            heading="Confirm deletion"
+            heading="Xác nhận xóa"
         >
-            <p>Are you sure you want to delete this unit?</p>
+            <p>Bạn có chắc chắn muốn xóa phòng này không?</p>
         </ActionModal>
     );
 }

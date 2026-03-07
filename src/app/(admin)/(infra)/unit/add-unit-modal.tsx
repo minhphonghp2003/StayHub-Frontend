@@ -1,4 +1,5 @@
 import Input from '@/components/form/InputField';
+import PriceInput from '@/components/form/PriceInput';
 import { FormSelect } from '@/components/form/Select';
 import Switch from '@/components/form/Switch';
 import ActionModal from '@/components/ui/modal/ActionModal';
@@ -11,16 +12,6 @@ import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { UnitGroup } from '@/core/model/infra/unitGroup';
-
-const statusOptions = [
-    { value: "AVAILABLE", label: "Available" },
-    { value: "OCCUPIED", label: "Occupied" },
-    { value: "NOTICE_GIVEN", label: "Notice Given" },
-    { value: "RESERVED", label: "Reserved" },
-    { value: "MAINTENANCE", label: "Maintenance" },
-    { value: "DRAFT", label: "Draft" },
-];
-
 type FormValues = {
     name: string;
     basePrice: number;
@@ -69,9 +60,9 @@ function AddUnitModal({
             const result = await toastPromise(
                 unitService.createUnit(payload),
                 {
-                    loading: "Creating unit...",
-                    success: "Unit created!",
-                    error: "Failed to create unit",
+                    loading: "Đang tạo phòng...",
+                    success: "Tạo phòng thành công!",
+                    error: "Tạo phòng thất bại",
                 }
             );
             if (result) {
@@ -110,23 +101,34 @@ function AddUnitModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleAdd)}
-            heading="Add unit"
+            heading="Thêm phòng"
         >
             <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Name" />
+                    <Input {...form.register("name")} required label="Tên phòng " />
                     <FormSelect
                         name="unitGroupId"
                         control={form.control}
-                        label="Unit Group"
+                        label="Khu/tầng/dãy"
                         required
                         options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
                         placeholder="Select unit group"
                     />
                 </div>
                 <div className="flex gap-2">
-                    <Input {...form.register("basePrice", { valueAsNumber: true })} type="number" required label="Base Price" />
-                    <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Max Customers" />
+                    <Controller
+                        name="basePrice"
+                        control={form.control}
+                        render={({ field }) => (
+                            <PriceInput
+                                label="Giá cơ bản"
+                                required
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
+                    <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Số khách tối đa " />
                 </div>
 
                 <Controller
@@ -134,7 +136,7 @@ function AddUnitModal({
                     control={form.control}
                     render={({ field }) => (
                         <Switch
-                            label="Active"
+                            label="Hoạt động"
                             defaultChecked={field.value}
                             onChange={(checked) => field.onChange(checked)}
                         />

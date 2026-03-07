@@ -46,9 +46,9 @@ function UpdateUnitGroupModal({
             const result = await toastPromise(
                 unitGroupService.updateUnitGroup(unitGroup.id ?? 0, payload),
                 {
-                    loading: "Updating...",
-                    success: "Unit group updated!",
-                    error: "Failed to update unit group",
+                    loading: "Đang cập nhật khu/tầng/dãy...",
+                    success: "Cập nhật khu/tầng/dãy thành công!",
+                    error: "Cập nhật khu/tầng/dãy thất bại",
                 }
             );
             if (result) {
@@ -70,10 +70,10 @@ function UpdateUnitGroupModal({
             isOpen={isOpen}
             closeModal={closeModal}
             onConfirm={form.handleSubmit(handleUpdate)}
-            heading="Update unit group"
+            heading="Cập nhật khu/tầng/dãy"
         >
             <div className="flex flex-col gap-4">
-                <Input {...form.register('name')} required label="Name" />
+                <Input {...form.register('name')} required label="Tên khu/tầng/dãy" />
             </div>
         </ActionModal>
     );

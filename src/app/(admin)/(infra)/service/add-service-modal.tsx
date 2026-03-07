@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 import Form from "@/components/form/Form";
 import Input from "@/components/form/InputField";
+import PriceInput from "@/components/form/PriceInput";
 import { FormSelect } from "@/components/form/Select";
 import Switch from "@/components/form/Switch";
 import TextArea from "@/components/form/TextArea";
@@ -112,7 +113,18 @@ function AddServiceModal({ isOpen, closeModal, reload }: AddServiceModalProps) {
                         placeholder="Select unit type"
                     />
                 </div>
-                <Input {...form.register("price", { valueAsNumber: true })} type="number" required label="Price" />
+                <Controller
+                    name="price"
+                    control={form.control}
+                    render={({ field }) => (
+                        <PriceInput
+                            label="Price"
+                            required
+                            value={field.value}
+                            onChange={field.onChange}
+                        />
+                    )}
+                />
                 <Controller
                     name="isActive"
                     control={form.control}

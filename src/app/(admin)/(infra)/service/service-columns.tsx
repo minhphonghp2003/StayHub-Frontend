@@ -6,6 +6,7 @@ import { Service } from "@/core/model/infra/service";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
 import Switch from "@/components/form/Switch";
+import { formatVND } from "@/lib/utils";
 
 export interface ColumnProp {
     onDelete: (item: Service) => void;
@@ -61,7 +62,7 @@ export const getServiceColumns = ({ onDelete, onUpdate, onToggleActivate }: Colu
         ),
         cell: ({ row }) => {
             const price = row.getValue<number>("price");
-            return <div>${price?.toFixed(2)}</div>;
+            return <div>{formatVND(price)}</div>;
         },
     },
     {

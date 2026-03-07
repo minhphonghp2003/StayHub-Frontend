@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Asset } from "@/core/model/infra/asset";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { formatVND } from "@/lib/utils";
 
 export interface ColumnProp {
     onDelete: (item: Asset) => void;
@@ -67,7 +68,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
         ),
         cell: ({ row }) => {
             const price = row.getValue<number | undefined>("price");
-            return <div>{price ? `$${price.toFixed(2)}` : "-"}</div>;
+            return <div>{formatVND(price)}</div>;
         },
     },
     {

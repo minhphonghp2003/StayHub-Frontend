@@ -28,7 +28,7 @@ export const getUnitGroupColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnD
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Name
+                Tên
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -52,7 +52,7 @@ export const getUnitGroupColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnD
                                 }}
                             >
                                 <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                <span className="text-blue-500">Update</span>
+                                <span className="text-blue-500">Cập nhật</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
@@ -60,7 +60,7 @@ export const getUnitGroupColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnD
                                 }}
                             >
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                <span className="text-red-500">Delete</span>
+                                <span className="text-red-500">Xóa</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

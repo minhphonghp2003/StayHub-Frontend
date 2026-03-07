@@ -1,12 +1,13 @@
 "use client";
 import Input from "@/components/form/InputField";
+import PriceInput from "@/components/form/PriceInput";
 import TextArea from "@/components/form/TextArea";
 import ActionModal from "@/components/ui/modal/ActionModal";
 import { AddTierPayload } from "@/core/payload/tier/add-tier-payload";
 import { tierService } from "@/core/service/tier/tier-service";
 import { toastPromise } from "@/lib/alert-helper";
 import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 
 type FormValues = {
     name: string;
@@ -92,12 +93,17 @@ function AddTierModal({
                 </div>
 
                 <div className="flex gap-2">
-                    <Input
-                        {...form.register("price", { valueAsNumber: true })}
-                        required
-                        label="Giá"
-                        type="number"
-                        step="0.01"
+                    <Controller
+                        name="price"
+                        control={form.control}
+                        render={({ field }) => (
+                            <PriceInput
+                                label="Giá"
+                                required
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
                     />
                     <Input
                         {...form.register("billingCycle")}

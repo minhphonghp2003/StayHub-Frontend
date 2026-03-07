@@ -1,6 +1,7 @@
 "use client";
 import Loading from "@/components/common/Loading";
 import Input from "@/components/form/InputField";
+import PriceInput from "@/components/form/PriceInput";
 import TextArea from "@/components/form/TextArea";
 import ActionModal from "@/components/ui/modal/ActionModal";
 import { Tier } from "@/core/model/tier/tier";
@@ -8,7 +9,7 @@ import { UpdateTierPayload } from "@/core/payload/tier/update-tier-payload";
 import { tierService } from "@/core/service/tier/tier-service";
 import { toastPromise } from "@/lib/alert-helper";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 
 type FormValues = {
     name: string;
@@ -103,12 +104,17 @@ function UpdateTierModal({
                 </div>
 
                 <div className="flex gap-2">
-                    <Input
-                        {...form.register("price", { valueAsNumber: true })}
-                        required
-                        label="Giá"
-                        type="number"
-                        step="0.01"
+                    <Controller
+                        name="price"
+                        control={form.control}
+                        render={({ field }) => (
+                            <PriceInput
+                                label="Giá"
+                                required
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
                     />
                     <Input
                         {...form.register("billingCycle")}

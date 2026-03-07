@@ -164,7 +164,7 @@ function UpdateAssetModal({
                     </div>
                     <div className="flex gap-2">
                         <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Quantity" />
-                        <Input {...form.register("price", { valueAsNumber: true })} type="number" label="Price" />
+                        <Input {...form.register("price", { valueAsNumber: true })} type="number" label="Price" suffix="VND" />
                     </div>
                     <FormSelect
                         name="unitId"

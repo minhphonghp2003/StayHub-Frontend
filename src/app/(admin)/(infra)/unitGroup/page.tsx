@@ -81,7 +81,7 @@ function UnitGroupPage() {
 
     return (
         <div>
-            <PageBreadcrumb pagePath="/unitGroup" pageTitle="Khu/dãy/tầng" />
+            <PageBreadcrumb pagePath="/unitGroup" pageTitle="Khu/tầng/dãy" />
             <div>
                 <DataTable
                     search={search}
@@ -93,7 +93,7 @@ function UnitGroupPage() {
                     totalPage={pageInfo?.totalPages ?? 1}
                     totalItems={pageInfo?.totalCount ?? 0}
                     onPageChange={onChangePage}
-                    name="Khu/dãy/tầng"
+                    name="Khu/tầng/dãy"
                     loading={loading}
                     pageSize={pageInfo?.pageSize ?? 0}
                 />

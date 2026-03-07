@@ -1,4 +1,5 @@
 import Input from '@/components/form/InputField';
+import PriceInput from '@/components/form/PriceInput';
 import { FormSelect } from '@/components/form/Select';
 import Switch from '@/components/form/Switch';
 import ActionModal from '@/components/ui/modal/ActionModal';
@@ -131,7 +132,17 @@ function AddAssetModal({
                 </div>
                 <div className="flex gap-2">
                     <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Quantity" />
-                    <Input {...form.register("price", { valueAsNumber: true })} type="number" label="Price" />
+                    <Controller
+                        name="price"
+                        control={form.control}
+                        render={({ field }) => (
+                            <PriceInput
+                                label="Price"
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
                 </div>
                 <FormSelect
                     name="unitId"

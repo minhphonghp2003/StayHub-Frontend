@@ -84,9 +84,9 @@ function UnitPage() {
         const result = await toastPromise(
             unitService.setActivation(unit.id ?? 0, isActivate),
             {
-                loading: "Updating...",
-                success: "Unit activation updated!",
-                error: "Failed to update unit activation",
+                loading: "Đang cập nhật trạng thái phòng...",
+                success: "Cập nhật trạng thái phòng thành công!",
+                error: "Cập nhật trạng thái phòng thất bại",
             }
         );
         if (!result) {
@@ -108,7 +108,7 @@ function UnitPage() {
 
     return (
         <div>
-            <PageBreadcrumb pagePath="/unit" pageTitle="Units" />
+            <PageBreadcrumb pagePath="/unit" pageTitle="Phòng" />
             <div>
                 <DataTable
                     search={search}
@@ -120,7 +120,7 @@ function UnitPage() {
                     totalPage={pageInfo?.totalPages ?? 1}
                     totalItems={pageInfo?.totalCount ?? 0}
                     onPageChange={onChangePage}
-                    name="Units"
+                    name="Phòng"
                     loading={loading}
                     pageSize={pageInfo?.pageSize ?? 0}
                 />
