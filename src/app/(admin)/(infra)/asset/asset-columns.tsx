@@ -29,7 +29,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Name
+                Tên
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -45,7 +45,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Quantity
+                Số lượng
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -62,7 +62,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Price
+                Giá
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -73,7 +73,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
     },
     {
         id: "type",
-        header: "Type",
+        header: "Loại",
         cell: ({ row }) => {
             const type = row.original.type;
             return <div>{type?.name ?? "-"}</div>;
@@ -96,7 +96,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
                                 }}
                             >
                                 <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                <span className="text-blue-500">Update</span>
+                                <span className="text-blue-500">Cập nhật</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
@@ -104,7 +104,7 @@ export const getAssetColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<A
                                 }}
                             >
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                <span className="text-red-500">Delete</span>
+                                <span className="text-red-500">Xóa</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

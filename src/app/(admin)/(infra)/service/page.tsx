@@ -105,7 +105,7 @@ function ServicePage() {
 
     return (
         <div>
-            <PageBreadcrumb pagePath="/service" pageTitle="Services" />
+            <PageBreadcrumb pagePath="/service" pageTitle="Dịch vụ" />
             <div>
                 <DataTable
                     search={search}
@@ -117,7 +117,7 @@ function ServicePage() {
                     totalPage={pageInfo?.totalPages ?? 1}
                     totalItems={pageInfo?.totalCount ?? 0}
                     onPageChange={onChangePage}
-                    name="Services"
+                    name="Dịch vụ"
                     loading={loading}
                     pageSize={pageInfo?.pageSize ?? 0}
                 />

@@ -112,7 +112,7 @@ function AddUnitModal({
                         label="Khu/tầng/dãy"
                         required
                         options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
-                        placeholder="Select unit group"
+                        placeholder="Chọn khu/tầng/dãy"
                     />
                 </div>
                 <div className="flex gap-2">

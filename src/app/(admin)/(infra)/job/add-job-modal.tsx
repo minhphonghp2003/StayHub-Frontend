@@ -95,24 +95,24 @@ function AddJobModal({
             isOpen={isOpen}
             closeModal={onClose}
             onConfirm={form.handleSubmit(handleAdd)}
-            heading="Add job"
+            heading="Thêm công việc"
         >
             <div className="flex flex-col gap-4">
-                <Input {...form.register("name")} required label="Name" />
+                <Input {...form.register("name")} required label="Tên" />
                 <FormSelect
                     name="unitId"
                     control={form.control}
-                    label="Unit (optional)"
+                    label="Phòng (tùy chọn)"
                     options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
-                    placeholder="Select unit"
+                    placeholder="Chọn phòng"
                 />
-                <Input {...form.register("description")} label="Description" />
+                <Input {...form.register("description")} label="Mô tả" />
                 <Controller
                     name="isActive"
                     control={form.control}
                     render={({ field }) => (
                         <Switch
-                            label="Active"
+                            label="Hoạt động"
                             defaultChecked={field.value}
                             onChange={(checked) => field.onChange(checked)}
                         />

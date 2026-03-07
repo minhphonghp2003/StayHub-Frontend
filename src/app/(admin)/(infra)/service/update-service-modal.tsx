@@ -108,7 +108,7 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
         <ActionModal
             isOpen={isOpen}
             closeModal={closeModal}
-            title="Update Service"
+            heading="Cập nhật dịch vụ"
             onConfirm={form.handleSubmit(onSubmit)}
             loading={loading}
         >
@@ -117,29 +117,32 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md transition-all duration-200">
                         <div className="flex flex-col items-center gap-2">
                             <Spinner className="size-14 text-brand-300" />
-                            <span className="text-sm text-muted-foreground">Loading data...</span>
+                            <span className="text-sm text-muted-foreground">Đang tải dữ liệu...</span>
                         </div>
                     </div>
                 )}
 
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
-                    <Input {...form.register("name")} required label="Name" />
-                    <FormSelect
-                        name="unitTypeId"
-                        control={form.control}
-                        label="Unit Type"
-                        options={unitTypes.map((u) => ({
-                            value: (u.id ?? 0).toString(),
-                            label: u.name ?? "",
-                        }))}
-                        placeholder="Select unit type"
-                    />
+                    <div className="flex gap-2">
+
+                        <Input {...form.register("name")} required label="Tên" />
+                        <FormSelect
+                            name="unitTypeId"
+                            control={form.control}
+                            label="Loại đơn vị"
+                            options={unitTypes.map((u) => ({
+                                value: (u.id ?? 0).toString(),
+                                label: u.name ?? "",
+                            }))}
+                            placeholder="Chọn loại đơn vị"
+                        />
+                    </div>
                     <Controller
                         name="price"
                         control={form.control}
                         render={({ field }) => (
                             <PriceInput
-                                label="Price"
+                                label="Giá"
                                 required
                                 value={field.value}
                                 onChange={field.onChange}
@@ -148,8 +151,8 @@ function UpdateServiceModal({ isOpen, closeModal, serviceId, reload }: UpdateSer
                     />
                     <TextArea
                         name="description"
-                        label="Description"
-                        placeholder="Enter description (optional)"
+                        label="Mô tả"
+                        placeholder="Nhập mô tả (tùy chọn)"
                     />
                 </div>
             </div>

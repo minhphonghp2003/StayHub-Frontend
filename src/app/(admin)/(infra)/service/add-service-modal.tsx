@@ -94,23 +94,23 @@ function AddServiceModal({ isOpen, closeModal, reload }: AddServiceModalProps) {
         <ActionModal
             isOpen={isOpen}
             closeModal={closeModal}
-            heading="Add Service"
+            heading="Thêm dịch vụ"
             onConfirm={form.handleSubmit(onSubmit)}
             loading={loading}
         >
             <div className="flex flex-col gap-4">
 
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Name" />
+                    <Input {...form.register("name")} required label="Tên" />
                     <FormSelect
                         name="unitTypeId"
                         control={form.control}
-                        label="Unit Type"
+                        label="Loại đơn vị"
                         options={unitTypes.map((u) => ({
                             value: (u.id ?? 0).toString(),
                             label: u.name ?? "",
                         }))}
-                        placeholder="Select unit type"
+                        placeholder="Chọn loại đơn vị"
                     />
                 </div>
                 <Controller
@@ -118,7 +118,7 @@ function AddServiceModal({ isOpen, closeModal, reload }: AddServiceModalProps) {
                     control={form.control}
                     render={({ field }) => (
                         <PriceInput
-                            label="Price"
+                            label="Giá"
                             required
                             value={field.value}
                             onChange={field.onChange}
@@ -130,7 +130,7 @@ function AddServiceModal({ isOpen, closeModal, reload }: AddServiceModalProps) {
                     control={form.control}
                     render={({ field }) => (
                         <Switch
-                            label="Active"
+                            label="Hoạt động"
                             defaultChecked={field.value}
                             onChange={(checked) => field.onChange(checked)}
                         />
@@ -138,8 +138,8 @@ function AddServiceModal({ isOpen, closeModal, reload }: AddServiceModalProps) {
                 />
                 <TextArea
                     name="description"
-                    label="Description"
-                    placeholder="Enter description (optional)"
+                    label="Mô tả"
+                    placeholder="Nhập mô tả (tùy chọn)"
                 />
 
             </div>

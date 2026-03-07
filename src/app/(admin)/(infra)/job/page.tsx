@@ -100,7 +100,7 @@ function JobPage() {
 
   return (
     <div>
-      <PageBreadcrumb pagePath="/job" pageTitle="Jobs" />
+      <PageBreadcrumb pagePath="/job" pageTitle="Công việc" />
       <div>
         <DataTable
           search={search}
@@ -112,7 +112,7 @@ function JobPage() {
           totalPage={pageInfo?.totalPages ?? 1}
           totalItems={pageInfo?.totalCount ?? 0}
           onPageChange={onChangePage}
-          loading={loading} pageSize={0} name={"Jobs"} />
+          loading={loading} pageSize={0} name={"Công việc"} />
         {modal.type === "ADD" && <AddJobModal isOpen={modal.type === "ADD"} onClose={closeModal} onSuccess={fetchData} />}
         {modal.type === "UPDATE" && modal.data && (
           <UpdateJobModal isOpen={modal.type === "UPDATE"} jobId={modal.data.id ?? 0} onClose={closeModal} onSuccess={fetchData} />

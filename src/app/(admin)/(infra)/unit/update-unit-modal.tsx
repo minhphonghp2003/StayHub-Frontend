@@ -16,12 +16,12 @@ import { Unit } from '@/core/model/infra/unit';
 import { UnitGroup } from '@/core/model/infra/unitGroup';
 
 const statusOptions = [
-    { value: "AVAILABLE", label: "Available" },
-    { value: "OCCUPIED", label: "Occupied" },
-    { value: "NOTICE_GIVEN", label: "Notice Given" },
-    { value: "RESERVED", label: "Reserved" },
-    { value: "MAINTENANCE", label: "Maintenance" },
-    { value: "DRAFT", label: "Draft" },
+    { value: "AVAILABLE", label: "Có sẵn" },
+    { value: "OCCUPIED", label: "Đã thuê" },
+    { value: "NOTICE_GIVEN", label: "Thông báo rời đi" },
+    { value: "RESERVED", label: "Đã đặt" },
+    { value: "MAINTENANCE", label: "Bảo trì" },
+    { value: "DRAFT", label: "Nháp" },
 ];
 
 type FormValues = {
@@ -131,7 +131,7 @@ function UpdateUnitModal({
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md transition-all duration-200">
                         <div className="flex flex-col items-center gap-2">
                             <Spinner className="size-14 text-brand-300" />
-                            <span className="text-sm text-muted-foreground">Loading data...</span>
+                            <span className="text-sm text-muted-foreground">Đang tải dữ liệu...</span>
                         </div>
                     </div>
                 )}

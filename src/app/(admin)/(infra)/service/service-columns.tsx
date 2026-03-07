@@ -31,7 +31,7 @@ export const getServiceColumns = ({ onDelete, onUpdate, onToggleActivate }: Colu
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Name
+                Tên
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -56,7 +56,7 @@ export const getServiceColumns = ({ onDelete, onUpdate, onToggleActivate }: Colu
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Price
+                Giá
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
@@ -67,7 +67,7 @@ export const getServiceColumns = ({ onDelete, onUpdate, onToggleActivate }: Colu
     },
     {
         id: "unitType",
-        header: "Unit Type",
+        header: "Loại đơn vị",
         cell: ({ row }) => {
             const unitType = row.original.unitType;
             return <div>{unitType?.name}</div>;
@@ -90,7 +90,7 @@ export const getServiceColumns = ({ onDelete, onUpdate, onToggleActivate }: Colu
                                 }}
                             >
                                 <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                <span className="text-blue-500">Update</span>
+                                <span className="text-blue-500">Cập nhật</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
@@ -98,7 +98,7 @@ export const getServiceColumns = ({ onDelete, onUpdate, onToggleActivate }: Colu
                                 }}
                             >
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                <span className="text-red-500">Delete</span>
+                                <span className="text-red-500">Xóa</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

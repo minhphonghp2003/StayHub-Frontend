@@ -109,27 +109,27 @@ function UpdateJobModal({
             isOpen={isOpen}
             closeModal={onClose}
             onConfirm={form.handleSubmit(handleUpdate)}
-            heading="Update job"
+            heading="Cập nhật công việc"
         >
             <div className="relative">
                 {isLoading && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md transition-all duration-200">
                         <div className="flex flex-col items-center gap-2">
                             <Spinner className="size-14 text-brand-300" />
-                            <span className="text-sm text-muted-foreground">Loading data...</span>
+                            <span className="text-sm text-muted-foreground">Đang tải dữ liệu...</span>
                         </div>
                     </div>
                 )}
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
-                    <Input {...form.register("name")} required label="Name" />
+                    <Input {...form.register("name")} required label="Tên" />
                     <FormSelect
                         name="unitId"
                         control={form.control}
-                        label="Unit (optional)"
+                        label="Phòng (tùy chọn)"
                         options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
-                        placeholder="Select unit"
+                        placeholder="Chọn phòng"
                     />
-                    <Input {...form.register("description")} label="Description" />
+                    <Input {...form.register("description")} label="Mô tả" />
 
                 </div>
             </div>

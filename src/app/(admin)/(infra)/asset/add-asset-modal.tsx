@@ -70,9 +70,9 @@ function AddAssetModal({
             const result = await toastPromise(
                 assetService.createAsset(payload),
                 {
-                    loading: "Creating asset...",
-                    success: "Asset created!",
-                    error: "Failed to create asset",
+                    loading: "Đang tạo tài sản...",
+                    success: "Tài sản đã được tạo!",
+                    error: "Tạo tài sản thất bại",
                 }
             );
             if (result) {
@@ -80,7 +80,9 @@ function AddAssetModal({
                 onSuccess?.();
                 form.reset();
             }
-        } catch { }
+        } catch (error) {
+            console.error("Error creating asset:", error);
+        }
     };
 
     const fetchDropdowns = async () => {
@@ -116,28 +118,28 @@ function AddAssetModal({
             isOpen={isOpen}
             closeModal={onClose}
             onConfirm={form.handleSubmit(handleAdd)}
-            heading="Add Asset"
+            heading="Thêm tài sản"
         >
             <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Name" />
+                    <Input {...form.register("name")} required label="Tên" />
                     <FormSelect
                         name="typeId"
                         control={form.control}
-                        label="Type"
+                        label="Loại"
                         required
                         options={assetTypes.map(t => ({ value: t.id?.toString(), label: t.name || "" }))}
-                        placeholder="Select type"
+                        placeholder="Chọn loại"
                     />
                 </div>
                 <div className="flex gap-2">
-                    <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Quantity" />
+                    <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Số lượng" />
                     <Controller
                         name="price"
                         control={form.control}
                         render={({ field }) => (
                             <PriceInput
-                                label="Price"
+                                label="Giá"
                                 value={field.value}
                                 onChange={field.onChange}
                             />
@@ -147,12 +149,12 @@ function AddAssetModal({
                 <FormSelect
                     name="unitId"
                     control={form.control}
-                    label="Unit (Optional)"
+                    label="Phòng (Tùy chọn)"
                     options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
-                    placeholder="Select unit"
+                    placeholder="Chọn phòng"
                 />
-                <Input {...form.register("note")} label="Note" />
-                <Input {...form.register("image")} required label="Image" />
+                <Input {...form.register("note")} label="Ghi chú" />
+                <Input {...form.register("image")} required label="Hình ảnh" />
             </div>
         </ActionModal>
     );

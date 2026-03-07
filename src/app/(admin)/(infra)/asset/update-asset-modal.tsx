@@ -8,12 +8,13 @@ import { categoryItemService } from '@/core/service/catalog/category-item-servic
 import { unitService } from '@/core/service/infra/unit-service';
 import { toastPromise } from '@/lib/alert-helper';
 import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Asset } from '@/core/model/infra/asset';
 import { CategoryItem } from '@/core/model/catalog/category-item';
 import { Unit } from '@/core/model/infra/unit';
+import PriceInput from '@/components/form/PriceInput';
 
 type FormValues = {
     name: string;
@@ -74,16 +75,18 @@ function UpdateAssetModal({
             const result = await toastPromise(
                 assetService.updateAsset(asset.id ?? 0, payload),
                 {
-                    loading: "Updating asset...",
-                    success: "Asset updated!",
-                    error: "Failed to update asset",
+                    loading: "Đang cập nhật tài sản...",
+                    success: "Tài sản đã được cập nhật!",
+                    error: "Cập nhật tài sản thất bại",
                 }
             );
             if (result) {
                 onClose();
                 onSuccess?.();
             }
-        } catch { }
+        } catch (error) {
+            console.error("Error updating asset:", error);
+        }
     };
 
     const fetchDropdowns = async () => {
@@ -138,43 +141,52 @@ function UpdateAssetModal({
             isOpen={isOpen}
             closeModal={onClose}
             onConfirm={form.handleSubmit(handleUpdate)}
-            heading="Update Asset"
+            heading="Cập nhật tài sản"
         >
             <div className="relative">
                 {isLoading && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md transition-all duration-200">
                         <div className="flex flex-col items-center gap-2">
                             <Spinner className="size-14 text-brand-300" />
-                            <span className="text-sm text-muted-foreground">Loading data...</span>
+                            <span className="text-sm text-muted-foreground">Đang tải dữ liệu...</span>
                         </div>
                     </div>
                 )}
 
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
                     <div className="flex gap-2">
-                        <Input {...form.register("name")} required label="Name" />
+                        <Input {...form.register("name")} required label="Tên" />
                         <FormSelect
                             name="typeId"
                             control={form.control}
-                            label="Type"
+                            label="Loại"
                             required
                             options={assetTypes.map(t => ({ value: t.id?.toString(), label: t.name || "" }))}
-                            placeholder="Select type"
                         />
                     </div>
                     <div className="flex gap-2">
-                        <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Quantity" />
-                        <Input {...form.register("price", { valueAsNumber: true })} type="number" label="Price" suffix="VND" />
+                        <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Số lượng" />
+                        <Controller
+                            name="price"
+                            control={form.control}
+                            render={({ field }) => (
+                                <PriceInput
+                                    label="Giá"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
                     </div>
                     <FormSelect
                         name="unitId"
                         control={form.control}
-                        label="Unit (Optional)"
+                        label="Phòng (Tùy chọn)"
                         options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
-                        placeholder="Select unit"
+                        placeholder="Chọn phòng"
                     />
-                    <Input {...form.register("note")} label="Note" />
-                    <Input {...form.register("image")} required label="Image" />
+                    <Input {...form.register("note")} label="Ghi chú" />
+                    <Input {...form.register("image")} required label="Ảnh" />
                 </div>
             </div>
         </ActionModal>

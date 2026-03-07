@@ -79,7 +79,7 @@ function AssetPage() {
 
   return (
     <div>
-      <PageBreadcrumb pagePath="/asset" pageTitle="Assets" />
+      <PageBreadcrumb pagePath="/asset" pageTitle="Tài sản" />
       <div>
         <DataTable
           search={search}
@@ -91,7 +91,7 @@ function AssetPage() {
           totalPage={pageInfo?.totalPages ?? 1}
           totalItems={pageInfo?.totalCount ?? 0}
           onPageChange={onChangePage}
-          loading={loading} pageSize={0} name={"Asset"} />
+          loading={loading} pageSize={0} name={"Tài sản"} />
         {modal.type === "ADD" && <AddAssetModal isOpen={modal.type === "ADD"} onClose={closeModal} onSuccess={fetchData} />}
         {modal.type === "UPDATE" && modal.data && (
           <UpdateAssetModal isOpen={modal.type === "UPDATE"} assetId={modal.data.id ?? 0} onClose={closeModal} onSuccess={fetchData} />

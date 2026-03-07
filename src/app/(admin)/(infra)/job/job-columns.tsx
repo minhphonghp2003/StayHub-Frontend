@@ -50,7 +50,7 @@ export const getJobColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp
     },
     {
         id: "unit",
-        header: "Unit",
+        header: "Phòng",
         cell: ({ row }) => {
             const unit = row.original.unit;
             return <div>{unit?.name ?? "-"}</div>;
@@ -58,7 +58,7 @@ export const getJobColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp
     },
     {
         accessorKey: "description",
-        header: "Description",
+        header: "Mô tả",
     },
     {
         id: "actions",
@@ -77,7 +77,7 @@ export const getJobColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp
                                 }}
                             >
                                 <Edit2 className="mr-2 w-4 h-4 opacity-70 text-blue-500" />
-                                <span className="text-blue-500">Update</span>
+                                <span className="text-blue-500">Cập nhật</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
@@ -85,7 +85,7 @@ export const getJobColumns = ({ onDelete, onUpdate, onToggleActive }: ColumnProp
                                 }}
                             >
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                <span className="text-red-500">Delete</span>
+                                <span className="text-red-500">Xóa</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
