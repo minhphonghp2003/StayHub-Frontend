@@ -4,7 +4,7 @@ import { UpdateUnitGroupPayload } from '@/core/payload/infra/update-unitGroup-pa
 import { unitGroupService } from '@/core/service/infra/unitGroup-service';
 import { toastPromise } from '@/lib/alert-helper';
 import { useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { UnitGroup } from '@/core/model/infra/unitGroup';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -31,6 +31,19 @@ function UpdateUnitGroupModal({
     const form = useForm<FormValues>({
         defaultValues: {
             name: "",
+        },
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
+
+            if (!values.name?.trim()) {
+                errors.name = { message: "Vui lòng nhập tên khu/tầng/dãy" };
+            }
+
+            return {
+                values,
+                errors,
+            };
         },
     });
 
@@ -73,7 +86,18 @@ function UpdateUnitGroupModal({
             heading="Cập nhật khu/tầng/dãy"
         >
             <div className="flex flex-col gap-4">
-                <Input {...form.register('name')} required label="Tên khu/tầng/dãy" />
+                <Controller
+                    name="name"
+                    control={form.control}
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            required
+                            label="Tên khu/tầng/dãy"
+                            errorMessage={form.formState.errors.name?.message}
+                        />
+                    )}
+                />
             </div>
         </ActionModal>
     );

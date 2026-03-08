@@ -10,15 +10,35 @@ import { categoryItemService } from '@/core/service/catalog/category-item-servic
 import { categoryService } from '@/core/service/catalog/category-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean, closeModal: any, item?: CategoryItem | null, reload: any }) {
     let [category, setCategory] = useState<Category[]>([])
     let [icon, setIcon] = useState<string>("")
     let [isLoading, setIsLoading] = useState(true)
-    const form = useForm(
+    const form = useForm({
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
 
-    );
+            if (!values.name?.trim()) {
+                errors.name = { message: "Vui lòng nhập tên item" };
+            }
+
+            if (!values.code?.trim()) {
+                errors.code = { message: "Vui lòng nhập mã item" };
+            }
+
+            if (!values.categoryId) {
+                errors.categoryId = { message: "Vui lòng chọn danh mục" };
+            }
+
+            return {
+                values,
+                errors,
+            };
+        },
+    });
 
     const handleSubmitForm: SubmitHandler<any> = async (data,) => {
         const payload = {
@@ -98,16 +118,48 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                     </div>
                 )}
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Tên" />
-                    <Input {...form.register("code")} required label="Mã" />
+                    <Controller
+                        name="name"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                required
+                                label="Tên"
+                                errorMessage={form.formState.errors.name?.message}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="code"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                required
+                                label="Mã"
+                                errorMessage={form.formState.errors.code?.message}
+                            />
+                        )}
+                    />
                 </div>
 
                 <div className="flex gap-2" >
-                    <Input
-                        {...form.register("icon")}
-                        label="Icon"
-                        onChange={(e) => setIcon(e.target.value)}
-                        suffix={<DynamicIcon iconString={icon} className="text-gray-500" />}
+                    <Controller
+                        name="icon"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                label="Icon"
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    setIcon(e.target.value);
+                                }}
+                                suffix={<DynamicIcon iconString={icon} className="text-gray-500" />}
+                                errorMessage={form.formState.errors.icon?.message}
+                            />
+                        )}
                     />
                     {
                         !isLoading && category.length > 1 && <FormSelect
@@ -119,10 +171,21 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                                 value: g.id?.toString() ?? 0,
                                 label: g.name ?? "",
                             }))}
+                            error={form.formState.errors.categoryId?.message}
                         />
                     }
                 </div>
-                <TextArea {...form.register("value")} label="Giá trị" />
+                <Controller
+                    name="value"
+                    control={form.control}
+                    render={({ field }) => (
+                        <TextArea
+                            {...field}
+                            label="Giá trị"
+                            errorMessage={form.formState.errors.value?.message}
+                        />
+                    )}
+                />
             </div>
         </ActionModal>
     )

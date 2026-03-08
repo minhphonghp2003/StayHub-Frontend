@@ -4,6 +4,7 @@ import { forwardRef, InputHTMLAttributes, ReactNode } from "react";
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
   hint?: string;
+  errorMessage?: string;
   suffix?: ReactNode;
   error?: boolean;
   success?: boolean;
@@ -14,6 +15,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     label,
     hint,
+    errorMessage,
     suffix,
     error = false,
     success = false,
@@ -25,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   // Base input styles
   let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-none focus:ring-3 dark:bg-black dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${className}`;
 
-  if (error) inputClasses += " border-error-500 text-error-800 focus:ring-error-500/10 dark:border-error-500 dark:text-error-400";
+  if (error || errorMessage) inputClasses += " border-error-500 text-error-800 focus:ring-error-500/10 dark:border-error-500 dark:text-error-400";
   else if (success) inputClasses += " border-success-400 text-success-500 focus:ring-success-500/10 dark:border-success-500 dark:text-success-400";
   else inputClasses += " bg-transparent border-gray-300 text-gray-800 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:focus:border-brand-800";
 
@@ -49,11 +51,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         </div>
       )}
 
-      {hint && (
+      {errorMessage ? (
+        <p className="mt-1.5 text-xs text-error-500">
+          {errorMessage}
+        </p>
+      ) : hint ? (
         <p className={`mt-1.5 text-xs ${error ? "text-error-500" : success ? "text-success-500" : "text-gray-500"}`}>
           {hint}
         </p>
-      )}
+      ) : null}
     </div>
   );
 });

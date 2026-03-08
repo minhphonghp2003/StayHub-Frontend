@@ -7,7 +7,7 @@ import { UpdateCategoryPayload } from '@/core/payload/catalog/update-category-pa
 import { categoryService } from '@/core/service/catalog/category-service'
 import { toastPromise } from '@/lib/alert-helper'
 import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 type FormValues = {
     name: string;
     code: string;
@@ -16,7 +16,25 @@ type FormValues = {
 function UpdateCategoryModal({ isOpen, closeModal, category, reload }: { isOpen: boolean, closeModal: any, category?: Category | null, reload: any }) {
 
     let [isLoading, setIsLoading] = useState(true)
-    const form = useForm<FormValues>();
+    const form = useForm<FormValues>({
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
+
+            if (!values.name?.trim()) {
+                errors.name = { message: "Vui lòng nhập tên category" };
+            }
+
+            if (!values.code?.trim()) {
+                errors.code = { message: "Vui lòng nhập mã category" };
+            }
+
+            return {
+                values,
+                errors,
+            };
+        },
+    });
 
     const handleSubmitForm: SubmitHandler<FormValues> = async (data,) => {
         const payload: UpdateCategoryPayload = {
@@ -86,11 +104,45 @@ function UpdateCategoryModal({ isOpen, closeModal, category, reload }: { isOpen:
 
                 <div className={`flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-50" : ""}`}>
                     <div className="flex gap-2 justify-between items-center">
-                        <Input {...form.register("name")} required label="Tên" type="text" />
-                        <Input {...form.register("code")} required label="Đường dẫn" type="text" />
+                        <Controller
+                            name="name"
+                            control={form.control}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    required
+                                    label="Tên"
+                                    type="text"
+                                    errorMessage={form.formState.errors.name?.message}
+                                />
+                            )}
+                        />
+                        <Controller
+                            name="code"
+                            control={form.control}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    required
+                                    label="Mã"
+                                    type="text"
+                                    errorMessage={form.formState.errors.code?.message}
+                                />
+                            )}
+                        />
                     </div>
 
-                    <TextArea {...form.register("description")} label="Mô tả" />
+                    <Controller
+                        name="description"
+                        control={form.control}
+                        render={({ field }) => (
+                            <TextArea
+                                {...field}
+                                label="Mô tả"
+                                errorMessage={form.formState.errors.description?.message}
+                            />
+                        )}
+                    />
                 </div>
             </div>
         </ActionModal>

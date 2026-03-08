@@ -43,6 +43,31 @@ function AddUnitModal({
             isActive: true,
             unitGroupId: undefined,
         },
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
+
+            if (!values.name?.trim()) {
+                errors.name = { message: "Vui lòng nhập tên phòng" };
+            }
+
+            if (!values.unitGroupId) {
+                errors.unitGroupId = { message: "Vui lòng chọn khu/tầng/dãy" };
+            }
+
+            if (!values.basePrice || values.basePrice <= 0) {
+                errors.basePrice = { message: "Vui lòng nhập giá cơ bản hợp lệ" };
+            }
+
+            if (!values.maximumCustomer || values.maximumCustomer <= 0) {
+                errors.maximumCustomer = { message: "Vui lòng nhập số khách tối đa hợp lệ" };
+            }
+
+            return {
+                values,
+                errors,
+            };
+        },
     });
 
     const handleAdd: SubmitHandler<FormValues> = async (data) => {
@@ -105,7 +130,18 @@ function AddUnitModal({
         >
             <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Tên phòng " />
+                    <Controller
+                        name="name"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                required
+                                label="Tên phòng"
+                                errorMessage={form.formState.errors.name?.message}
+                            />
+                        )}
+                    />
                     <FormSelect
                         name="unitGroupId"
                         control={form.control}
@@ -113,6 +149,7 @@ function AddUnitModal({
                         required
                         options={unitGroups.map(g => ({ value: g.id?.toString(), label: g.name || "" }))}
                         placeholder="Chọn khu/tầng/dãy"
+                        error={form.formState.errors.unitGroupId?.message}
                     />
                 </div>
                 <div className="flex gap-2">
@@ -125,10 +162,24 @@ function AddUnitModal({
                                 required
                                 value={field.value}
                                 onChange={field.onChange}
+                                errorMessage={form.formState.errors.basePrice?.message}
                             />
                         )}
                     />
-                    <Input {...form.register("maximumCustomer", { valueAsNumber: true })} type="number" required label="Số khách tối đa " />
+                    <Controller
+                        name="maximumCustomer"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                type="number"
+                                required
+                                label="Số khách tối đa"
+                                errorMessage={form.formState.errors.maximumCustomer?.message}
+                                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                            />
+                        )}
+                    />
                 </div>
 
                 <Controller

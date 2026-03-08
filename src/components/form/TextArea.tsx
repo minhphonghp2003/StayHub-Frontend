@@ -4,6 +4,7 @@ import { forwardRef, TextareaHTMLAttributes } from "react";
 interface TextAreaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> {
   label?: string;
   hint?: string;
+  errorMessage?: string;
   error?: boolean;
   required?: boolean;
 }
@@ -11,6 +12,7 @@ interface TextAreaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(({
   label,
   hint,
+  errorMessage,
   error = false,
   required = false,
   className = "",
@@ -21,7 +23,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(({
 
   if (rest.disabled) {
     textareaClasses += ` bg-gray-100 opacity-50 text-gray-500 border-gray-300 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700`;
-  } else if (error) {
+  } else if (error || errorMessage) {
     textareaClasses += ` bg-transparent text-gray-400 border-gray-300 focus:border-error-300 focus:ring-3 focus:ring-error-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:focus:border-error-800`;
   } else {
     textareaClasses += ` bg-transparent text-gray-400 border-gray-300 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-black dark:text-white/90 dark:focus:border-brand-800`;
@@ -42,11 +44,15 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(({
         {...rest}  // includes value, onChange, name, placeholder, rows, etc.
       />
 
-      {hint && (
+      {errorMessage ? (
+        <p className="mt-2 text-sm text-error-500">
+          {errorMessage}
+        </p>
+      ) : hint ? (
         <p className={`mt-2 text-sm ${error ? "text-error-500" : "text-gray-500 dark:text-gray-400"}`}>
           {hint}
         </p>
-      )}
+      ) : null}
     </div>
   );
 });
