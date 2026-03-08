@@ -194,9 +194,13 @@ function AddPropertyModal({
                                 id="startSubscriptionDate"
                                 label="Ngày bắt đầu"
                                 defaultDate={field.value ? new Date(field.value) : undefined}
-                                onChange={(selectedDates: Date[], _dateStr: string) =>
-                                    field.onChange(selectedDates && selectedDates[0] ? selectedDates[0].toISOString() : undefined)
-                                }
+                                onChange={(selectedDates: Date[]) => {
+                                    if (selectedDates[0]) {
+                                        const date = new Date(selectedDates[0]);
+                                        const formatted = date.toISOString();
+                                        field.onChange(formatted);
+                                    }
+                                }}
                             />
                         )}
                     />
@@ -209,9 +213,13 @@ function AddPropertyModal({
                                 id="endSubscriptionDate"
                                 label="Ngày kết thúc"
                                 defaultDate={field.value ? new Date(field.value) : undefined}
-                                onChange={(selectedDates: Date[], _dateStr: string) =>
-                                    field.onChange(selectedDates && selectedDates[0] ? selectedDates[0].toISOString() : undefined)
-                                }
+                                onChange={(selectedDates: Date[]) => {
+                                    if (selectedDates[0]) {
+                                        const date = new Date(selectedDates[0]);
+                                        const formatted = date.toISOString();
+                                        field.onChange(formatted);
+                                    }
+                                }}
                             />
                         )}
                     />

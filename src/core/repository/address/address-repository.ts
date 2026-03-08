@@ -1,4 +1,5 @@
 import { api } from "@/core/http-client/AxiosClient";
+import { BaseResponse } from "@/core/model/BaseResponse";
 import { Province, Ward } from "@/core/model/address/address";
 import { AddProvincePayload } from "@/core/payload/address/add-province-payload";
 import { AddWardPayload } from "@/core/payload/address/add-ward-payload";

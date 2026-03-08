@@ -126,7 +126,7 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                                 {...field}
                                 required
                                 label="Tên"
-                                errorMessage={form.formState.errors.name?.message}
+                                errorMessage={form.formState.errors.name?.message as string}
                             />
                         )}
                     />
@@ -138,7 +138,7 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                                 {...field}
                                 required
                                 label="Mã"
-                                errorMessage={form.formState.errors.code?.message}
+                                errorMessage={form.formState.errors.code?.message as string}
                             />
                         )}
                     />
@@ -157,7 +157,7 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                                     setIcon(e.target.value);
                                 }}
                                 suffix={<DynamicIcon iconString={icon} className="text-gray-500" />}
-                                errorMessage={form.formState.errors.icon?.message}
+                                errorMessage={form.formState.errors.icon?.message as string}
                             />
                         )}
                     />
@@ -171,7 +171,7 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                                 value: g.id?.toString() ?? 0,
                                 label: g.name ?? "",
                             }))}
-                            error={form.formState.errors.categoryId?.message}
+                            error={form.formState.errors.categoryId?.message as string}
                         />
                     }
                 </div>
@@ -182,7 +182,7 @@ function UpdateItemModal({ isOpen, closeModal, item, reload }: { isOpen: boolean
                         <TextArea
                             {...field}
                             label="Giá trị"
-                            errorMessage={form.formState.errors.value?.message}
+                            errorMessage={form.formState.errors.value?.message as string}
                         />
                     )}
                 />

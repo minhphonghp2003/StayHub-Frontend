@@ -15,6 +15,10 @@ import { getContractColumns } from './contract-columns';
 import AddContractModal from './add-contract-modal';
 import UpdateContractModal from './update-contract-modal';
 import DeleteContractModal from './delete-contract-modal';
+import RenewContractModal from './renew-contract-modal';
+import ChangeRoomModal from './change-room-modal';
+import RegisterLeavingModal from './register-leaving-modal';
+import TransferContractModal from './transfer-contract-modal';
 
 function ContractPage() {
     const router = useRouter();
@@ -27,7 +31,7 @@ function ContractPage() {
     );
 
     const [modal, setModalState] = useState<{
-        type: "ADD" | "UPDATE" | "DELETE" | null;
+        type: "ADD" | "UPDATE" | "DELETE" | "RENEW" | "CHANGE_ROOM" | "REGISTER_LEAVING" | "TRANSFER" | null;
         data: Contract | null;
     }>({ type: null, data: null });
     const [loading, setLoading] = useState(true);
@@ -73,22 +77,10 @@ function ContractPage() {
     const columns = getContractColumns({
         onDelete: (c) => setModalState({ type: "DELETE", data: c }),
         onUpdate: (c) => setModalState({ type: "UPDATE", data: c }),
-        onRenew: (c) => {
-            // TODO: Implement renew contract modal
-            console.log("Renew contract:", c);
-        },
-        onChangeRoom: (c) => {
-            // TODO: Implement change room modal
-            console.log("Change room:", c);
-        },
-        onRegisterLeaving: (c) => {
-            // TODO: Implement register leaving modal
-            console.log("Register leaving:", c);
-        },
-        onTransfer: (c) => {
-            // TODO: Implement transfer modal
-            console.log("Transfer contract:", c);
-        },
+        onRenew: (c) => setModalState({ type: "RENEW", data: c }),
+        onChangeRoom: (c) => setModalState({ type: "CHANGE_ROOM", data: c }),
+        onRegisterLeaving: (c) => setModalState({ type: "REGISTER_LEAVING", data: c }),
+        onTransfer: (c) => setModalState({ type: "TRANSFER", data: c }),
     });
 
     const closeModal = () => setModalState({ type: null, data: null });
@@ -131,6 +123,38 @@ function ContractPage() {
                         isOpen={modal.type === "DELETE"}
                         onClose={closeModal}
                         onSuccess={fetchData}
+                        contract={modal.data}
+                    />
+                )}
+                {modal.type === "RENEW" && modal.data && (
+                    <RenewContractModal
+                        isOpen={modal.type === "RENEW"}
+                        closeModal={closeModal}
+                        reload={fetchData}
+                        contract={modal.data}
+                    />
+                )}
+                {modal.type === "CHANGE_ROOM" && modal.data && (
+                    <ChangeRoomModal
+                        isOpen={modal.type === "CHANGE_ROOM"}
+                        closeModal={closeModal}
+                        reload={fetchData}
+                        contract={modal.data}
+                    />
+                )}
+                {modal.type === "REGISTER_LEAVING" && modal.data && (
+                    <RegisterLeavingModal
+                        isOpen={modal.type === "REGISTER_LEAVING"}
+                        closeModal={closeModal}
+                        reload={fetchData}
+                        contract={modal.data}
+                    />
+                )}
+                {modal.type === "TRANSFER" && modal.data && (
+                    <TransferContractModal
+                        isOpen={modal.type === "TRANSFER"}
+                        closeModal={closeModal}
+                        reload={fetchData}
                         contract={modal.data}
                     />
                 )}

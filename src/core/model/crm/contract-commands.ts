@@ -27,8 +27,8 @@ export class RenewContractCommand {
         this.note = note;
     }
 
-    static fromContract(contract: Contract, newEndDate: string, newPrice?: number, note?: string): RenewContractCommand {
-        return new RenewContractCommand(contract.id!, newEndDate, newPrice, note);
+    static fromContract(contract: Contract, newDate: string, newPrice?: number, note?: string): RenewContractCommand {
+        return new RenewContractCommand(contract.id!, newDate, newPrice, note);
     }
 }
 

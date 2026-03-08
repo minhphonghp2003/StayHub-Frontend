@@ -61,7 +61,7 @@ const deleteContract = async (id: number): Promise<BaseResponse<boolean>> => {
 
 const changeRoom = async (contractId: number, unitId: number): Promise<BaseResponse<boolean>> => {
     const response = await api.request({
-        url: `change-room/contract/${contractId}/unit/${unitId}`,
+        url: `${baseUrl}/change-room/contract/${contractId}/unit/${unitId}`,
         method: "POST",
     });
     return response.data;
