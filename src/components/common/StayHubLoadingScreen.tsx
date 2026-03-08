@@ -1,4 +1,5 @@
 import React from 'react';
+import BrandLogo from './BrandLogo';
 
 interface StayHubLoadingScreenProps {
     progress?: number; // 0-100
@@ -6,7 +7,7 @@ interface StayHubLoadingScreenProps {
 
 const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 0 }) => {
     return (
-        <div className="min-h-screen bg-[#121417] overflow-hidden flex justify-center items-center font-['Plus_Jakarta_Sans'] relative">
+        <div className="min-h-screen bg-[#121417] overflow-hidden flex justify-center items-center relative">
             {/* Grid Background Animation */}
             <div
                 className="absolute top-0 left-0 w-[200%] h-[200%] opacity-30"
@@ -21,25 +22,12 @@ const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 
             />
 
             {/* Ambient Glow */}
-            <div className="absolute w-[400px] h-[400px] bg-radial-gradient(circle, rgba(255, 214, 70, 0.04) 0%, transparent 70%) rounded-full -z-10" />
+            <div className="absolute w-[400px] h-[400px] bg-radial-gradient(circle, rgba(255, 214, 70, 0.04) 0%, transparent 70%) rounded-full -z-10 animate-ambient-glow" />
 
             <div className="relative z-10 flex flex-col items-center text-center">
-                {/* Logo Section */}
+                {/* Logo Section (reuse BrandLogo component) */}
                 <div className="flex items-center gap-4 mb-8 animate-fadeInUp">
-                    <svg
-                        className="w-18 h-18 fill-[#FFD646] animate-pulse drop-shadow-[0_0_15px_rgba(255,214,70,0.4)]"
-                        viewBox="0 0 100 100"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        {/* House Roof & Main Body */}
-                        <path d="M10 55 L50 20 L90 55 L90 85 L10 85 Z" />
-                        {/* Windows/Details from the original brand identity */}
-                        <rect x="55" y="65" width="12" height="12" fill="#121417" rx="1.5" />
-                        <rect x="38" y="65" width="12" height="12" fill="#121417" rx="1.5" />
-                    </svg>
-                    <h1 className="text-[#FFD646] text-6xl font-extrabold tracking-tight leading-none">
-                        StayHub
-                    </h1>
+                    <BrandLogo size="xl" animated />
                 </div>
 
                 {/* Progress Bar */}
@@ -90,13 +78,31 @@ const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 
           opacity: 0;
         }
 
-        .animate-pulse {
-          animation: pulse 2s infinite ease-in-out;
+        .animate-ambient-glow {
+          animation: ambientGlow 4s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 15px rgba(255, 214, 70, 0.4)); }
-          50% { transform: scale(1.03); opacity: 0.85; filter: drop-shadow(0 0 25px rgba(255, 214, 70, 0.6)); }
+        @keyframes ambientGlow {
+          0%, 100% {
+            transform: scale(1) rotate(0deg);
+            opacity: 0.3;
+            filter: blur(0px);
+          }
+          25% {
+            transform: scale(1.1) rotate(90deg);
+            opacity: 0.5;
+            filter: blur(2px);
+          }
+          50% {
+            transform: scale(0.9) rotate(180deg);
+            opacity: 0.4;
+            filter: blur(1px);
+          }
+          75% {
+            transform: scale(1.05) rotate(270deg);
+            opacity: 0.6;
+            filter: blur(3px);
+          }
         }
       `}</style>
         </div>
