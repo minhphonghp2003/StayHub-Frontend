@@ -26,4 +26,6 @@ export interface UpdateContractPayload {
     assets?: ContractAssetPayload[];
     customerIds: number[];
     representativeId: number;
+    saleId?: number;
+    vehicleNumber?: number;
 }

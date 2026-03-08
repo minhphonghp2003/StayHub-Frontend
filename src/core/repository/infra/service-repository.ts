@@ -18,6 +18,11 @@ const getAllServices = async (queryParam: {
     return response.data;
 };
 
+const getAllServicesNoPaging = async (propertyId: number): Promise<BaseResponse<Service[]>> => {
+    const response = await api.get(`${baseUrl}/no-paging/${propertyId}`);
+    return response.data;
+};
+
 const getServiceById = async (id: number): Promise<BaseResponse<Service | null>> => {
     const response = await api.get(`${baseUrl}/${id}`);
     return response.data;
@@ -50,6 +55,7 @@ const setActivateService = async (id: number, isActivate: boolean): Promise<Base
 
 export const serviceRepository = {
     getAllServices,
+    getAllServicesNoPaging,
     getServiceById,
     createService,
     updateService,

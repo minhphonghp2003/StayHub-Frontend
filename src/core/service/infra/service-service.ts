@@ -30,6 +30,11 @@ const getAllServices = async ({
     return null;
 };
 
+const getAllServicesNoPaging = async (propertyId: number): Promise<Service[] | null> => {
+    const result = await serviceRepository.getAllServicesNoPaging(propertyId);
+    return result.success ? result.data ?? null : null;
+};
+
 const getServiceById = async (id: number): Promise<Service | null> => {
     const result = await serviceRepository.getServiceById(id);
     return result.success ? result.data ?? null : null;
@@ -62,6 +67,7 @@ const setActivateService = async (id: number, isActivate: boolean): Promise<bool
 
 export const serviceService = {
     getAllServices,
+    getAllServicesNoPaging,
     getServiceById,
     createService,
     updateService,

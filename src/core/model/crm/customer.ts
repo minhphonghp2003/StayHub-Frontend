@@ -15,6 +15,7 @@ export interface Customer extends BaseModel {
     ward?: Ward;
     unitId?: number;
     unit?: Unit;
+    isRepresentative: boolean;
     dateOfBirth?: string; // ISO string
     address?: string;
     image?: string;

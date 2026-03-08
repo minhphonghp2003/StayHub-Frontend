@@ -3,6 +3,7 @@ import { Customer } from "./customer";
 import { Service } from "@/core/model/infra/service";
 import { Asset } from "@/core/model/infra/asset";
 import { CategoryItem } from "@/core/model/catalog/category-item";
+import { User } from "@/core/model/RBAC/User";
 
 export interface ContractService extends BaseModel {
     serviceId: number;
@@ -19,7 +20,9 @@ export interface ContractAsset extends BaseModel {
 export interface Contract extends BaseModel {
     unitId: number;
     unit?: Unit;
-    customers?: Customer[];
+    customer?: Customer[];
+    assets?: ContractAsset[];
+    services?: ContractService[];
     status?: string;
     price: number;
     deposit: number;
@@ -34,9 +37,7 @@ export interface Contract extends BaseModel {
     code: string;
     isSigned: boolean;
     templateId?: number;
-    services?: ContractService[];
-    assets?: ContractAsset[];
-    representativeId?: number;
-    vehicleNumber?: number;
     saleId?: number;
+    sale?: User;
+    vehicleNumber?: number;
 }

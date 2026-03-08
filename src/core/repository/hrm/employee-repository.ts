@@ -28,9 +28,15 @@ const deleteEmployee = async (propertyId: number, id: number): Promise<BaseRespo
     return response.data;
 };
 
+const getAllEmployeesNoPaging = async (propertyId: number): Promise<BaseResponse<User[]>> => {
+    const response = await api.get(`${baseUrl}/no-paging/${propertyId}`);
+    return response.data;
+};
+
 export default {
     createEmployee,
     getAllEmployees,
+    getAllEmployeesNoPaging,
     updateEmployee,
     deleteEmployee
 };

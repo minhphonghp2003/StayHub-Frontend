@@ -27,9 +27,15 @@ const deleteEmployee = async (propertyId: number, id: number): Promise<boolean |
     return result.success ? result.data ?? null : null;
 };
 
+const getAllEmployeesNoPaging = async (propertyId: number): Promise<User[]> => {
+    const result = await employeeRepository.getAllEmployeesNoPaging(propertyId);
+    return result.success ? result.data ?? [] : [];
+};
+
 export default {
     createEmployee,
     getAllEmployees,
+    getAllEmployeesNoPaging,
     updateEmployee,
     deleteEmployee
 };

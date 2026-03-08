@@ -14,6 +14,7 @@ type PropsType = {
   defaultDate?: DateOption;
   label?: string;
   placeholder?: string;
+  required?: boolean;
 };
 
 export default function DatePicker({
@@ -23,6 +24,7 @@ export default function DatePicker({
   label,
   defaultDate,
   placeholder,
+  required
 }: PropsType) {
   useEffect(() => {
     const input = document.getElementById(id) as HTMLInputElement | null;
@@ -59,7 +61,7 @@ export default function DatePicker({
 
   return (
     <div className='w-full'>
-      {label && <Label htmlFor={id}>{label}</Label>}
+      {label && <Label htmlFor={id}>{label} {required && <span className="text-red-500">*</span>}</Label>}
 
       <div className="relative ">
         <input
