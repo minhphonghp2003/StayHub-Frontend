@@ -133,7 +133,6 @@ function UpdateCustomerModal({
             genderId: data.genderId ? parseInt(data.genderId) : undefined,
             provinceId: data.provinceId ? parseInt(data.provinceId) : undefined,
             wardId: data.wardId ? parseInt(data.wardId) : undefined,
-            // unitId removed
             dateOfBirth: data.dateOfBirth || undefined,
             address: data.address || undefined,
             image: data.image || undefined,

@@ -66,6 +66,7 @@ export function ContractForm({
     onServiceRowsChange,
     onAssetRowsChange,
 }: ContractFormProps) {
+
     const handleCustomerChange = (index: number, value: string) => {
         const newRows = [...customerRows];
         newRows[index].customerId = value as string;
@@ -105,6 +106,7 @@ export function ContractForm({
     const handleServiceChange = (index: number, quantity: string) => {
         const newRows = [...serviceRows];
         newRows[index].quantity = quantity;
+
         onServiceRowsChange(newRows);
     };
 
@@ -304,8 +306,9 @@ export function ContractForm({
                             <div key={index} className="flex gap-2">
                                 <div className="flex-1">
                                     <FormSelect
-                                        name={`customer-${index}`}
                                         control={form.control}
+                                        {...form.register(`customerIds.${index}`)}
+                                        required
                                         options={customers.map(c => ({ value: c.id?.toString() ?? "", label: c.name ?? "" }))}
                                         placeholder="Chọn khách hàng"
                                         onChange={(value) => handleCustomerChange(index, value as string)}
@@ -364,8 +367,14 @@ export function ContractForm({
                             <div key={index} className="flex gap-2">
                                 <div className="flex-1">
                                     <FormSelect
-                                        name={`services.${index}.serviceId`}
+                                        {...form.register(`services.${index}.serviceId`)}
                                         control={form.control}
+                                        onChange={(value) => {
+                                            const newRows = [...serviceRows];
+                                            newRows[index].serviceId = value as string;
+                                            onServiceRowsChange(newRows);
+
+                                        }}
                                         options={services.map(s => ({ value: s.id?.toString(), label: s.name ?? "" }))}
                                         placeholder="Chọn dịch vụ"
                                     />
@@ -406,8 +415,13 @@ export function ContractForm({
                             <div key={index} className="flex gap-2">
                                 <div className="flex-1">
                                     <FormSelect
-                                        name={`assets.${index}.assetId`}
+                                        {...form.register(`assets.${index}.assetId`)}
                                         control={form.control}
+                                        onChange={(value) => {
+                                            const newRows = [...assetRows];
+                                            newRows[index].assetId = value as string;
+                                            onAssetRowsChange(newRows);
+                                        }}
                                         options={assets.map(a => ({ value: a.id?.toString(), label: a.name ?? "" }))}
                                         placeholder="Chọn tài sản"
                                     />

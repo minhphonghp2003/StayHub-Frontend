@@ -135,6 +135,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     }, [isOpen, selectedPropertyId]);
 
     const onSubmit = async (data: ContractFormValues) => {
+
         // Validate customer and representative requirements
         const validCustomers = customerRows.filter(r => r.customerId);
         if (validCustomers.length === 0) {

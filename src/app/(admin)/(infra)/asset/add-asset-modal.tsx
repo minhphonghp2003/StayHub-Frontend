@@ -51,6 +51,31 @@ function AddAssetModal({
             note: "",
             image: "",
         },
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
+
+            if (!values.name?.trim()) {
+                errors.name = { message: "Vui lòng nhập tên tài sản" };
+            }
+
+            if (!values.typeId) {
+                errors.typeId = { message: "Vui lòng chọn loại tài sản" };
+            }
+
+            if (!values.quantity || values.quantity <= 0) {
+                errors.quantity = { message: "Vui lòng nhập số lượng hợp lệ" };
+            }
+
+            if (!values.image?.trim()) {
+                errors.image = { message: "Vui lòng nhập hình ảnh" };
+            }
+
+            return {
+                values,
+                errors,
+            };
+        },
     });
 
     const handleAdd: SubmitHandler<FormValues> = async (data) => {
@@ -122,7 +147,18 @@ function AddAssetModal({
         >
             <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Tên" />
+                    <Controller
+                        name="name"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                required
+                                label="Tên"
+                                errorMessage={form.formState.errors.name?.message}
+                            />
+                        )}
+                    />
                     <FormSelect
                         name="typeId"
                         control={form.control}
@@ -130,10 +166,24 @@ function AddAssetModal({
                         required
                         options={assetTypes.map(t => ({ value: t.id?.toString(), label: t.name || "" }))}
                         placeholder="Chọn loại"
+                        error={form.formState.errors.typeId?.message}
                     />
                 </div>
                 <div className="flex gap-2">
-                    <Input {...form.register("quantity", { valueAsNumber: true })} type="number" required label="Số lượng" />
+                    <Controller
+                        name="quantity"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                type="number"
+                                required
+                                label="Số lượng"
+                                errorMessage={form.formState.errors.quantity?.message}
+                                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                            />
+                        )}
+                    />
                     <Controller
                         name="price"
                         control={form.control}
@@ -142,6 +192,7 @@ function AddAssetModal({
                                 label="Giá"
                                 value={field.value}
                                 onChange={field.onChange}
+                                errorMessage={form.formState.errors.price?.message}
                             />
                         )}
                     />
@@ -152,9 +203,31 @@ function AddAssetModal({
                     label="Phòng (Tùy chọn)"
                     options={units.map(u => ({ value: u.id?.toString(), label: u.name || "" }))}
                     placeholder="Chọn phòng"
+                    error={form.formState.errors.unitId?.message}
                 />
-                <Input {...form.register("note")} label="Ghi chú" />
-                <Input {...form.register("image")} required label="Hình ảnh" />
+                <Controller
+                    name="note"
+                    control={form.control}
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            label="Ghi chú"
+                            errorMessage={form.formState.errors.note?.message}
+                        />
+                    )}
+                />
+                <Controller
+                    name="image"
+                    control={form.control}
+                    render={({ field }) => (
+                        <Input
+                            {...field}
+                            required
+                            label="Hình ảnh"
+                            errorMessage={form.formState.errors.image?.message}
+                        />
+                    )}
+                />
             </div>
         </ActionModal>
     );

@@ -63,6 +63,29 @@ function AddCustomerModal({ isOpen, closeModal, reload }: AddCustomerModalProps)
             image: "",
             job: "",
         },
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
+
+            if (!values.name?.trim()) {
+                errors.name = { message: "Vui lòng nhập tên khách hàng" };
+            }
+
+            if (!values.phone?.trim()) {
+                errors.phone = { message: "Vui lòng nhập số điện thoại" };
+            } else if (!/^[\d\s\-\+\(\)]+$/.test(values.phone)) {
+                errors.phone = { message: "Số điện thoại không hợp lệ" };
+            }
+
+            if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+                errors.email = { message: "Email không hợp lệ" };
+            }
+
+            return {
+                values,
+                errors,
+            };
+        },
     });
 
     const fetchDropdowns = async () => {
@@ -132,8 +155,31 @@ function AddCustomerModal({ isOpen, closeModal, reload }: AddCustomerModalProps)
             <div className="flex flex-col gap-4">
                 <h3 className="font-semibold text-lg">Thông tin cơ bản</h3>
                 <div className="flex gap-2">
-                    <Input {...form.register("name")} required label="Tên" />
-                    <Input {...form.register("phone")} type="tel" required label="Số điện thoại" />
+                    <Controller
+                        name="name"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                required
+                                label="Tên"
+                                errorMessage={form.formState.errors.name?.message}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="phone"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                type="tel"
+                                required
+                                label="Số điện thoại"
+                                errorMessage={form.formState.errors.phone?.message}
+                            />
+                        )}
+                    />
                 </div>
                 <div className="flex gap-2">
                     <Input {...form.register("email")} label="Email" />

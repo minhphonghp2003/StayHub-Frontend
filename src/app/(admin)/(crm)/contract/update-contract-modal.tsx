@@ -51,7 +51,14 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
 
     const form = useForm<ContractFormValues>({
         defaultValues: {
-            customerIds: [],
+            customerIds: [
+            ],
+            services: [
+                { serviceId: "", quantity: "" }
+            ],
+            assets: [
+                { assetId: "", quantity: "" }
+            ],
             unitId: "",
             price: "",
             deposit: "",
@@ -158,6 +165,15 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
             }
             form.reset({
                 customerIds: (contract.customer ?? []).map(c => c.id?.toString() ?? "") || [],
+                services: contract.services?.map(s => ({
+                    serviceId: s.serviceId?.toString() || "",
+                    quantity: s.quantity?.toString() || ""
+                })) || [{ serviceId: "", quantity: "" }],
+                assets: contract.assets?.map(a => ({
+                    assetId: a.assetId?.toString() || "",
+                    quantity: a.quantity?.toString() || ""
+                })) || [{ assetId: "", quantity: "" }],
+
                 unitId: contract.unitId?.toString() || "",
                 price: contract.price?.toString() || "",
                 deposit: contract.deposit?.toString() || "",

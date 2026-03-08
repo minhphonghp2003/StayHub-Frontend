@@ -38,8 +38,16 @@ export const getContractColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
         header: "Căn hộ",
     },
     {
-        accessorKey: "customer.name",
+        accessorKey: "customer",
         header: "Khách thuê",
+        cell: ({ row }: any) => {
+            const contract: Contract = row.original;
+            return (
+                <span>
+                    {contract.customer?.find(e => e.isRepresentative === true)?.name ?? contract.customer?.[0]?.name ?? "N/A"}
+                </span>
+            );
+        },
 
     },
     {
