@@ -145,6 +145,7 @@ export function ContractForm({
                             label="Căn hộ"
                             options={units.map(u => ({ value: u.id?.toString(), label: u.name ?? "" }))}
                             placeholder="Chọn căn hộ"
+                            error={form.formState.errors.unitId?.message}
                         />
                     </div>
                     <div className="flex gap-2 mt-2">
@@ -158,6 +159,7 @@ export function ContractForm({
                                     required
                                     placeholder="Chọn ngày bắt đầu"
                                     defaultDate={field.value}
+                                    error={form.formState.errors.startDate?.message}
                                     onChange={(selectedDates) => {
                                         if (selectedDates[0]) {
                                             const date = new Date(selectedDates[0]);
@@ -178,6 +180,7 @@ export function ContractForm({
                                     placeholder="Chọn ngày kết thúc"
                                     required
                                     defaultDate={field.value}
+                                    error={form.formState.errors.endDate?.message}
                                     onChange={(selectedDates) => {
                                         if (selectedDates[0]) {
                                             const date = new Date(selectedDates[0]);
@@ -213,6 +216,7 @@ export function ContractForm({
                                     value={field.value ? parseInt(field.value) : undefined}
                                     onChange={(val) => field.onChange(val.toString())}
                                     required
+                                    errorMessage={form.formState.errors.price?.message}
                                 />
                             )}
                         />
@@ -225,6 +229,7 @@ export function ContractForm({
                                     value={field.value ? parseInt(field.value) : undefined}
                                     onChange={(val) => field.onChange(val.toString())}
                                     required
+                                    errorMessage={form.formState.errors.deposit?.message}
                                 />
                             )}
                         />
@@ -235,7 +240,7 @@ export function ContractForm({
                             name="depositRemain"
                             render={({ field }) => (
                                 <PriceInput
-                                    label="Tiền cọc  còn lại"
+                                    label="Tiền cọc còn lại"
                                     value={field.value ? parseInt(field.value) : undefined}
                                     onChange={(val) => field.onChange(val.toString())}
                                 />
@@ -269,6 +274,7 @@ export function ContractForm({
                             label="Kỳ thanh toán"
                             options={paymentPeriods.map(p => ({ value: p.id?.toString(), label: p.name ?? "" }))}
                             placeholder="Chọn kỳ thanh toán"
+                            error={form.formState.errors.paymentPeriodId?.message}
                         />
                     </div>
 

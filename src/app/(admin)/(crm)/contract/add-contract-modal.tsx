@@ -65,6 +65,47 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             vehicleNumber: "",
             saleId: "",
         },
+        mode: "onChange",
+        resolver: async (values) => {
+            const errors: any = {};
+
+            // Unit validation
+            if (!values.unitId) {
+                errors.unitId = { message: "Vui lòng chọn căn hộ" };
+            }
+
+            // Date validations
+            if (!values.startDate) {
+                errors.startDate = { message: "Vui lòng chọn ngày bắt đầu" };
+            }
+            if (!values.endDate) {
+                errors.endDate = { message: "Vui lòng chọn ngày kết thúc" };
+            }
+            if (values.startDate && values.endDate && new Date(values.startDate) >= new Date(values.endDate)) {
+                errors.endDate = { message: "Ngày kết thúc phải sau ngày bắt đầu" };
+            }
+
+            // Price validations
+            if (!values.price || parseInt(values.price) <= 0) {
+                errors.price = { message: "Vui lòng nhập giá hợp đồng hợp lệ" };
+            }
+            if (!values.deposit || parseInt(values.deposit) <= 0) {
+                errors.deposit = { message: "Vui lòng nhập tiền cọc hợp lệ" };
+            }
+            if (values.price && values.deposit && parseInt(values.deposit) > parseInt(values.price)) {
+                errors.deposit = { message: "Tiền cọc không được lớn hơn giá hợp đồng" };
+            }
+
+            // Payment period validation
+            if (!values.paymentPeriodId) {
+                errors.paymentPeriodId = { message: "Vui lòng chọn kỳ thanh toán" };
+            }
+
+            return {
+                values,
+                errors,
+            };
+        },
     });
 
     const fetchDropdowns = async () => {
@@ -94,23 +135,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     }, [isOpen, selectedPropertyId]);
 
     const onSubmit = async (data: ContractFormValues) => {
-        // Validate required fields
-        if (!data.unitId) {
-            await toastPromise(Promise.reject(new Error("Vui lòng chọn căn hộ")), {
-                loading: "Đang xác nhận...",
-                success: "Hoàn thành!",
-                error: "Vui lòng chọn căn hộ",
-            });
-            return;
-        }
-        if (!data.paymentPeriodId) {
-            await toastPromise(Promise.reject(new Error("Vui lòng chọn kỳ thanh toán")), {
-                loading: "Đang xác nhận...",
-                success: "Hoàn thành!",
-                error: "Vui lòng chọn kỳ thanh toán",
-            });
-            return;
-        }
+        // Validate customer and representative requirements
         const validCustomers = customerRows.filter(r => r.customerId);
         if (validCustomers.length === 0) {
             await toastPromise(Promise.reject(new Error("Vui lòng chọn ít nhất một khách hàng")), {

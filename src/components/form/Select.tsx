@@ -37,6 +37,7 @@ interface FormSelectProps {
   onChange?: (value?: any | undefined) => void;
   disabled?: boolean;
   allowClear?: boolean;
+  error?: string;
 }
 
 
@@ -50,6 +51,7 @@ export function FormSelect({
   onChange,
   disabled,
   allowClear = true,
+  error,
 }: FormSelectProps) {
   return (
     <Controller
@@ -75,6 +77,7 @@ export function FormSelect({
               <SelectTrigger
                 className={cn(
                   "w-full pr-9", // space for suffix button
+                  error && "border-red-500 focus:ring-red-500/10"
                 )}
               >
                 <SelectValue placeholder={placeholder} />
@@ -105,6 +108,9 @@ export function FormSelect({
               </button>
             )}
           </div>
+          {error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
         </div>
       )}
     />

@@ -5,6 +5,7 @@ interface PriceInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "v
     label?: string;
     hint?: string;
     error?: boolean;
+    errorMessage?: string;
     success?: boolean;
     required?: boolean;
     value?: number;
@@ -16,6 +17,7 @@ const PriceInput = forwardRef<HTMLInputElement, PriceInputProps>((props, ref) =>
         label,
         hint,
         error = false,
+        errorMessage,
         success = false,
         required = false,
         value,
@@ -94,6 +96,9 @@ const PriceInput = forwardRef<HTMLInputElement, PriceInputProps>((props, ref) =>
 
             {hint && (
                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{hint}</p>
+            )}
+            {errorMessage && (
+                <p className="mt-1 text-sm text-red-500">{errorMessage}</p>
             )}
         </div>
     );
