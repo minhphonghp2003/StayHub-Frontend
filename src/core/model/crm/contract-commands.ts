@@ -1,69 +1,45 @@
 import { Contract } from "./contract";
+import { RenewContractPayload, TransferContractPayload, RegisterLeavingPayload, ChangeRoomPayload } from "@/core/payload/crm/contract-action-payload";
 
-export class ChangeRoomCommand {
-    contractId: number;
-    unitId: number;
+export type RenewContractCommand = RenewContractPayload;
+export type TransferContractCommand = TransferContractPayload;
+export type RegisterLeavingCommand = RegisterLeavingPayload;
+export type ChangeRoomCommand = ChangeRoomPayload;
 
-    constructor(contractId: number, unitId: number) {
-        this.contractId = contractId;
-        this.unitId = unitId;
-    }
+export const createRenewContractCommand = (
+    contract: Contract,
+    newDate: string,
+    newPrice?: number,
+    newDeposit?: number
+): RenewContractCommand => ({
+    contractId: contract.id!,
+    newDate,
+    newPrice,
+    newDeposit,
+});
 
-    static fromContract(contract: Contract, newUnitId: number): ChangeRoomCommand {
-        return new ChangeRoomCommand(contract.id!, newUnitId);
-    }
-}
+export const createTransferContractCommand = (
+    contract: Contract,
+    newCustomerId: number,
+    transferDate: string
+): TransferContractCommand => ({
+    contractId: contract.id!,
+    newCustomerId,
+    transferDate,
+});
 
-export class RenewContractCommand {
-    contractId: number;
-    newEndDate: string;
-    newPrice?: number;
-    note?: string;
+export const createRegisterLeavingCommand = (
+    contract: Contract,
+    leaveDate: string
+): RegisterLeavingCommand => ({
+    contractId: contract.id!,
+    leaveDate,
+});
 
-    constructor(contractId: number, newEndDate: string, newPrice?: number, note?: string) {
-        this.contractId = contractId;
-        this.newEndDate = newEndDate;
-        this.newPrice = newPrice;
-        this.note = note;
-    }
-
-    static fromContract(contract: Contract, newDate: string, newPrice?: number, note?: string): RenewContractCommand {
-        return new RenewContractCommand(contract.id!, newDate, newPrice, note);
-    }
-}
-
-export class RegisterLeavingCommand {
-    contractId: number;
-    leavingDate: string;
-    reason?: string;
-    note?: string;
-
-    constructor(contractId: number, leavingDate: string, reason?: string, note?: string) {
-        this.contractId = contractId;
-        this.leavingDate = leavingDate;
-        this.reason = reason;
-        this.note = note;
-    }
-
-    static fromContract(contract: Contract, leavingDate: string, reason?: string, note?: string): RegisterLeavingCommand {
-        return new RegisterLeavingCommand(contract.id!, leavingDate, reason, note);
-    }
-}
-
-export class TransferContractCommand {
-    contractId: number;
-    newCustomerId: number;
-    transferDate: string;
-    note?: string;
-
-    constructor(contractId: number, newCustomerId: number, transferDate: string, note?: string) {
-        this.contractId = contractId;
-        this.newCustomerId = newCustomerId;
-        this.transferDate = transferDate;
-        this.note = note;
-    }
-
-    static fromContract(contract: Contract, newCustomerId: number, transferDate: string, note?: string): TransferContractCommand {
-        return new TransferContractCommand(contract.id!, newCustomerId, transferDate, note);
-    }
-}
+export const createChangeRoomCommand = (
+    contract: Contract,
+    unitId: number
+): ChangeRoomCommand => ({
+    contractId: contract.id!,
+    unitId,
+});

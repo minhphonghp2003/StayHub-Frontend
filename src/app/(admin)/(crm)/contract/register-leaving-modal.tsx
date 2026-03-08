@@ -7,7 +7,7 @@ import InputField from "@/components/form/InputField";
 import TextArea from "@/components/form/TextArea";
 // FormSelect removed; reason field no longer required
 import { Contract } from "@/core/model/crm/contract";
-import { RegisterLeavingCommand } from "@/core/model/crm/contract-commands";
+import { createRegisterLeavingCommand } from "@/core/model/crm/contract-commands";
 import { contractService } from "@/core/service/crm/contract-service";
 import { toastPromise } from "@/lib/alert-helper";
 import { formatDate } from "@/lib/utils";
@@ -34,14 +34,13 @@ function RegisterLeavingModal({ isOpen, closeModal, reload, contract }: Register
     const onSubmit = async (data: RegisterLeavingFormData) => {
         if (!contract?.id) return;
 
-        const command = RegisterLeavingCommand.fromContract(
+        const payload = createRegisterLeavingCommand(
             contract,
-            data.leavingDate,
-            undefined,
+            data.leavingDate
         );
 
         const result = await toastPromise(
-            contractService.registerLeaving(command),
+            contractService.registerLeaving(payload),
             {
                 loading: "Đang đăng ký rời đi...",
                 success: "Đăng ký rời đi thành công!",

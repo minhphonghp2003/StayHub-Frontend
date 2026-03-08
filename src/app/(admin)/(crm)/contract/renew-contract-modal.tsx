@@ -7,7 +7,7 @@ import InputField from "@/components/form/InputField";
 import TextArea from "@/components/form/TextArea";
 import PriceInput from "@/components/form/PriceInput";
 import { Contract } from "@/core/model/crm/contract";
-import { RenewContractCommand } from "@/core/model/crm/contract-commands";
+import { createRenewContractCommand } from "@/core/model/crm/contract-commands";
 import { contractService } from "@/core/service/crm/contract-service";
 import { toastPromise } from "@/lib/alert-helper";
 import { formatDate } from "@/lib/utils";
@@ -38,14 +38,15 @@ function RenewContractModal({ isOpen, closeModal, reload, contract }: RenewContr
     const onSubmit = async (data: RenewFormData) => {
         if (!contract?.id) return;
 
-        const command = RenewContractCommand.fromContract(
+        const payload = createRenewContractCommand(
             contract,
             data.newDate,
             data.newPrice,
+            data.newDeposit
         );
 
         const result = await toastPromise(
-            contractService.renewContract(command),
+            contractService.renewContract(payload),
             {
                 loading: "Đang gia hạn hợp đồng...",
                 success: "Gia hạn hợp đồng thành công!",
@@ -135,7 +136,7 @@ function RenewContractModal({ isOpen, closeModal, reload, contract }: RenewContr
                     )}
                 />
 
-               
+
             </div>
         </ActionModal>
     );

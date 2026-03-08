@@ -9,7 +9,7 @@ import TextArea from "@/components/form/TextArea";
 import { FormSelect } from "@/components/form/Select";
 import { Contract } from "@/core/model/crm/contract";
 import { Customer } from "@/core/model/crm/customer";
-import { TransferContractCommand } from "@/core/model/crm/contract-commands";
+import { createTransferContractCommand } from "@/core/model/crm/contract-commands";
 import { contractService } from "@/core/service/crm/contract-service";
 import { customerService } from "@/core/service/crm/customer-service";
 import { toastPromise } from "@/lib/alert-helper";
@@ -69,14 +69,14 @@ function TransferContractModal({ isOpen, closeModal, reload, contract }: Transfe
     const onSubmit = async (data: TransferFormData) => {
         if (!contract?.id || !data.newCustomerId) return;
 
-        const command = TransferContractCommand.fromContract(
+        const payload = createTransferContractCommand(
             contract,
             parseInt(data.newCustomerId),
-            data.transferDate,
+            data.transferDate
         );
 
         const result = await toastPromise(
-            contractService.transferContract(command),
+            contractService.transferContract(payload),
             {
                 loading: "Đang chuyển nhượng hợp đồng...",
                 success: "Chuyển nhượng hợp đồng thành công!",

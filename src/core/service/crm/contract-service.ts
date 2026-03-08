@@ -2,7 +2,7 @@ import { Contract } from "@/core/model/crm/contract";
 import { PageInfo } from "@/core/model/BaseResponse";
 import { AddContractPayload } from "@/core/payload/crm/add-contract-payload";
 import { UpdateContractPayload } from "@/core/payload/crm/update-contract-payload";
-import { ChangeRoomCommand, RenewContractCommand, RegisterLeavingCommand, TransferContractCommand } from "@/core/model/crm/contract-commands";
+import { RenewContractPayload, TransferContractPayload, RegisterLeavingPayload } from "@/core/payload/crm/contract-action-payload";
 import { contractRepository } from "@/core/repository/crm/contract-repository";
 
 const getContractById = async (id: number): Promise<Contract | null> => {
@@ -46,18 +46,18 @@ const changeRoom = async (contractId: number, unitId: number): Promise<boolean> 
     return result.data ?? false;
 };
 
-const renewContract = async (command: RenewContractCommand): Promise<boolean> => {
-    const result = await contractRepository.renewContract(command);
+const renewContract = async (payload: RenewContractPayload): Promise<boolean> => {
+    const result = await contractRepository.renewContract(payload);
     return result.data ?? false;
 };
 
-const registerLeaving = async (command: RegisterLeavingCommand): Promise<boolean> => {
-    const result = await contractRepository.registerLeaving(command);
+const registerLeaving = async (payload: RegisterLeavingPayload): Promise<boolean> => {
+    const result = await contractRepository.registerLeaving(payload);
     return result.data ?? false;
 };
 
-const transferContract = async (command: TransferContractCommand): Promise<boolean> => {
-    const result = await contractRepository.transferContract(command);
+const transferContract = async (payload: TransferContractPayload): Promise<boolean> => {
+    const result = await contractRepository.transferContract(payload);
     return result.data ?? false;
 };
 

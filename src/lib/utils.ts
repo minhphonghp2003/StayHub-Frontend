@@ -20,38 +20,43 @@ export function formatVND(amount: number | undefined | null): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
-
+/**
+ * Formats a date string to DD/MM/YYYY (Vietnamese standard)
+ */
 export function formatDate(dateString: string | undefined | null): string {
   if (!dateString) return "-";
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "-";
+  const date = new Date(dateString);
 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+  if (isNaN(date.getTime())) return "-";
 
-    return `${day}/${month}/${year}`;
-  } catch {
-    return "-";
-  }
+  // Using 'en-GB' or 'vi-VN' results in DD/MM/YYYY
+  return date.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
 }
 
+/**
+ * Formats a date string to DD/MM/YYYY HH:mm (Vietnamese standard)
+ */
 export function formatDateTime(dateString: string | undefined | null): string {
   if (!dateString) return "-";
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "-";
+  const date = new Date(dateString);
 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+  if (isNaN(date.getTime())) return "-";
 
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
-  } catch {
-    return "-";
-  }
+  const d = date.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+
+  const t = date.toLocaleTimeString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false // Vietnam typically uses 24h format in tech/admin
+  });
+
+  return `${d} ${t}`;
 }
-
