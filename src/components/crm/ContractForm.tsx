@@ -299,11 +299,11 @@ export function ContractForm({
             <div className="flex flex-col gap-6">
                 {/* Section 2: Thông tin khách thuê */}
                 <div>
-                    <h3 className="font-semibold text-lg mb-3">Thông tin khách thuê & xe <span className="text-red-500">*</span> </h3>
+                    <h3 className="font-semibold text-lg mb-3">Thông tin khách thuê & xe  </h3>
 
                     <div key={customerRows.length} className="space-y-2 mt-10">
                         {customerRows.length > 0 && customerRows.map((row, index) => (
-                            <div key={index} className="flex gap-2">
+                            <div key={index} className="flex gap-2 ">
                                 <div className="flex-1">
                                     <FormSelect
                                         control={form.control}
@@ -343,7 +343,7 @@ export function ContractForm({
                     </button>
                 </div>
                 <div className="flex flex-col gap-2 ">
-                    <Input {...form.register("vehicleNumber")} label="Số xe" type="number" />
+                    <Input {...form.register("vehicleNumber")} label="Số xe" type="number" min={0} />
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                     <Controller
@@ -385,6 +385,7 @@ export function ContractForm({
                                     value={row.quantity}
                                     onChange={(e) => handleServiceChange(index, e.target.value)}
                                     className="w-24"
+                                    min={0}
                                 />
                                 {index > 0 ? (
                                     <button
@@ -432,6 +433,7 @@ export function ContractForm({
                                     value={row.quantity}
                                     onChange={(e) => handleAssetChange(index, e.target.value)}
                                     className="w-24"
+                                    min={0}
                                 />
                                 {index > 0 ? (
                                     <button

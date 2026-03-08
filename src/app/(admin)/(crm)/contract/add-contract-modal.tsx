@@ -73,7 +73,9 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             if (!values.unitId) {
                 errors.unitId = { message: "Vui lòng chọn căn hộ" };
             }
-
+            if (!values.customerIds || values.customerIds.length === 0) {
+                errors.customerIds = { message: "Vui lòng chọn ít nhất một khách hàng" };
+            }
             // Date validations
             if (!values.startDate) {
                 errors.startDate = { message: "Vui lòng chọn ngày bắt đầu" };
