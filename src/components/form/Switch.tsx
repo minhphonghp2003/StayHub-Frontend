@@ -4,6 +4,7 @@ import React, { useState } from "react";
 interface SwitchProps {
   label: string;
   defaultChecked?: boolean;
+  checked?: boolean;
   disabled?: boolean;
   onChange?: (checked: boolean) => void;
   color?: "blue" | "gray"; // Added prop to toggle color theme
@@ -12,16 +13,20 @@ interface SwitchProps {
 const Switch: React.FC<SwitchProps> = ({
   label,
   defaultChecked = false,
+  checked: controlledChecked,
   disabled = false,
   onChange,
   color = "blue", // Default to blue color
 }) => {
-  const [isChecked, setIsChecked] = useState(defaultChecked);
+  const [internalChecked, setInternalChecked] = useState(defaultChecked);
+  const isChecked = controlledChecked !== undefined ? controlledChecked : internalChecked;
 
   const handleToggle = () => {
     if (disabled) return;
     const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
+    if (controlledChecked === undefined) {
+      setInternalChecked(newCheckedState);
+    }
     if (onChange) {
       onChange(newCheckedState);
     }
@@ -55,8 +60,8 @@ const Switch: React.FC<SwitchProps> = ({
       <div className="relative">
         <div
           className={`block transition duration-150 ease-linear h-6 w-11 rounded-full ${disabled
-              ? "bg-gray-100 pointer-events-none dark:bg-gray-800"
-              : switchColors.background
+            ? "bg-gray-100 pointer-events-none dark:bg-gray-800"
+            : switchColors.background
             }`}
         ></div>
         <div

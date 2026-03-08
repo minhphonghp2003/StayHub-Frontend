@@ -8,6 +8,7 @@ import ActionModal from "@/components/ui/modal/ActionModal";
 import Input from "@/components/form/InputField";
 import PriceInput from "@/components/form/PriceInput";
 import { FormSelect } from "@/components/form/Select";
+import Switch from "@/components/form/Switch";
 import DatePicker from "@/components/form/date-picker";
 import { toastPromise } from "@/lib/alert-helper";
 import { RootState } from "@/redux/store";
@@ -23,6 +24,7 @@ import { customerService } from "@/core/service/crm/customer-service";
 import { serviceService } from "@/core/service/infra/service-service";
 import { assetService } from "@/core/service/infra/asset-service";
 import { categoryItemService } from "@/core/service/catalog/category-item-service";
+import { TrashBinIcon } from "@/icons";
 
 interface AddContractModalProps {
     isOpen: boolean;
@@ -64,9 +66,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     const [loading, setLoading] = useState(false);
     const [serviceRows, setServiceRows] = useState<{ serviceId: string; quantity: string }[]>([{ serviceId: "", quantity: "" }]);
     const [assetRows, setAssetRows] = useState<{ assetId: string; quantity: string }[]>([{ assetId: "", quantity: "" }]);
-    const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
-    const [representativeId, setRepresentativeId] = useState<number | null>(null);
-    const [showCustomerList, setShowCustomerList] = useState(true);
+    const [customerRows, setCustomerRows] = useState<{ customerId: string; isRepresentative: boolean }[]>([{ customerId: "", isRepresentative: false }]);
 
     const form = useForm<FormValues>({
         defaultValues: {
@@ -112,7 +112,8 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     }, [isOpen, selectedPropertyId]);
 
     const onSubmit = async (data: FormValues) => {
-        if (selectedCustomers.length === 0) {
+        const validCustomers = customerRows.filter(r => r.customerId);
+        if (validCustomers.length === 0) {
             await toastPromise(Promise.reject(new Error("Vui lòng chọn ít nhất một khách hàng")), {
                 loading: "Đang xác nhận...",
                 success: "Hoàn thành!",
@@ -120,7 +121,8 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             });
             return;
         }
-        if (!representativeId) {
+        const hasRepresentative = customerRows.some(r => r.isRepresentative);
+        if (!hasRepresentative) {
             await toastPromise(Promise.reject(new Error("Vui lòng chọn đại diện")), {
                 loading: "Đang xác nhận...",
                 success: "Hoàn thành!",
@@ -129,8 +131,10 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             return;
         }
         setLoading(true);
+        const customerIds = customerRows.filter(r => r.customerId).map(r => parseInt(r.customerId));
+        const representativeId = customerRows.find(r => r.isRepresentative)?.customerId;
         const payload: AddContractPayload = {
-            customerIds: selectedCustomers,
+            customerIds: customerIds,
             unitId: parseInt(data.unitId),
             price: parseInt(data.price),
             deposit: parseInt(data.deposit),
@@ -143,15 +147,15 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             attachment: data.attachment || undefined,
             isSigned: data.isSigned || false,
             templateId: data.templateId ? parseInt(data.templateId) : undefined,
-            representativeId: representativeId,
+            representativeId: representativeId ? parseInt(representativeId) : 0,
             vehicleNumber: data.vehicleNumber ? parseInt(data.vehicleNumber) : undefined,
             saleId: data.saleId ? parseInt(data.saleId) : undefined,
             services: serviceRows
-                .filter(r => r.serviceId && r.quantity)
-                .map(r => ({ serviceId: parseInt(r.serviceId), quantity: parseInt(r.quantity) })),
+                .filter(r => r.serviceId)
+                .map(r => ({ serviceId: parseInt(r.serviceId), quantity: parseInt(r.quantity || "0") })),
             assets: assetRows
-                .filter(r => r.assetId && r.quantity)
-                .map(r => ({ assetId: parseInt(r.assetId), quantity: parseInt(r.quantity) })),
+                .filter(r => r.assetId)
+                .map(r => ({ assetId: parseInt(r.assetId), quantity: parseInt(r.quantity || "0") })),
         };
 
         const result = await toastPromise(contractService.createContract(payload), {
@@ -166,8 +170,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             form.reset();
             setServiceRows([{ serviceId: "", quantity: "" }]);
             setAssetRows([{ assetId: "", quantity: "" }]);
-            setSelectedCustomers([]);
-            setRepresentativeId(null);
+            setCustomerRows([{ customerId: "", isRepresentative: false }]);
         }
     };
 
@@ -317,67 +320,70 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                     <div>
                         <h3 className="font-semibold text-lg mb-3">Thông tin khách thuê</h3>
                         <div className="space-y-2">
-                            {customers.map((c, index) => (
-                                <div key={c.id} className="flex items-center gap-3">
+                            {customerRows.map((row, index) => (
+                                <div key={index} className="flex gap-2">
                                     <div className="flex-1">
-                                        <div className="flex items-center gap-2 p-2 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedCustomers.includes(c.id ?? 0)}
-                                                onChange={(e) => {
-                                                    if (e.target.checked) {
-                                                        const newSelected = [...selectedCustomers, c.id ?? 0];
-                                                        setSelectedCustomers(newSelected);
-                                                        form.setValue("customerIds", newSelected.map(id => id.toString()));
-                                                        // Set as representative if first added
-                                                        if (newSelected.length === 1) {
-                                                            setRepresentativeId(c.id ?? null);
-                                                            form.setValue("representativeId", (c.id ?? 0).toString());
-                                                        }
-                                                    } else {
-                                                        const filtered = selectedCustomers.filter(id => id !== c.id);
-                                                        setSelectedCustomers(filtered);
-                                                        form.setValue("customerIds", filtered.map(id => id.toString()));
-                                                        // Clear representative if they were the one removed
-                                                        if (representativeId === c.id) {
-                                                            setRepresentativeId(null);
-                                                            form.setValue("representativeId", "");
-                                                        }
-                                                    }
-                                                }}
-                                                className="w-4 h-4"
-                                            />
-                                            <span className="flex-1 text-sm font-medium">{c.name}</span>
-                                        </div>
+                                        <FormSelect
+                                            name={`customer-${index}`}
+                                            control={form.control}
+                                            options={customers.map(c => ({ value: c.id?.toString() ?? "", label: c.name ?? "" }))}
+                                            placeholder="Chọn khách hàng"
+                                            onChange={(value) => {
+                                                const newRows = [...customerRows];
+                                                newRows[index].customerId = value as string;
+                                                setCustomerRows(newRows);
+                                                // Update form values
+                                                const customerIds = newRows.filter(r => r.customerId).map(r => r.customerId);
+                                                form.setValue("customerIds", customerIds);
+                                                // Set representative
+                                                const representative = newRows.find(r => r.isRepresentative);
+                                                if (representative?.customerId) {
+                                                    form.setValue("representativeId", representative.customerId);
+                                                }
+                                            }}
+                                        />
                                     </div>
-                                    {selectedCustomers.includes(c.id ?? 0) && (
-                                        <label className="flex items-center gap-2 cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={representativeId === c.id}
-                                                onChange={() => {
-                                                    if (representativeId === c.id) {
-                                                        setRepresentativeId(null);
-                                                        form.setValue("representativeId", "");
-                                                    } else {
-                                                        setRepresentativeId(c.id ?? null);
-                                                        form.setValue("representativeId", (c.id ?? 0).toString());
+                                    <div className="flex items-center">
+                                        <Switch
+                                            label=""
+                                            checked={row.isRepresentative}
+                                            onChange={(checked) => {
+                                                const newRows = [...customerRows];
+                                                // Only one representative at a time
+                                                if (checked) {
+                                                    newRows.forEach((r, i) => {
+                                                        r.isRepresentative = i === index;
+                                                    });
+                                                    if (row.customerId) {
+                                                        form.setValue("representativeId", row.customerId);
                                                     }
-                                                }}
-                                                className="w-4 h-4"
-                                            />
-                                            <span className="text-xs text-gray-600 dark:text-gray-400">Đại diện</span>
-                                        </label>
+                                                } else {
+                                                    newRows[index].isRepresentative = false;
+                                                    form.setValue("representativeId", "");
+                                                }
+                                                setCustomerRows(newRows);
+                                            }}
+                                        />
+                                        <span className="ml-2 text-xs text-gray-600 dark:text-gray-400">Đại diện</span>
+                                    </div>
+                                    {index > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setCustomerRows(customerRows.filter((_, i) => i !== index))}
+                                            className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                                        >
+                                            <TrashBinIcon className="w-4 h-4" />
+                                        </button>
                                     )}
                                 </div>
                             ))}
                         </div>
                         <button
                             type="button"
-                            onClick={() => { }}
-                            className="text-sm text-brand-500 hover:text-brand-600 mt-2 cursor-default"
+                            onClick={() => setCustomerRows([...customerRows, { customerId: "", isRepresentative: false }])}
+                            className="text-sm text-brand-500 hover:text-brand-600 mt-2"
                         >
-                            {selectedCustomers.length > 0 ? `${selectedCustomers.length} khách hàng đã chọn` : "Chọn khách hàng"}
+                            + Thêm khách hàng
                         </button>
                     </div>
 
@@ -410,9 +416,9 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                                         <button
                                             type="button"
                                             onClick={() => setServiceRows(serviceRows.filter((_, i) => i !== index))}
-                                            className="px-2 py-1 text-red-500 hover:bg-red-50 rounded"
+                                            className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
                                         >
-                                            Xóa
+                                            <TrashBinIcon className="w-4 h-4" />
                                         </button>
                                     )}
                                 </div>
@@ -456,9 +462,9 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                                         <button
                                             type="button"
                                             onClick={() => setAssetRows(assetRows.filter((_, i) => i !== index))}
-                                            className="px-2 py-1 text-red-500 hover:bg-red-50 rounded"
+                                            className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
                                         >
-                                            Xóa
+                                            <TrashBinIcon className="w-4 h-4" />
                                         </button>
                                     )}
                                 </div>
