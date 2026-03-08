@@ -38,13 +38,9 @@ export const getContractColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
         header: "Căn hộ",
     },
     {
-        accessorKey: "customers",
+        accessorKey: "customer.name",
         header: "Khách thuê",
-        cell: ({ row }: any) => {
-            const contract: Contract = row.original;
-            const customerNames = contract.customers?.map(c => c.name).join(", ") || "-";
-            return <span>{customerNames}</span>;
-        },
+
     },
     {
         accessorKey: "price",
@@ -54,6 +50,18 @@ export const getContractColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
             return (
                 <span>
                     {contract.price?.toLocaleString("vi-VN")} ₫
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "deposit",
+        header: "Tiền cọc",
+        cell: ({ row }: any) => {
+            const contract: Contract = row.original;
+            return (
+                <span>
+                    {contract.deposit?.toLocaleString("vi-VN")} ₫
                 </span>
             );
         },

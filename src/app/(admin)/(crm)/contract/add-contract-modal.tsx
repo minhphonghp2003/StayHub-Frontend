@@ -208,7 +208,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                                         onChange={(selectedDates) => {
                                             if (selectedDates[0]) {
                                                 const date = new Date(selectedDates[0]);
-                                                const formatted = date.toISOString().split('T')[0];
+                                                const formatted = date.toISOString();
                                                 field.onChange(formatted);
                                             }
                                         }}
@@ -227,7 +227,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                                         onChange={(selectedDates) => {
                                             if (selectedDates[0]) {
                                                 const date = new Date(selectedDates[0]);
-                                                const formatted = date.toISOString().split('T')[0];
+                                                const formatted = date.toISOString();
                                                 field.onChange(formatted);
                                             }
                                         }}
@@ -290,7 +290,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                                         onChange={(selectedDates) => {
                                             if (selectedDates[0]) {
                                                 const date = new Date(selectedDates[0]);
-                                                const formatted = date.toISOString().split('T')[0];
+                                                const formatted = date.toISOString();
                                                 field.onChange(formatted);
                                             }
                                         }}
