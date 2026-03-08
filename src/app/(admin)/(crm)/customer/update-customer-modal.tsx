@@ -210,7 +210,7 @@ function UpdateCustomerModal({
                                 )}
                             />
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mt-2">
                             <Input {...form.register("job")} label="Công việc" />
                         </div>
                     </div>
