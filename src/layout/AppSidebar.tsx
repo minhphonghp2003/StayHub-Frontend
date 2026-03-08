@@ -51,7 +51,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                   : "menu-item-icon-inactive"
                   }`}
               >
-                <DynamicIcon className="p-1" iconString={nav.icon?.toString() ?? "<GridIcon />"} />
+                <DynamicIcon className="" iconString={nav.icon?.toString() ?? "<GridIcon />"} />
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
                 <span className={`menu-item-text text-sm font-bold`}>{nav.name}</span>
@@ -79,7 +79,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ menuGroups }) => {
                     : "menu-item-icon-inactive"
                     }`}
                 >
-                  <DynamicIcon className="p-1" iconString={nav.icon?.toString() ?? "<GridIcon />"} />
+                  <DynamicIcon className="" iconString={nav.icon?.toString() ?? "<GridIcon />"} />
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className={`menu-item-text text-sm font-bold`}>{nav.name}</span>
