@@ -3,6 +3,7 @@ import { BaseResponse } from "@/core/model/BaseResponse";
 import { Contract } from "@/core/model/crm/contract";
 import { AddContractPayload } from "@/core/payload/crm/add-contract-payload";
 import { UpdateContractPayload } from "@/core/payload/crm/update-contract-payload";
+import { ChangeRoomCommand, RenewContractCommand, RegisterLeavingCommand, TransferContractCommand } from "@/core/model/crm/contract-commands";
 
 const baseUrl = "/contract";
 
@@ -58,10 +59,49 @@ const deleteContract = async (id: number): Promise<BaseResponse<boolean>> => {
     return response.data;
 };
 
+const changeRoom = async (contractId: number, unitId: number): Promise<BaseResponse<boolean>> => {
+    const response = await api.request({
+        url: `change-room/contract/${contractId}/unit/${unitId}`,
+        method: "POST",
+    });
+    return response.data;
+};
+
+const renewContract = async (command: RenewContractCommand): Promise<BaseResponse<boolean>> => {
+    const response = await api.request({
+        url: `${baseUrl}/renew`,
+        method: "POST",
+        data: command,
+    });
+    return response.data;
+};
+
+const registerLeaving = async (command: RegisterLeavingCommand): Promise<BaseResponse<boolean>> => {
+    const response = await api.request({
+        url: `${baseUrl}/register-leaving`,
+        method: "POST",
+        data: command,
+    });
+    return response.data;
+};
+
+const transferContract = async (command: TransferContractCommand): Promise<BaseResponse<boolean>> => {
+    const response = await api.request({
+        url: `${baseUrl}/transfer`,
+        method: "POST",
+        data: command,
+    });
+    return response.data;
+};
+
 export const contractRepository = {
     getContractById,
     getAllContracts,
     createContract,
     updateContract,
     deleteContract,
+    changeRoom,
+    renewContract,
+    registerLeaving,
+    transferContract,
 };

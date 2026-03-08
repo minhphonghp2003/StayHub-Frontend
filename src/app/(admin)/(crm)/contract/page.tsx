@@ -73,6 +73,22 @@ function ContractPage() {
     const columns = getContractColumns({
         onDelete: (c) => setModalState({ type: "DELETE", data: c }),
         onUpdate: (c) => setModalState({ type: "UPDATE", data: c }),
+        onRenew: (c) => {
+            // TODO: Implement renew contract modal
+            console.log("Renew contract:", c);
+        },
+        onChangeRoom: (c) => {
+            // TODO: Implement change room modal
+            console.log("Change room:", c);
+        },
+        onRegisterLeaving: (c) => {
+            // TODO: Implement register leaving modal
+            console.log("Register leaving:", c);
+        },
+        onTransfer: (c) => {
+            // TODO: Implement transfer modal
+            console.log("Transfer contract:", c);
+        },
     });
 
     const closeModal = () => setModalState({ type: null, data: null });

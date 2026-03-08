@@ -4,15 +4,19 @@ import { Button } from "@/components/ui/shadcn/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/shadcn/dropdown-menu";
 import { Contract } from "@/core/model/crm/contract";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { ArrowUpDown, Edit2, MoreHorizontal, Trash2, RefreshCw, Move, LogOut, FileText } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export interface ColumnProp {
     onDelete: (item: Contract) => void;
     onUpdate: (item: Contract) => void;
+    onRenew: (item: Contract) => void;
+    onChangeRoom: (item: Contract) => void;
+    onRegisterLeaving: (item: Contract) => void;
+    onTransfer: (item: Contract) => void;
 }
 
-export const getContractColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDef<Contract>[] => [
+export const getContractColumns = ({ onDelete, onUpdate, onRenew, onChangeRoom, onRegisterLeaving, onTransfer }: ColumnProp): ColumnDef<Contract>[] => [
     {
         id: "index",
         header: () => <p className="text-center">#</p>,
@@ -117,11 +121,43 @@ export const getContractColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => {
+                                    onRenew(item);
+                                }}
+                            >
+                                <RefreshCw className="mr-2 w-4 h-4 opacity-70 text-green-500" />
+                                <span className="text-green-500">Gia hạn hợp đồng</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    onChangeRoom(item);
+                                }}
+                            >
+                                <Move className="mr-2 w-4 h-4 opacity-70 text-orange-500" />
+                                <span className="text-orange-500">Chuyển phòng</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    onRegisterLeaving(item);
+                                }}
+                            >
+                                <LogOut className="mr-2 w-4 h-4 opacity-70 text-purple-500" />
+                                <span className="text-purple-500">Đăng ký rời đi</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    onTransfer(item);
+                                }}
+                            >
+                                <FileText className="mr-2 w-4 h-4 opacity-70 text-indigo-500" />
+                                <span className="text-indigo-500">Chuyển nhượng</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => {
                                     onDelete(item);
                                 }}
                             >
                                 <Trash2 className="mr-2 w-4 h-4 opacity-70 text-red-500" />
-                                <span className="text-red-500">Xóa</span>
+                                <span className="text-red-500">Xóa (Hủy hợp đồng)</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
