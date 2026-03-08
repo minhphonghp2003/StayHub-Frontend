@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Contract } from "@/core/model/crm/contract";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 export interface ColumnProp {
     onDelete: (item: Contract) => void;
@@ -77,10 +78,18 @@ export const getContractColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
     {
         accessorKey: "startDate",
         header: "Ngày bắt đầu",
+        cell: ({ row }) => {
+            const startDate = row.getValue<string>("startDate");
+            return <span>{formatDate(startDate)}</span>;
+        },
     },
     {
         accessorKey: "endDate",
         header: "Ngày kết thúc",
+        cell: ({ row }) => {
+            const endDate = row.getValue<string>("endDate");
+            return <span>{formatDate(endDate)}</span>;
+        },
     },
     {
         accessorKey: "status",

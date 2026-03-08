@@ -7,18 +7,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
 export interface EmployeeColumnProp {
     onDelete: (employee: User) => void;
 }
-const formatter = new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-});
+
 export const getEmployeeColumns = ({ onDelete, }: EmployeeColumnProp): ColumnDef<User>[] => [
     {
         id: "index",
@@ -133,9 +127,7 @@ export const getEmployeeColumns = ({ onDelete, }: EmployeeColumnProp): ColumnDef
         },
         cell: ({ row }) => {
             const updatedAt = row.getValue<string>("updatedAt");
-            const date = new Date(updatedAt);
-            const formatted = formatter.format(date);
-            return <div className="font-medium">{formatted}</div>
+            return <div className="font-medium">{formatDateTime(updatedAt)}</div>
         },
     },
     {

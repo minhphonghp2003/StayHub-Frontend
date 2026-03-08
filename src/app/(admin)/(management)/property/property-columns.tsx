@@ -7,12 +7,7 @@ import { Tooltip } from "@/components/ui/tooltip/Tooltip"
 import { Property } from "@/core/model/pmm/property"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, Edit2, MoreHorizontal, Newspaper, Trash2 } from "lucide-react"
-
-const formatter = new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-});
+import { formatDate, formatDateTime } from "@/lib/utils"
 
 export interface PropertyColumnProp {
     onDelete: (property: Property) => void;
@@ -72,7 +67,7 @@ export const getPropertyColumns = ({ onDelete, onUpdate, onRenew }: PropertyColu
             const end = endSubscriptionDate ? new Date(endSubscriptionDate) : undefined
             const start = startSubscriptionDate ? new Date(startSubscriptionDate) : undefined
 
-            const tooltipText = `${start ? 'Bắt đầu: ' + formatter.format(start) : ''}\n${end ? 'Kết thúc: ' + formatter.format(end) : ''}`.trim()
+            const tooltipText = `${start ? 'Bắt đầu: ' + formatDate(startSubscriptionDate?.toISOString?.() ?? String(startSubscriptionDate)) : ''}\n${end ? 'Kết thúc: ' + formatDate(endSubscriptionDate?.toISOString?.() ?? String(endSubscriptionDate)) : ''}`.trim()
 
             if (!end) {
                 if (start && start <= now) {
@@ -116,7 +111,7 @@ export const getPropertyColumns = ({ onDelete, onUpdate, onRenew }: PropertyColu
         header: "Ngày cập nhật",
         cell: ({ row }) => {
             const date = row.original.updatedAt
-            return date ? formatter.format(new Date(date)) : "-"
+            return date ? formatDateTime(typeof date === 'string' ? date : date.toISOString?.() ?? String(date)) : "-"
         },
     },
     {

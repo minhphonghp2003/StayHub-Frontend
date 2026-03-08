@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Customer } from "@/core/model/crm/customer";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
 export interface ColumnProp {
     onDelete: (item: Customer) => void;
@@ -62,7 +63,10 @@ export const getCustomerColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
     {
         accessorKey: "dateOfBirth",
         header: " Ngày sinh",
-
+        cell: ({ row }) => {
+            const dateOfBirth = row.getValue<string>("dateOfBirth");
+            return <span>{formatDate(dateOfBirth)}</span>;
+        },
     },
     {
         accessorKey: "cccd",

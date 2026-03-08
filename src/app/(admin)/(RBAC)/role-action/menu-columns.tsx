@@ -8,16 +8,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Menu } from "@/core/model/RBAC/Menu"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react"
-const formatter = new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-});
+import { formatDate } from "@/lib/utils"
 export const getMenuColumns = (): ColumnDef<Menu>[] => [
-   {
+    {
         id: "select",
         header: ({ table }) => (
             <Checkbox
@@ -71,6 +64,6 @@ export const getMenuColumns = (): ColumnDef<Menu>[] => [
             )
         },
     },
-    
+
 
 ]

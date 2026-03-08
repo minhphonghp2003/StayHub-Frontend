@@ -7,14 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Action } from "@/core/model/RBAC/Action"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react"
-const formatter = new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-});
+import { formatDate } from "@/lib/utils"
 export interface ColumnProp {
     onToggleAnon: (action: Action, value: boolean) => void;
 }

@@ -9,14 +9,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-const formatter = new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-});
+import { formatDate, formatDateTime } from "@/lib/utils"
 export interface ColumnProp {
     onToggleActive: (user: User, value: boolean) => void;
     onDelete: (user: User) => void; // <-- Thêm dòng này
@@ -167,9 +160,7 @@ export const getUserColumns = ({ onToggleActive, onDelete }: ColumnProp): Column
         },
         cell: ({ row }) => {
             const updatedAt = row.getValue<string>("updatedAt");
-            const date = new Date(updatedAt);
-            const formatted = formatter.format(date);
-            return <div className="font-medium">{formatted}</div>
+            return <div className="font-medium">{formatDateTime(updatedAt)}</div>
         },
     },
     {

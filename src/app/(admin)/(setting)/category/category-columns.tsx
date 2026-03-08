@@ -7,14 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Category } from "@/core/model/catalog/category"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2 } from "lucide-react"
-const formatter = new Intl.DateTimeFormat('en-GB', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-});
+import { formatDate, formatDateTime } from "@/lib/utils"
 export interface ColumnProp {
     onDelete: (category: Category) => void;
     onUpdate: (category: Category) => void;
@@ -80,9 +73,7 @@ export const getCategoryColumns = ({ onDelete, onUpdate }: ColumnProp): ColumnDe
         },
         cell: ({ row }) => {
             const updatedAt = row.getValue<string>("updatedAt");
-            const date = new Date(updatedAt);
-            const formatted = formatter.format(date);
-            return <div className="font-medium">{formatted}</div>
+            return <div className="font-medium">{formatDateTime(updatedAt)}</div>
         },
     },
     {
