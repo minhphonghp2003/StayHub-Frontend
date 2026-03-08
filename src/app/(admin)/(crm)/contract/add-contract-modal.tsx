@@ -41,6 +41,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     const [paymentPeriods, setPaymentPeriods] = useState<CategoryItem[]>([]);
     const [sales, setSales] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(false);
     const [serviceRows, setServiceRows] = useState<{ serviceId: string; quantity: string }[]>([{ serviceId: "", quantity: "" }]);
     const [assetRows, setAssetRows] = useState<{ assetId: string; quantity: string }[]>([{ assetId: "", quantity: "" }]);
     const [customerRows, setCustomerRows] = useState<{ customerId: string; isRepresentative: boolean }[]>([{ customerId: "", isRepresentative: false }]);
@@ -68,6 +69,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
 
     const fetchDropdowns = async () => {
         if (!selectedPropertyId) return;
+        setInitialLoading(true);
         const [u, c, s, a, p, sa] = await Promise.all([
             unitService.getAllUnitsNoPaging(selectedPropertyId) ?? Promise.resolve(null),
             customerService.getAllCustomersNoPaging(selectedPropertyId) ?? Promise.resolve(null),
@@ -82,6 +84,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
         setAssets(a ?? []);
         setPaymentPeriods(p ?? []);
         setSales(sa ?? []);
+        setInitialLoading(false);
     };
 
     useEffect(() => {
@@ -176,7 +179,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             closeModal={closeModal}
             heading="Thêm hợp đồng"
             onConfirm={form.handleSubmit(onSubmit)}
-            loading={loading}
+            loading={loading || initialLoading}
             size="2xl"
         >
             <ContractForm

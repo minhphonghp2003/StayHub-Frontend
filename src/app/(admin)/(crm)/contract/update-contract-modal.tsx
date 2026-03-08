@@ -70,6 +70,7 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
 
     const fetchDropdowns = async () => {
         if (!selectedPropertyId) return;
+        setInitialLoading(true);
         const [u, c, s, a, p, sa] = await Promise.all([
             unitService.getAllUnitsNoPaging(selectedPropertyId) ?? Promise.resolve(null),
             customerService.getAllCustomersNoPaging(selectedPropertyId) ?? Promise.resolve(null),
@@ -84,10 +85,10 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
         setAssets(a ?? []);
         setPaymentPeriods(p ?? []);
         setSales(sa ?? []);
+        setInitialLoading(false);
     };
 
     const fetchInitialData = async () => {
-        setInitialLoading(true);
         const contract = await contractService.getContractById(contractId);
         if (contract) {
             setContractCode(contract.code || "");
@@ -136,8 +137,10 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
 
     useEffect(() => {
         if (isOpen && selectedPropertyId) {
-            fetchDropdowns();
-            fetchInitialData();
+            setInitialLoading(true);
+            Promise.all([fetchDropdowns(), fetchInitialData()]).then(() => {
+                setInitialLoading(false);
+            });
         }
     }, [isOpen, contractId, selectedPropertyId]);
 
@@ -233,7 +236,7 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
             closeModal={closeModal}
             heading="Cập nhật hợp đồng"
             onConfirm={form.handleSubmit(onSubmit)}
-            loading={loading}
+            loading={loading || initialLoading}
             size="2xl"
         >
             <ContractForm
