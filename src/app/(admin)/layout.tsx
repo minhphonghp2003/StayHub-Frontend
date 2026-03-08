@@ -77,7 +77,7 @@ export default function AdminLayout({
 
   // Show loading screen during initial data fetch
   if (isInitialLoad) {
-    return <StayHubLoadingScreen progress={getLoadingProgress()} />;
+    return <StayHubLoadingScreen  progress={getLoadingProgress()} />;
   }
 
   return (

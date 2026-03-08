@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BrandLogo from './BrandLogo';
 
 interface StayHubLoadingScreenProps {
@@ -6,6 +6,20 @@ interface StayHubLoadingScreenProps {
 }
 
 const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 0 }) => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const isDark = theme === 'dark';
+
+  useEffect(() => {
+    // Get theme from localStorage
+    const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else {
+      // Check system preference if no stored theme
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+  }, []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef({
     snake: [{ x: 10, y: 10 }],
@@ -179,14 +193,15 @@ const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#121417] overflow-hidden flex justify-center items-center relative">
+    <div className={`min-h-screen overflow-hidden flex justify-center items-center relative transition-colors duration-300 ${isDark ? 'bg-[#121417]' : 'bg-white'
+      }`}>
       {/* Grid Background Animation */}
       <div
         className="absolute top-0 left-0 w-[200%] h-[200%] opacity-70"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(128, 128, 128, 0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(128, 128, 128, 0.08) 1px, transparent 1px)
+            linear-gradient(rgba(${isDark ? '128, 128, 128' : '0, 0, 0'}, 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(${isDark ? '128, 128, 128' : '0, 0, 0'}, 0.08) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
           animation: 'moveGrid 20s linear infinite',
@@ -194,7 +209,10 @@ const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 
       />
 
       {/* Ambient Glow */}
-      <div className="absolute w-[400px] h-[400px] bg-radial-gradient(circle, rgba(255, 214, 70, 0.04) 0%, transparent 70%) rounded-full -z-10 animate-ambient-glow" />
+      <div className={`absolute w-[400px] h-[400px] rounded-full -z-10 animate-ambient-glow ${isDark
+        ? 'bg-radial-gradient(circle, rgba(255, 214, 70, 0.04) 0%, transparent 70%)'
+        : 'bg-radial-gradient(circle, rgba(255, 214, 70, 0.08) 0%, transparent 70%)'
+        }`} />
 
       <div className="relative z-10 flex flex-col items-center text-center">
         {/* Logo Section */}
@@ -206,13 +224,17 @@ const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 
         <div className="mb-8 animate-fadeIn">
           <canvas
             ref={canvasRef}
-            className="bg-black/30 border border-white/10 rounded-lg shadow-lg"
+            className={`rounded-lg shadow-lg border ${isDark
+              ? 'bg-black/30 border-white/10'
+              : 'bg-gray-100 border-gray-300'
+              }`}
             style={{ display: 'block' }}
           />
         </div>
 
         {/* Progress Bar */}
-        <div className="w-80 h-1 bg-white/5 rounded-xl overflow-hidden mb-6 animate-fadeIn">
+        <div className={`w-80 h-1 rounded-xl overflow-hidden mb-6 animate-fadeIn ${isDark ? 'bg-white/5' : 'bg-gray-300'
+          }`}>
           <div
             className="h-full bg-[#FFD646] shadow-[0_0_15px_rgba(255,214,70,0.5)] transition-all duration-300 ease-out"
             style={{
@@ -223,13 +245,15 @@ const StayHubLoadingScreen: React.FC<StayHubLoadingScreenProps> = ({ progress = 
         </div>
 
         {/* Tagline */}
-        <p className="text-white/50 text-base font-normal max-w-[450px] leading-relaxed animate-fadeIn">
+        <p className={`text-base font-normal max-w-[450px] leading-relaxed animate-fadeIn ${isDark ? 'text-white/50' : 'text-gray-600'
+          }`}>
           Hệ sinh thái lưu trú thông minh, <br />
           kết nối trải nghiệm và tối ưu không gian sống
         </p>
 
         {/* Game Instructions */}
-        <p className="text-white/40 text-xs mt-4 animate-fadeIn">
+        <p className={`text-xs mt-4 animate-fadeIn ${isDark ? 'text-white/40' : 'text-gray-500'
+          }`}>
           Sử dụng các phím mũi tên để điều khiển con rắn • Thu thập các điểm vàng
         </p>
       </div>
