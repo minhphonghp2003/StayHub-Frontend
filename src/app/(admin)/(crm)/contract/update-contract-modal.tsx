@@ -44,7 +44,6 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
     const [sales, setSales] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [initialLoading, setInitialLoading] = useState(false);
-    const [serviceRows, setServiceRows] = useState<{ serviceId: string; quantity: string }[]>([{ serviceId: "", quantity: "" }]);
     const [assetRows, setAssetRows] = useState<{ assetId: string; quantity: string }[]>([{ assetId: "", quantity: "" }]);
     const [customerRows, setCustomerRows] = useState<{ customerId: string; isRepresentative: boolean }[]>([{ customerId: "", isRepresentative: false }]);
     const [contractCode, setContractCode] = useState("");
@@ -53,9 +52,7 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
         defaultValues: {
             customerIds: [
             ],
-            services: [
-                { serviceId: "", quantity: "" }
-            ],
+            services: [],
             assets: [
                 { assetId: "", quantity: "" }
             ],
@@ -149,13 +146,6 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
                     isRepresentative: customer.isRepresentative === true
                 }))
             );
-            // Map services from contract
-            if (contract.services && contract.services.length > 0) {
-                setServiceRows(contract.services.map(s => ({
-                    serviceId: s.serviceId?.toString() || "",
-                    quantity: s.quantity?.toString() || ""
-                })));
-            }
             // Map assets from contract
             if (contract.assets && contract.assets.length > 0) {
                 setAssetRows(contract.assets.map(a => ({
@@ -165,10 +155,7 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
             }
             form.reset({
                 customerIds: (contract.customer ?? []).map(c => c.id?.toString() ?? "") || [],
-                services: contract.services?.map(s => ({
-                    serviceId: s.serviceId?.toString() || "",
-                    quantity: s.quantity?.toString() || ""
-                })) || [{ serviceId: "", quantity: "" }],
+                services: contract.services?.map(s => s.id?.toString()) || [],
                 assets: contract.assets?.map(a => ({
                     assetId: a.assetId?.toString() || "",
                     quantity: a.quantity?.toString() || ""
@@ -242,11 +229,9 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
             isSigned: data.isSigned || false,
             templateId: data.templateId ? parseInt(data.templateId) : undefined,
             representativeId: representativeId ? parseInt(representativeId) : 0,
-            saleId: data.saleId ? parseInt(data.saleId) : undefined,
-            vehicleNumber: data.vehicleNumber ? parseInt(data.vehicleNumber) : undefined,
-            services: serviceRows
-                .filter(r => r.serviceId)
-                .map(r => ({ serviceId: parseInt(r.serviceId), quantity: parseInt(r.quantity || "0") })),
+            services: data.services
+                .filter(s => s)
+                .map(s => parseInt(s)),
             assets: assetRows
                 .filter(r => r.assetId)
                 .map(r => ({ assetId: parseInt(r.assetId), quantity: parseInt(r.quantity || "0") })),
@@ -291,10 +276,8 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
                 paymentPeriods={paymentPeriods}
                 sales={sales}
                 customerRows={customerRows}
-                serviceRows={serviceRows}
                 assetRows={assetRows}
                 onCustomerRowsChange={setCustomerRows}
-                onServiceRowsChange={setServiceRows}
                 onAssetRowsChange={setAssetRows}
             />
         </ActionModal>

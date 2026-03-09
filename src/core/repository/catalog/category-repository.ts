@@ -1,4 +1,5 @@
 import { api } from "@/core/http-client/AxiosClient";
+import { BaseResponse } from "@/core/model/BaseResponse";
 import { Category } from "@/core/model/catalog/category";
 import { AddCategoryPayload } from "@/core/payload/catalog/add-category-payload";
 import { UpdateCategoryPayload } from "@/core/payload/catalog/update-category-payload";

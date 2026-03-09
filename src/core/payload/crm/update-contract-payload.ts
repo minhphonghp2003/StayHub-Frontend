@@ -1,8 +1,3 @@
-export interface ContractServicePayload {
-    serviceId: number;
-    quantity: number;
-}
-
 export interface ContractAssetPayload {
     assetId: number;
     quantity: number;
@@ -22,10 +17,8 @@ export interface UpdateContractPayload {
     code: string;
     isSigned: boolean;
     templateId?: number;
-    services?: ContractServicePayload[];
+    services?: number[];
     assets?: ContractAssetPayload[];
     customerIds: number[];
     representativeId: number;
-    saleId?: number;
-    vehicleNumber?: number;
 }

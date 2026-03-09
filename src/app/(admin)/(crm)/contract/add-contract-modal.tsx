@@ -42,7 +42,6 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     const [sales, setSales] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [initialLoading, setInitialLoading] = useState(false);
-    const [serviceRows, setServiceRows] = useState<{ serviceId: string; quantity: string }[]>([{ serviceId: "", quantity: "" }]);
     const [assetRows, setAssetRows] = useState<{ assetId: string; quantity: string }[]>([{ assetId: "", quantity: "" }]);
     const [customerRows, setCustomerRows] = useState<{ customerId: string; isRepresentative: boolean }[]>([{ customerId: "", isRepresentative: false }]);
 
@@ -64,6 +63,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             representativeId: "",
             vehicleNumber: "",
             saleId: "",
+            services: [],
         },
         mode: "onChange",
         resolver: async (values) => {
@@ -102,6 +102,8 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             if (!values.paymentPeriodId) {
                 errors.paymentPeriodId = { message: "Vui lòng chọn kỳ thanh toán" };
             }
+
+         
 
             return {
                 values,
@@ -157,11 +159,8 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             });
             return;
         }
-        setLoading(true);
-        const customerIds = customerRows.filter(r => r.customerId).map(r => parseInt(r.customerId));
-        const representativeId = customerRows.find(r => r.isRepresentative)?.customerId;
         const payload: AddContractPayload = {
-            customerIds: customerIds,
+            customerIds: validCustomers.map(r => parseInt(r.customerId)),
             unitId: parseInt(data.unitId),
             price: parseInt(data.price),
             deposit: parseInt(data.deposit),
@@ -174,12 +173,14 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             attachment: data.attachment || undefined,
             isSigned: data.isSigned || false,
             templateId: data.templateId ? parseInt(data.templateId) : undefined,
-            representativeId: representativeId ? parseInt(representativeId) : 0,
-            vehicleNumber: data.vehicleNumber ? parseInt(data.vehicleNumber) : undefined,
+            representativeId: customerRows.find(r => r.isRepresentative)?.customerId
+                ? parseInt(customerRows.find(r => r.isRepresentative)!.customerId)
+                : 0,
+            vehicleNumber: data.vehicleNumber ? parseInt(data.vehicleNumber) : 0,
             saleId: data.saleId ? parseInt(data.saleId) : undefined,
-            services: serviceRows
-                .filter(r => r.serviceId)
-                .map(r => ({ serviceId: parseInt(r.serviceId), quantity: parseInt(r.quantity || "0") })),
+            services: data.services
+                .filter(s => s)
+                .map(s => parseInt(s)),
             assets: assetRows
                 .filter(r => r.assetId)
                 .map(r => ({ assetId: parseInt(r.assetId), quantity: parseInt(r.quantity || "0") })),
@@ -195,10 +196,11 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
             closeModal();
             reload();
             form.reset();
-            setServiceRows([{ serviceId: "", quantity: "" }]);
+            // local state not needed for services any more
             setAssetRows([{ assetId: "", quantity: "" }]);
             setCustomerRows([{ customerId: "", isRepresentative: false }]);
         }
+
     };
 
     return (
@@ -219,10 +221,8 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                 paymentPeriods={paymentPeriods}
                 sales={sales}
                 customerRows={customerRows}
-                serviceRows={serviceRows}
                 assetRows={assetRows}
                 onCustomerRowsChange={setCustomerRows}
-                onServiceRowsChange={setServiceRows}
                 onAssetRowsChange={setAssetRows}
             />
         </ActionModal>

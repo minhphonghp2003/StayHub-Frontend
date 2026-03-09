@@ -1,15 +1,9 @@
 import { Unit } from "@/core/model/infra/unit";
 import { Customer } from "./customer";
-import { Service } from "@/core/model/infra/service";
 import { Asset } from "@/core/model/infra/asset";
 import { CategoryItem } from "@/core/model/catalog/category-item";
 import { User } from "@/core/model/RBAC/User";
-
-export interface ContractService extends BaseModel {
-    serviceId: number;
-    service?: Service;
-    quantity: number;
-}
+import { Service } from "@/core/model/infra/service";
 
 export interface ContractAsset extends BaseModel {
     assetId: number;
@@ -20,10 +14,11 @@ export interface ContractAsset extends BaseModel {
 export interface Contract extends BaseModel {
     unitId: number;
     unit?: Unit;
+    vehicleNumber: number;
     customer?: Customer[];
     assets?: ContractAsset[];
-    services?: ContractService[];
-    status?: string;
+    services?: Service[];
+    status: string;
     price: number;
     deposit: number;
     depositRemain?: number;
@@ -39,5 +34,4 @@ export interface Contract extends BaseModel {
     templateId?: number;
     saleId?: number;
     sale?: User;
-    vehicleNumber?: number;
 }

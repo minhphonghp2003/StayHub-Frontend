@@ -1,6 +1,7 @@
 "use client";
 
 import { Controller, UseFormReturn } from "react-hook-form";
+import MultiSelect from "@/components/form/MultiSelect";
 import Input from "@/components/form/InputField";
 import PriceInput from "@/components/form/PriceInput";
 import { FormSelect } from "@/components/form/Select";
@@ -31,7 +32,7 @@ export type ContractFormValues = {
     representativeId: string;
     vehicleNumber?: string;
     saleId?: string;
-    services?: { serviceId: string; quantity: string }[];
+    services: string[];
     assets?: { assetId: string; quantity: string }[];
 };
 
@@ -44,10 +45,8 @@ interface ContractFormProps {
     paymentPeriods: CategoryItem[];
     sales: User[];
     customerRows: { customerId: string; isRepresentative: boolean }[];
-    serviceRows: { serviceId: string; quantity: string }[];
     assetRows: { assetId: string; quantity: string }[];
     onCustomerRowsChange: (rows: { customerId: string; isRepresentative: boolean }[]) => void;
-    onServiceRowsChange: (rows: { serviceId: string; quantity: string }[]) => void;
     onAssetRowsChange: (rows: { assetId: string; quantity: string }[]) => void;
 }
 
@@ -60,10 +59,8 @@ export function ContractForm({
     paymentPeriods,
     sales,
     customerRows,
-    serviceRows,
     assetRows,
     onCustomerRowsChange,
-    onServiceRowsChange,
     onAssetRowsChange,
 }: ContractFormProps) {
 
@@ -101,21 +98,6 @@ export function ContractForm({
 
     const handleAddCustomer = () => {
         onCustomerRowsChange([...customerRows, { customerId: "", isRepresentative: false }]);
-    };
-
-    const handleServiceChange = (index: number, quantity: string) => {
-        const newRows = [...serviceRows];
-        newRows[index].quantity = quantity;
-
-        onServiceRowsChange(newRows);
-    };
-
-    const handleDeleteService = (index: number) => {
-        onServiceRowsChange(serviceRows.filter((_, i) => i !== index));
-    };
-
-    const handleAddService = () => {
-        onServiceRowsChange([...serviceRows, { serviceId: "", quantity: "" }]);
     };
 
     const handleAssetChange = (index: number, quantity: string) => {
@@ -360,52 +342,20 @@ export function ContractForm({
                 </div>
 
                 {/* Section 4: Dịch vụ */}
-                <div>
+                <div key={form.getValues("services").length}>
                     <h3 className="font-semibold text-lg mb-3">Dịch vụ</h3>
-                    <div className="space-y-2">
-                        {serviceRows.map((row, index) => (
-                            <div key={index} className="flex gap-2">
-                                <div className="flex-1">
-                                    <FormSelect
-                                        {...form.register(`services.${index}.serviceId`)}
-                                        control={form.control}
-                                        onChange={(value) => {
-                                            const newRows = [...serviceRows];
-                                            newRows[index].serviceId = value as string;
-                                            onServiceRowsChange(newRows);
-
-                                        }}
-                                        options={services.map(s => ({ value: s.id?.toString(), label: s.name ?? "" }))}
-                                        placeholder="Chọn dịch vụ"
-                                    />
-                                </div>
-                                <Input
-                                    placeholder="Số lượng"
-                                    type="number"
-                                    value={row.quantity}
-                                    onChange={(e) => handleServiceChange(index, e.target.value)}
-                                    className="w-24"
-                                    min={0}
-                                />
-                                {index > 0 ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDeleteService(index)}
-                                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
-                                    >
-                                        <TrashBinIcon className="w-4 h-4" />
-                                    </button>
-                                ) : <div className="w-12 h-8" />}
-                            </div>
-                        ))}
-                    </div>
-                    <button
-                        type="button"
-                        onClick={handleAddService}
-                        className="text-sm text-brand-500 hover:text-brand-600 mt-2"
-                    >
-                        + Thêm dịch vụ
-                    </button>
+                    <Controller
+                        control={form.control}
+                        name="services"
+                        render={({ field }) => (
+                            <MultiSelect
+                                label=""
+                                options={services.map(s => ({ value: s.id?.toString() || "", text: s.name || "", selected: false }))}
+                                defaultSelected={field.value || []}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
                 </div>
 
                 {/* Section 5: Bàn giao tài sản */}
