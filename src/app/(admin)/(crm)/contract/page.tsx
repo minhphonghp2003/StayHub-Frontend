@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
+import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
@@ -11,7 +12,7 @@ import { RootState } from '@/redux/store';
 import { PageInfo } from '@/core/model/BaseResponse';
 import { Contract } from '@/core/model/crm/contract';
 import { contractService } from '@/core/service/crm/contract-service';
-import { getContractColumns } from './contract-columns';
+import { FormSelect } from "@/components/form/Select";
 import AddContractModal from './add-contract-modal';
 import UpdateContractModal from './update-contract-modal';
 import DeleteContractModal from './delete-contract-modal';
@@ -19,12 +20,14 @@ import RenewContractModal from './renew-contract-modal';
 import ChangeRoomModal from './change-room-modal';
 import RegisterLeavingModal from './register-leaving-modal';
 import TransferContractModal from './transfer-contract-modal';
+import { getContractColumns } from '@/app/(admin)/(crm)/contract/contract-columns';
 
 function ContractPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const search = searchParams.get("search");
     const page = searchParams.get("page");
+    const status = searchParams.get("status");
 
     const selectedPropertyId = useSelector(
         (state: RootState) => state.property.selectedPropertyId
@@ -38,9 +41,19 @@ function ContractPage() {
     const [data, setData] = useState<Contract[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
 
+    const form = useForm({
+        defaultValues: {
+            status: status === "" ? "all" : status || "",
+        },
+    });
+
     useEffect(() => {
         fetchData();
-    }, [page, search, selectedPropertyId]);
+    }, [page, search, status, selectedPropertyId]);
+
+    useEffect(() => {
+        form.setValue("status", status === "" ? "all" : status || "");
+    }, [status, form]);
 
     const fetchData = async () => {
         setLoading(true);
@@ -51,6 +64,7 @@ function ContractPage() {
         }
         const result = await contractService.getAllContracts({
             propertyId: selectedPropertyId,
+            status: status || undefined,
             pageNumber: page ? Number(page) : undefined,
             pageSize: pageInfo?.pageSize,
             search: search || undefined,
@@ -74,6 +88,17 @@ function ContractPage() {
         router.push(`?${currentParams.toString()}`);
     }, 1000);
 
+    const onStatusChange = (value: string) => {
+        const currentParams = new URLSearchParams(searchParams.toString());
+        const statusValue = value === "all" ? "" : value;
+        if (statusValue) {
+            currentParams.set("status", statusValue);
+        } else {
+            currentParams.delete("status");
+        }
+        router.push(`?${currentParams.toString()}`);
+    };
+
     const columns = getContractColumns({
         onDelete: (c) => setModalState({ type: "DELETE", data: c }),
         onUpdate: (c) => setModalState({ type: "UPDATE", data: c }),
@@ -88,6 +113,24 @@ function ContractPage() {
     return (
         <div>
             <PageBreadcrumb pagePath="/contract" pageTitle="Hợp đồng" />
+            <div className="mb-4 flex gap-4">
+                <FormSelect
+                    name="status"
+                    control={form.control}
+                    label="Trạng thái"
+                    options={[
+                        { value: "all", label: "Tất cả" },
+                        { value: "Pending", label: "Chờ duyệt" },
+                        { value: "Active", label: "Đang hiệu lực" },
+                        { value: "ExpiringSoon", label: "Sắp hết hạn" },
+                        { value: "Expired", label: "Đã hết hạn" },
+                        { value: "Terminated", label: "Đã thanh lý" },
+                        { value: "Canceled", label: "Đã hủy" },
+                    ]}
+                    placeholder="Chọn trạng thái"
+                    onChange={onStatusChange}
+                />
+            </div>
             <div>
                 <DataTable
                     search={search}

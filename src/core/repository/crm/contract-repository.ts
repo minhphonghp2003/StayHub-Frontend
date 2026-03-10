@@ -17,6 +17,7 @@ const getContractById = async (id: number): Promise<BaseResponse<Contract | null
 
 const getAllContracts = async (params: {
     propertyId: number;
+    status?: number;
     pageNumber?: number;
     pageSize?: number;
     search?: string;
@@ -25,6 +26,7 @@ const getAllContracts = async (params: {
         url: `${baseUrl}/all/${params.propertyId}`,
         method: "GET",
         params: {
+            status: params.status,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
             search: params.search,

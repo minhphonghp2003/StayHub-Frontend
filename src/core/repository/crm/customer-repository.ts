@@ -16,6 +16,7 @@ const getCustomerById = async (id: number): Promise<BaseResponse<Customer | null
 
 const getAllCustomers = async (params: {
     propertyId: number;
+    isWalkin?: boolean;
     pageNumber?: number;
     pageSize?: number;
     search?: string;
@@ -24,6 +25,7 @@ const getAllCustomers = async (params: {
         url: `${baseUrl}/all/${params.propertyId}`,
         method: "GET",
         params: {
+            isWalkin: params.isWalkin,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
             search: params.search,
@@ -32,10 +34,13 @@ const getAllCustomers = async (params: {
     return response.data;
 };
 
-const getAllCustomersNoPaging = async (propertyId: number): Promise<BaseResponse<Customer[]>> => {
+const getAllCustomersNoPaging = async (propertyId: number, isWalkin?: boolean): Promise<BaseResponse<Customer[]>> => {
     const response = await api.request({
         url: `${baseUrl}/no-paging/${propertyId}`,
         method: "GET",
+        params: {
+            isWalkin,
+        },
     });
     return response.data;
 };

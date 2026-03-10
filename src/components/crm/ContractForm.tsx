@@ -130,6 +130,12 @@ export function ContractForm({
                             options={units.map(u => ({ value: u.id?.toString(), label: u.name ?? "" }))}
                             placeholder="Chọn căn hộ"
                             error={form.formState.errors.unitId?.message}
+                            onChange={(value) => {
+                                const selectedUnit = units.find(u => u.id?.toString() === value);
+                                if (selectedUnit?.basePrice) {
+                                    form.setValue("price", selectedUnit.basePrice.toString());
+                                }
+                            }}
                         />
                     </div>
                     <div className="flex gap-2 mt-2">

@@ -11,6 +11,7 @@ const getCustomerById = async (id: number): Promise<Customer | null> => {
 
 const getAllCustomers = async (params: {
     propertyId: number;
+    isWalkin?: boolean;
     pageNumber?: number;
     pageSize?: number;
     search?: string;
@@ -25,8 +26,8 @@ const getAllCustomers = async (params: {
     return null;
 };
 
-const getAllCustomersNoPaging = async (propertyId: number): Promise<Customer[] | null> => {
-    const result = await customerRepository.getAllCustomersNoPaging(propertyId);
+const getAllCustomersNoPaging = async (propertyId: number, isWalkin?: boolean): Promise<Customer[] | null> => {
+    const result = await customerRepository.getAllCustomersNoPaging(propertyId, isWalkin);
     return result.success ? (result.data ?? []) : null;
 };
 

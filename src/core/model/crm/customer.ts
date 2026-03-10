@@ -20,4 +20,5 @@ export interface Customer extends BaseModel {
     address?: string;
     image?: string;
     job?: string;
+    isWalkin?: boolean;
 }

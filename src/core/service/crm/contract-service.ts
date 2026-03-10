@@ -5,6 +5,15 @@ import { UpdateContractPayload } from "@/core/payload/crm/update-contract-payloa
 import { RenewContractPayload, TransferContractPayload, RegisterLeavingPayload } from "@/core/payload/crm/contract-action-payload";
 import { contractRepository } from "@/core/repository/crm/contract-repository";
 
+const statusToInt: Record<string, number> = {
+    Pending: 0,
+    Active: 1,
+    ExpiringSoon: 2,
+    Expired: 3,
+    Terminated: 4,
+    Canceled: 5,
+};
+
 const getContractById = async (id: number): Promise<Contract | null> => {
     const result = await contractRepository.getContractById(id);
     return result.success ? (result.data ?? null) : null;
@@ -12,11 +21,15 @@ const getContractById = async (id: number): Promise<Contract | null> => {
 
 const getAllContracts = async (params: {
     propertyId: number;
+    status?: string;
     pageNumber?: number;
     pageSize?: number;
     search?: string;
 }): Promise<{ data: Contract[]; pageInfo: PageInfo } | null> => {
-    const result = await contractRepository.getAllContracts(params);
+    const result = await contractRepository.getAllContracts({
+        ...params,
+        status: params.status ? statusToInt[params.status] : undefined,
+    });
     if (result && result.success) {
         return {
             data: result.data ?? [],

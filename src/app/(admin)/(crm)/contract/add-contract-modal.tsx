@@ -21,6 +21,7 @@ import { customerService } from "@/core/service/crm/customer-service";
 import { serviceService } from "@/core/service/infra/service-service";
 import { assetService } from "@/core/service/infra/asset-service";
 import { categoryItemService } from "@/core/service/catalog/category-item-service";
+import { defaultSettingService } from "@/core/service/infra/default-setting-service";
 import employeeService from "@/core/service/hrm/employee-service";
 
 interface AddContractModalProps {
@@ -103,7 +104,7 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
                 errors.paymentPeriodId = { message: "Vui lòng chọn kỳ thanh toán" };
             }
 
-         
+
 
             return {
                 values,
@@ -115,13 +116,14 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
     const fetchDropdowns = async () => {
         if (!selectedPropertyId) return;
         setInitialLoading(true);
-        const [u, c, s, a, p, sa] = await Promise.all([
+        const [u, c, s, a, p, sa, ds] = await Promise.all([
             unitService.getAllUnitsNoPaging(selectedPropertyId) ?? Promise.resolve(null),
-            customerService.getAllCustomersNoPaging(selectedPropertyId) ?? Promise.resolve(null),
+            customerService.getAllCustomersNoPaging(selectedPropertyId, false) ?? Promise.resolve(null),
             serviceService.getAllServicesNoPaging(selectedPropertyId) ?? Promise.resolve(null),
             assetService.getAllAssetsNoPaging(selectedPropertyId) ?? Promise.resolve(null),
             categoryItemService.getCategoryItemsByCategoryCode("PAYMENT_PERIOD"),
             employeeService.getAllEmployeesNoPaging(selectedPropertyId) ?? Promise.resolve(null),
+            defaultSettingService.getDefaultSetting(selectedPropertyId) ?? Promise.resolve(null),
         ]);
         setUnits(u ?? []);
         setCustomers(c ?? []);
@@ -129,6 +131,15 @@ function AddContractModal({ isOpen, closeModal, reload }: AddContractModalProps)
         setAssets(a ?? []);
         setPaymentPeriods(p ?? []);
         setSales(sa ?? []);
+        // Set default values from default settings
+        if (ds) {
+            form.setValue("price", ds.defaultBasePrice?.toString() || "");
+            // For payment date, perhaps set depositRemainEndDate or something, but user said defaultPaymentDate
+            // Maybe set startDate or something. For now, set depositRemainEndDate
+            if (ds.defaultPaymentDate) {
+                form.setValue("depositRemainEndDate", ds.defaultPaymentDate);
+            }
+        }
         setInitialLoading(false);
     };
 

@@ -7,6 +7,15 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit2, MoreHorizontal, Trash2, RefreshCw, Move, LogOut, FileText } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
+const statusLabels: Record<string, string> = {
+    Pending: "Chờ duyệt",
+    Active: "Đang hiệu lực",
+    ExpiringSoon: "Sắp hết hạn",
+    Expired: "Đã hết hạn",
+    Terminated: "Đã thanh lý",
+    Canceled: "Đã hủy",
+};
+
 export interface ColumnProp {
     onDelete: (item: Contract) => void;
     onUpdate: (item: Contract) => void;
@@ -98,6 +107,10 @@ export const getContractColumns = ({ onDelete, onUpdate, onRenew, onChangeRoom, 
     {
         accessorKey: "status",
         header: "Trạng thái",
+        cell: ({ row }) => {
+            const status = row.getValue<string>("status");
+            return <span>{statusLabels[status] || status}</span>;
+        },
     },
 
     {

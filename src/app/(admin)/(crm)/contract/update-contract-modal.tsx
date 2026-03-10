@@ -120,7 +120,7 @@ function UpdateContractModal({ isOpen, closeModal, reload, contractId }: UpdateC
         setInitialLoading(true);
         const [u, c, s, a, p, sa] = await Promise.all([
             unitService.getAllUnitsNoPaging(selectedPropertyId) ?? Promise.resolve(null),
-            customerService.getAllCustomersNoPaging(selectedPropertyId) ?? Promise.resolve(null),
+            customerService.getAllCustomersNoPaging(selectedPropertyId, false) ?? Promise.resolve(null), // filter non-walkin
             serviceService.getAllServicesNoPaging(selectedPropertyId) ?? Promise.resolve(null),
             assetService.getAllAssetsNoPaging(selectedPropertyId) ?? Promise.resolve(null),
             categoryItemService.getCategoryItemsByCategoryCode("PAYMENT_PERIOD"),
