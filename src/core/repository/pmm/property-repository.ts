@@ -1,4 +1,5 @@
 import { api } from "@/core/http-client/AxiosClient";
+import { BaseResponse } from "@/core/model/BaseResponse";
 import { Property } from "@/core/model/pmm/property";
 import { AddPropertyPayload } from "@/core/payload/pmm/add-property-payload";
 import { UpdatePropertyPayload } from "@/core/payload/pmm/update-property-payload";

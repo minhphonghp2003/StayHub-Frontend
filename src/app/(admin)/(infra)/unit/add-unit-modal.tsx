@@ -12,6 +12,7 @@ import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { UnitGroup } from '@/core/model/infra/unitGroup';
+import { defaultSettingService } from '@/core/service/infra/default-setting-service';
 type FormValues = {
     name: string;
     basePrice: number;
@@ -103,10 +104,17 @@ function AddUnitModal({
         const groups = await unitGroupService.getAllUnitGroupsNoPaging(selectedPropertyId);
         setUnitGroups(groups);
     };
+    const fetchDefaultBasePrice = async () => {
+        if (!selectedPropertyId) return;
+        const price = await defaultSettingService.getDefaultSetting(selectedPropertyId);
+        form.setValue("basePrice", price?.defaultBasePrice ?? 0,);
+
+    }
 
     useEffect(() => {
         if (isOpen) {
             fetchUnitGroups();
+            fetchDefaultBasePrice();
         }
         return () => {
             form.reset({

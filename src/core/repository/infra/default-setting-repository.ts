@@ -10,7 +10,11 @@ const setDefaultSetting = async (payload: SetDefaultSettingPayload): Promise<Bas
     const response = await api.request({
         url: `${baseUrl}/default-setting`,
         method: "POST",
-        data: payload,
+        data: {
+            "basePrice": payload.defaultBasePrice,
+            "propertyId": payload.propertyId,
+            "paymentDate": payload.defaultPaymentDate,
+        },
     });
     return response.data;
 };
