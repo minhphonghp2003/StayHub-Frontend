@@ -2,6 +2,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.css';
 import { Vietnamese } from 'flatpickr/dist/l10n/vn.js';
 import { useEffect } from 'react';
+import { localToUTCISOString } from '@/lib/date-utils';
 import { CalenderIcon } from '../../icons';
 import Label from './Label';
 import Hook = flatpickr.Options.Hook;
@@ -51,7 +52,18 @@ export default function DatePicker({
           // ignore
         }
       },
-      onChange,
+      onChange: (selectedDates, dateStr, instance) => {
+        const emitValue = mode === 'single' && selectedDates[0]
+          ? localToUTCISOString(selectedDates[0])
+          : selectedDates.map(localToUTCISOString);
+        if (onChange) {
+          if (Array.isArray(onChange)) {
+            onChange.forEach(fn => fn(emitValue, dateStr, instance));
+          } else {
+            onChange(emitValue, dateStr, instance);
+          }
+        }
+      },
     });
 
     return () => {
